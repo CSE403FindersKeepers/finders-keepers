@@ -1,0 +1,21 @@
+body {
+	font-family: sans-serif;
+	background-color: #fcfcf9;
+}
+
+a {
+	text-decoration: none;
+	color: #6fb2b7;
+}
+
+a:visited {
+	color: #93517d
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+li {
+	list-style-type: none;
+}
