@@ -13,8 +13,80 @@
     tools:context="cse403.finderskeepers.HomePage"
     tools:showIn="@layout/activity_home_page">
 
+    <ImageView
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:id="@+id/user_avatar"
+        android:layout_width="wrap_content"
+        android:adjustViewBounds="false"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
     <TextView
+        android:text="@string/user_items_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_marginTop="57dp"
+        android:id="@+id/user_items_text"
+        android:textSize="24sp"
+        android:layout_below="@+id/username_text"
+        android:layout_alignParentStart="true"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:text="@string/user_tags_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_tags_text"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/user_items_text"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="132dp" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/user_tags_text"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="29dp"
+        android:layout_below="@+id/user_items_text">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@mipmap/bike"
+                android:id="@+id/item_1_button"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@android:drawable/ic_menu_add"
+                android:id="@+id/add_item_button"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:text="@string/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:id="@+id/username_text"
+        android:layout_below="@+id/user_avatar"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

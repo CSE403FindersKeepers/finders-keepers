@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Finders Keepers</string>
     <string name="action_settings">Settings</string>
+    <string name="action_browse_items">Browse Items</string>
+    <string name="action_view_trades">View Trades</string>
+    <string name="action_user_page">User Page</string>
+
+    <string name="user_name">username</string>
+    <string name="user_items_text">Your Items</string>
+    <string name="user_tags_text">Your Tags</string>
 </resources>
