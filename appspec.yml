@@ -3,8 +3,3 @@ os: linux
 files:
    - source: /
      destination: /var/www/html
-
-hooks:
-   BeforeInstall:
-    - location: startServer.sh
-      runas: root
