@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="Y:\CSE\CSE 403\project\finders-keepers\FindersKeepers\AndroidBootstrap\src\main\shaders"/></dataSet><dataSet config="debug"><source path="Y:\CSE\CSE 403\project\finders-keepers\FindersKeepers\AndroidBootstrap\src\debug\shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="C:\Users\Artem\AndroidProjects\finders-keepers\FindersKeepers\AndroidBootstrap\src\main\shaders"/></dataSet><dataSet config="debug"><source path="C:\Users\Artem\AndroidProjects\finders-keepers\FindersKeepers\AndroidBootstrap\src\debug\shaders"/></dataSet></merger>

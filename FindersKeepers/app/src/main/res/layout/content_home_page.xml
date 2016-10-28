@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_home_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:paddingBottom="50dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -13,25 +14,96 @@
     tools:context="cse403.finderskeepers.HomePage"
     tools:showIn="@layout/activity_home_page">
 
-    <com.beardedhen.androidbootstrap.AwesomeTextView
-        android:text="@string/user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="310dp"
-        android:id="@+id/user_na"
-        android:textSize="30sp"
-        android:textColor="@color/bootstrap_brand_secondary_text" />
-
     <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:bootstrapBrand="primary"
         app:hasBorder="true"
         android:src="@mipmap/ic_launcher"
-        app:bootstrapSize="md"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="350dp"
-        android:layout_centerHorizontal="true"/>
-</RelativeLayout>
+        android:id="@+id/user_avatar"
+        android:gravity="top"
+        android:layout_gravity="center"
+        android:layout_weight="1" />
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:text="@string/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/user_name"
+        android:textSize="30sp"
+        android:textColor="@color/bootstrap_brand_secondary_text"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight=".5"/>
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:text="@string/user_items_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/user_items_text"
+        android:textSize="30sp"
+        android:textColor="@color/bootstrap_brand_secondary_text"
+        android:layout_gravity="start"
+        android:layout_weight=".5"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/user_items_view"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/bike"
+                android:id="@+id/item1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/bike"
+                android:id="@+id/item2"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/bike"
+                android:id="@+id/item3"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_control_point_black_24dp"
+                android:id="@+id/add_item"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="#FFFFFF"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:text="@string/user_tags_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/user_tags_text"
+        android:textSize="30sp"
+        android:textColor="@color/bootstrap_brand_secondary_text"
+        android:layout_gravity="start"
+        android:layout_weight=".5"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:inputType="textCapWords"
+        android:text="Tag1 Tag2 Tag3 Tag4"
+        android:ems="10"
+        android:id="@+id/editTags"
+        android:layout_weight=".5" />
+
+</LinearLayout>
