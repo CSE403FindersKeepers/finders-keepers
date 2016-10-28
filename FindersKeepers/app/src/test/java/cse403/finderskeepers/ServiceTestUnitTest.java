@@ -1,3 +1,4 @@
+/*Unit tests for the backend data/API/push notifications service. */
 package cse403.finderskeepers;
 
 import android.content.Intent;
