@@ -1,3 +1,8 @@
-dependencies:
-	pre:
-	  - pip install flask
+machine:
+  environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
+
+test:
+  pre:
+    - pip install flask
+
