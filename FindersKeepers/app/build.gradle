@@ -17,6 +17,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        test {
+            java {
+                srcDirs = ["/src/test/java/cse403/finderskeepers"]
+            }
+        }
+    }
 }
 
 dependencies {
