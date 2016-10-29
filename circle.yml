@@ -1,3 +1,6 @@
+general:
+  build_dir: FindersKeepers
+
 test:
   pre:
     - pip install flask
