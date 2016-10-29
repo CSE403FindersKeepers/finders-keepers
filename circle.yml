@@ -4,6 +4,7 @@ general:
 test:
   pre:
     - pip install flask
+    - rm ./gradlew
   override:
     - python -m unittest discover -s ./server/tests -v
     - gradle test
