@@ -1,6 +1,3 @@
-general:
-  build_dir: FindersKeepers
-
 dependencies:
   pre:
     - rm ./gradlew
@@ -12,8 +9,8 @@ test:
   pre:
     - pip install flask
   override:
+    - python -m unittest discover -s ./server/tests -v
+    - cd FindersKeepers
     - gradle test
-    - cd ..
-    - python -m unittest discover -s .././server/tests -v
     
 
