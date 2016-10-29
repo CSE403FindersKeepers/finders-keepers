@@ -1,6 +1,6 @@
 dependencies:
   pre:
-    # - rm FindersKeepers/gradlew
+    #- rm FindersKeepers/gradlew
     - sudo add-apt-repository ppa:cwchien/gradle -y
     - sudo apt-get update
     - sudo apt-get install gradle-2.14.1
@@ -10,6 +10,6 @@ test:
     - pip install flask
   override:
     - python -m unittest discover -s ./server/tests -v
-    - cd FindersKeepers; ./gradle test
+    - cd FindersKeepers; gradle test
     
 
