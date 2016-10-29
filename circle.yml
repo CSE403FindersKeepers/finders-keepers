@@ -12,6 +12,8 @@ test:
   pre:
     - pip install flask
   override:
-    - python -m unittest discover -s .././server/tests -v
     - gradle test
+    - cd ..
+    - python -m unittest discover -s .././server/tests -v
+    
 
