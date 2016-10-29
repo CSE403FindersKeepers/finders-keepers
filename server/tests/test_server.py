@@ -12,7 +12,7 @@ class MockTestCase(unittest.TestCase):
 	def test_mock_get_user(self):
 		client = app.test_client()
 		response = client.get('mock/api/get_user/1234')
-		self.assertTrue(response is not None)
+		self.assertTrue(response is None)	# $NOTE-yoont4: this is set to fail
 
 if __name__ == '__main__':
 	unittest.main()
