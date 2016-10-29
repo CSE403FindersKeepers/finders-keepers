@@ -4,6 +4,7 @@ general:
 dependencies:
   pre:
     - rm ./gradlew
+    - wget "https://services.gradle.org/distributions/gradle-2.14.1-bin.zip"; unzip gradle-2.14.1-bin.zip
   
 test:
   pre:
