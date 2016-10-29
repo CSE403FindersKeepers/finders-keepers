@@ -3,5 +3,5 @@ test:
     - pip install flask
   override:
     - python -m unittest discover -s ./server/tests -v
-    - FindersKeepers/gradlew test
+    - gradle test
 
