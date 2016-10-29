@@ -9,7 +9,7 @@ test:
   pre:
     - pip install flask
   override:
-    - python -m unittest discover -s ./server/tests -v
-    - cd FindersKeepers; gradle testDebugUnitTest
+    - python -m unittest discover -s ./server/tests -v 
+    - cd FindersKeepers; chmod +x gradlew; ./gradlew test
     
 
