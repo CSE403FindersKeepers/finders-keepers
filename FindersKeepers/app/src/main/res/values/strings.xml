@@ -8,4 +8,6 @@
     <string name="user_name">username</string>
     <string name="user_items_text">Your Items</string>
     <string name="user_tags_text">Your Tags</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="sign_in_text">Sign In</string>
 </resources>

@@ -4,14 +4,19 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import cse403.finderskeepers.data.FindersKeepersUserInfo;
 
 /**
  * Created by Jared on 10/27/2016.
  */
 
 public class UserAPIService extends Service {
+
+    public FindersKeepersUserInfo userInfo;
+
     @Override
     public void onCreate() {
+        this.userInfo = new FindersKeepersUserInfo("username");
         super.onCreate();
     }
 

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "493848631072",
+    "project_id": "firebase-finderskeepers"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493848631072:android:ee7508145e1a25d1",
+        "android_client_info": {
+          "package_name": "cse403.finderskeepers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "493848631072-rsgoctnmm8f593o4d4h3aaojf9r93r0i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cse403.finderskeepers",
+            "certificate_hash": "C1C0987773ABA9617C3919EC2845ABBB415307CB"
+          }
+        },
+        {
+          "client_id": "493848631072-qgkdqk2ia159bevvqpbpcavqqmrfpvmh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMpdBcpXfQC_Sevc6ol_MMInRLjb__3Wg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
