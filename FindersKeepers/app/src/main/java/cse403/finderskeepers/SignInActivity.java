@@ -14,6 +14,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.*;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
+import cse403.finderskeepers.data.UserInfoHolder;
+
 public class SignInActivity extends AppCompatActivity implements OnConnectionFailedListener, View.OnClickListener {
 
     GoogleApiClient mGoogleApiClient;
@@ -62,13 +64,19 @@ public class SignInActivity extends AppCompatActivity implements OnConnectionFai
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
+        TextView signInText = (TextView) findViewById(R.id.sign_in_text);
         if(result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
-            TextView signInText = (TextView) findViewById(R.id.sign_in_text);
             signInText.setText("Signed In");
+
+            // initialize user info in global singleton
+            UserInfoHolder.getInstance().initializeUser(result);
+
+            Intent intent = new Intent(SignInActivity.this, HomePage.class);
+            finish();
+            startActivity(intent);
         } else {
-            // do nothing if login failed
-            return;
+            signInText.setText("Sign In Failed");
         }
     }
 }
