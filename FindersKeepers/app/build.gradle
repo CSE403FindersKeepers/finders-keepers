@@ -20,9 +20,9 @@ android {
     }
 
     sourceSets {
-        test {
+        testDebugUnitTest {
             java {
-                srcDirs = ["/src/test/java/cse403/finderskeepers"]
+                srcDirs = ["/src/test/java/cse403/finderskeepers/cse403/finderskeepers"]
             }
         }
     }
