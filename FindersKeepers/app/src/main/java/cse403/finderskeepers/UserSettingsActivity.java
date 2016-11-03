@@ -6,29 +6,24 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.*;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import cse403.finderskeepers.data.UserInfoHolder;
-
-public class HomePage extends AppCompatActivity {
+public class UserSettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
+        setContentView(R.layout.activity_user_settings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        TextView userName = (TextView) findViewById(R.id.user_name_text);
-        userName.setText(UserInfoHolder.getInstance().getUserName());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home_page, menu);
+        getMenuInflater().inflate(R.menu.menu_user_settings_activity, menu);
         return true;
     }
 
@@ -41,11 +36,11 @@ public class HomePage extends AppCompatActivity {
 
         switch(id) {
             case R.id.action_settings:
-                Intent intent = new Intent(HomePage.this, UserSettingsActivity.class);
-                finish();
-                startActivity(intent);
                 return true;
             case R.id.action_user_page:
+                Intent intent = new Intent(UserSettingsActivity.this, HomePage.class);
+                finish();
+                startActivity(intent);
                 return true;
         }
 
