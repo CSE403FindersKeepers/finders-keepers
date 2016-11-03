@@ -36,7 +36,7 @@ def make_dummy_user(user_id):
 		user_id=user_id,
 		name="test_user" + str(user_id),
 		photo="pretend_this_is_a_photo",
-		zipcode=42,
+		zipcode=32,
 		email="test_email" + str(user_id) + "@email.com")
 
 # ---------------------------------------------------------------------
