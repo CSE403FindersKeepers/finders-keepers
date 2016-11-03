@@ -3,3 +3,21 @@ os: linux
 files:
    - source: /
      destination: /var/www/html
+permissions:
+   - object: /var/www/html
+     pattern: "**"
+     owner: apache
+     group: apache
+     mode: 755
+     type:
+       - file
+hooks:
+   BeforeInstall:
+    - location: scripts/installapache.sh
+      runas: root
+    - location: scripts/startapache.sh
+      runas: root
+    - location: scripts/startServer.sh
+   AfterInstall:
+    - location: scripts/restartapache.sh
+      runas: root
