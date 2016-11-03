@@ -6,7 +6,12 @@ files:
 permissions:
    - object: /var/www/html
      pattern: "**"
-     owner: ec2-user
-     mode: 777
+     owner: root
+     group: root
+     mode: 755
      type:
        - file
+hooks:
+   ApplicationStart:
+    - location: scripts/startServer.sh
+      runas: root
