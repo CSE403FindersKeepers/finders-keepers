@@ -1,16 +1,47 @@
 package cse403.finderskeepers;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import cse403.finderskeepers.data.UserInfoHolder;
 
 public class UserSettingsActivity extends AppCompatActivity {
+
+    private static final int GET_AVATAR = 1;
+
+    private View.OnClickListener avatarListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent getAvatarIntent = new Intent();
+            getAvatarIntent.setType("image/*");
+            getAvatarIntent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(getAvatarIntent, "Select Image to Use as Avatar"), GET_AVATAR);
+        }
+    };
+
+    private View.OnClickListener locationListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            // stub - not yet implemented
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +49,17 @@ public class UserSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_settings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Button avatarButton  = (Button) findViewById(R.id.action_change_avatar);
+        avatarButton.setOnClickListener(this.avatarListener);
+
+        Button locationButton  = (Button) findViewById(R.id.action_change_location);
+        locationButton.setOnClickListener(this.locationListener);
+
+        if (UserInfoHolder.getInstance().getAvatar() != null) {
+            ImageView userAvatar = (ImageView) findViewById(R.id.user_avatar);
+            userAvatar.setImageBitmap(UserInfoHolder.getInstance().getAvatar());
+        }
     }
 
     @Override
@@ -45,5 +87,34 @@ public class UserSettingsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == GET_AVATAR && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            ParcelFileDescriptor parcelFileDescriptor;
+            try {
+                parcelFileDescriptor = getContentResolver().openFileDescriptor(selectedImage, "r");
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            Bitmap avatar = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            try {
+                parcelFileDescriptor.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            ImageView currentAvatar = (ImageView) findViewById(R.id.user_avatar);
+            currentAvatar.setImageBitmap(avatar);
+            UserInfoHolder.getInstance().setAvatar(avatar);
+        }
     }
 }

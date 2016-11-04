@@ -1,5 +1,7 @@
 package cse403.finderskeepers.data;
 
+import android.graphics.Bitmap;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 /**
@@ -14,6 +16,7 @@ public class UserInfoHolder {
     private static final UserInfoHolder instance = new UserInfoHolder();
 
     private GoogleSignInResult signInInfo;
+    private Bitmap avatar;
 
     // Private constructor to ensure only one instance exists
     private UserInfoHolder() {
@@ -34,4 +37,10 @@ public class UserInfoHolder {
     public String getUserName() {
         return signInInfo.getSignInAccount().getDisplayName();
     }
+
+    // Set user avatar to given Bitmap
+    public void setAvatar(Bitmap avatar) { this.avatar = avatar; }
+
+    // Return Bitmap of user avatar
+    public Bitmap getAvatar() {return this.avatar; }
 }
