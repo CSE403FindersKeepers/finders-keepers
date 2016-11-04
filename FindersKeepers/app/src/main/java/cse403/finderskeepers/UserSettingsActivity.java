@@ -4,27 +4,44 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
+import android.Manifest;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import android.content.pm.PackageManager;
+import android.widget.TextView;
+
 import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import cse403.finderskeepers.data.UserInfoHolder;
 
-public class UserSettingsActivity extends AppCompatActivity {
+public class UserSettingsActivity extends AppCompatActivity
+        implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final int GET_AVATAR = 1;
+    private static final int LOCATION_PERMISSIONS = 2;
+
+    private GoogleApiClient mGoogleApiClient;
+
+    private Location mLastLocation;
 
     private View.OnClickListener avatarListener = new View.OnClickListener() {
         @Override
@@ -39,7 +56,7 @@ public class UserSettingsActivity extends AppCompatActivity {
     private View.OnClickListener locationListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // stub - not yet implemented
+            setLocation();
         }
     };
 
@@ -60,6 +77,30 @@ public class UserSettingsActivity extends AppCompatActivity {
             ImageView userAvatar = (ImageView) findViewById(R.id.user_avatar);
             userAvatar.setImageBitmap(UserInfoHolder.getInstance().getAvatar());
         }
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Button locationButton  = (Button) findViewById(R.id.action_change_location);
+        locationButton.setEnabled(false);
     }
 
     @Override
@@ -103,6 +144,11 @@ public class UserSettingsActivity extends AppCompatActivity {
                 return;
             }
 
+            // error getting file descriptor
+            if (parcelFileDescriptor == null) {
+                return;
+            }
+
             FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
             Bitmap avatar = BitmapFactory.decodeFileDescriptor(fileDescriptor);
             try {
@@ -116,5 +162,47 @@ public class UserSettingsActivity extends AppCompatActivity {
             currentAvatar.setImageBitmap(avatar);
             UserInfoHolder.getInstance().setAvatar(avatar);
         }
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        Button locationButton  = (Button) findViewById(R.id.action_change_location);
+        locationButton.setEnabled(true);
+        setLocation();
+    }
+
+    private void setLocation() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if (permissionCheck == 0) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+            if (mLastLocation != null) {
+                TextView locationText  = (TextView) findViewById(R.id.location_text);
+                locationText.setText("Latitude: " + String.valueOf(mLastLocation.getLatitude()
+                        + "\nLongitude: " + String.valueOf(mLastLocation.getLongitude())));
+            } else {
+                Log.d("ApiClientStatus", "" + mGoogleApiClient.isConnected());
+            }
+        } else {
+            requestPermissions(new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION }, LOCATION_PERMISSIONS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSIONS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                this.setLocation();
+            } else {
+                TextView locationText = (TextView) findViewById(R.id.location_text);
+                locationText.setText("Location permissions not granted");
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
+
     }
 }
