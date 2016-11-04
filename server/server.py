@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import abort, jsonify, request
+from response_objects import Item, User, Trade, Error
 
 app = Flask(__name__)
 
@@ -47,7 +48,7 @@ def make_dummy_user(user_id):
 def get_user(user_id):
 	# $NOTE-yoont4: this command is not implemented yet, need to discuss API behavior.
 	abort(400, "<get_user> is not accessable right now, sorry dawg")
-		
+
 
 if __name__ == "__main__":
 	app.run()

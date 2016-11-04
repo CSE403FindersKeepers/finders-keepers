@@ -1,6 +1,7 @@
 package cse403.finderskeepers;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,6 +24,11 @@ public class HomePage extends AppCompatActivity {
 
         TextView userName = (TextView) findViewById(R.id.user_name_text);
         userName.setText(UserInfoHolder.getInstance().getUserName());
+
+        if (UserInfoHolder.getInstance().getAvatar() != null) {
+            ImageView userAvatar = (ImageView) findViewById(R.id.user_avatar);
+            userAvatar.setImageBitmap(UserInfoHolder.getInstance().getAvatar());
+        }
     }
 
     @Override
