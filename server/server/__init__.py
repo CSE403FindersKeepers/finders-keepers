@@ -1,6 +1,9 @@
 from flask import Flask
 from flask import abort, jsonify, request
-from response_objects import Item, User, Trade, Error
+#from handlers import Item, User, Trade, Error
+from handlers import user_handler
+from handlers import item_handler
+from handlers import trade_handler
 
 app = Flask(__name__)
 
@@ -46,9 +49,11 @@ def make_dummy_user(user_id):
 
 @app.route("/api/get_user/<int:user_id>", methods=["GET"])
 def get_user(user_id):
-	# $NOTE-yoont4: this command is not implemented yet, need to discuss API behavior.
+	# check for malformed request
+	if user_id <= 0:
+		abort(400, "<get_user> only accepts positive user IDs")
+	
+	
+	
 	abort(400, "<get_user> is not accessable right now, sorry dawg")
 
-
-if __name__ == "__main__":
-	app.run()

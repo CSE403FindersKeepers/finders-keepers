@@ -2,13 +2,15 @@ class Item:
 	"""
 	This defines an Item object with the following fields:
 		id: integer
+		userId: integer
 		name: string
 		image_url: string
 		tags: string[]
 	"""
 
-	def __init__(self, iid=-1, name="", image_url="", tags=[]):
+	def __init__(self, iid=-1, uid=-1, name="", image_url="", tags=[]):
 		self.id = iid
+		self.uid = uid
 		self.name = name
 		self.image_url = image_url
 		self.tags = tags
