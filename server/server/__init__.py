@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import abort, jsonify, request
-#from handlers import Item, User, Trade, Error
+from handlers.response_objects import Item, User, Trade, Error
 from handlers import user_handler
 from handlers import item_handler
 from handlers import trade_handler
