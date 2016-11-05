@@ -11,4 +11,6 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="sign_in_text">Sign In</string>
     <string name="title_activity_user_settings">UserSettingsActivity</string>
+    <string name="enter_zip_text">Enter ZIP Code</string>
+    <string name="set_zip_button_text">Set ZIP Code</string>
 </resources>

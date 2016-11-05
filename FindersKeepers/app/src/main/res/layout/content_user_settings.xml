@@ -29,8 +29,18 @@
         android:id="@+id/action_change_avatar"
         android:layout_weight="1"/>
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/edit_zip_field"
+        android:gravity="center"
+        android:inputType="number"
+        android:hint="@string/enter_zip_text"
+        android:maxLines="1"/>
+
     <Button
-        android:text="Set Location to Current"
+        android:text="@string/set_zip_button_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/action_change_location"
@@ -42,6 +52,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:id="@+id/location_text"
+        android:gravity="center"
         android:text=""/>
 
     <LinearLayout

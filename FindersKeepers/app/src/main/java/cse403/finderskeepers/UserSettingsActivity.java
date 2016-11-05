@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
-import android.Manifest;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,29 +17,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import android.content.pm.PackageManager;
 import android.widget.TextView;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import cse403.finderskeepers.data.UserInfoHolder;
 
-public class UserSettingsActivity extends AppCompatActivity
-        implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class UserSettingsActivity extends AppCompatActivity {
 
     private static final int GET_AVATAR = 1;
-    private static final int LOCATION_PERMISSIONS = 2;
-
-    private GoogleApiClient mGoogleApiClient;
-
-    private Location mLastLocation;
+    private Geocoder geoCoder;
 
     private View.OnClickListener avatarListener = new View.OnClickListener() {
         @Override
@@ -56,7 +47,33 @@ public class UserSettingsActivity extends AppCompatActivity
     private View.OnClickListener locationListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            setLocation();
+
+            TextView locationText  = (TextView) findViewById(R.id.location_text);
+
+            EditText zipEntered = (EditText) findViewById(R.id.edit_zip_field);
+
+            double longitude, latitude;
+
+            try {
+                List<Address> addresses = geoCoder.getFromLocationName(zipEntered.getText().toString() + ", United States", 1);
+                if (addresses == null || zipEntered.getText().toString().equals("")) {
+                    Log.d("zip", zipEntered.getText().toString());
+                    locationText.setText("Invalid ZIP code");
+                    return;
+                }
+                longitude = addresses.get(0).getLongitude();
+                latitude = addresses.get(0).getLatitude();
+            } catch (IOException e) {
+                locationText.setText("Unable to translate ZIP to location");
+                e.printStackTrace();
+                return;
+            }
+            Location userLocation = new Location("");
+            userLocation.setLatitude(latitude);
+            userLocation.setLongitude(longitude);
+            UserInfoHolder.getInstance().setLocation(userLocation);
+
+            locationText.setText("Latitude: " + latitude + " Longitude: " + longitude);
         }
     };
 
@@ -78,29 +95,19 @@ public class UserSettingsActivity extends AppCompatActivity
             userAvatar.setImageBitmap(UserInfoHolder.getInstance().getAvatar());
         }
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
+        geoCoder = new Geocoder(getApplicationContext(), Locale.getDefault());
 
-    @Override
-    protected void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
+        Location userLocation;
 
-    @Override
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        Button locationButton  = (Button) findViewById(R.id.action_change_location);
-        locationButton.setEnabled(false);
+        if((userLocation = UserInfoHolder.getInstance().getLocation()) != null) {
+            EditText zipEntered = (EditText) findViewById(R.id.edit_zip_field);
+            try {
+                List<Address> addresses = geoCoder.getFromLocation(userLocation.getLatitude(),userLocation.getLongitude(), 1);
+                zipEntered.setText(addresses.get(0).getPostalCode());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -162,47 +169,5 @@ public class UserSettingsActivity extends AppCompatActivity
             currentAvatar.setImageBitmap(avatar);
             UserInfoHolder.getInstance().setAvatar(avatar);
         }
-    }
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Button locationButton  = (Button) findViewById(R.id.action_change_location);
-        locationButton.setEnabled(true);
-        setLocation();
-    }
-
-    private void setLocation() {
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        if (permissionCheck == 0) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-            if (mLastLocation != null) {
-                TextView locationText  = (TextView) findViewById(R.id.location_text);
-                locationText.setText("Latitude: " + String.valueOf(mLastLocation.getLatitude()
-                        + "\nLongitude: " + String.valueOf(mLastLocation.getLongitude())));
-            } else {
-                Log.d("ApiClientStatus", "" + mGoogleApiClient.isConnected());
-            }
-        } else {
-            requestPermissions(new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION }, LOCATION_PERMISSIONS);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == LOCATION_PERMISSIONS) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                this.setLocation();
-            } else {
-                TextView locationText = (TextView) findViewById(R.id.location_text);
-                locationText.setText("Location permissions not granted");
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult result) {
-
     }
 }
