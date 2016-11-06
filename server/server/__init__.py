@@ -4,8 +4,13 @@ from handlers.response_objects import Item, User, Trade, Error
 from handlers import user_handler
 from handlers import item_handler
 from handlers import trade_handler
+from handlers.db_handler import DBHandler
 
+# create the app instance
 app = Flask(__name__)
+
+# create the MySQL database handler instance
+db_handler = DBHandler(app)
 
 # these are all the mock API end points.
 
