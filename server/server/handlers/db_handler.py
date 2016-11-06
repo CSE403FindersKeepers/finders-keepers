@@ -33,3 +33,13 @@ class DBHandler():
 		# just return the raw results to whatever handler called this and
 		# parse, check, jsonify, etc. there
 		return data
+
+	def sample_query(self, query):
+		# same principle as sample_method(), but with a query string
+		self.cursor.execute(query)
+
+		# you can also get some of the rows
+		some_rows = cursor.fetchmany(size=2)
+
+		# but you MUST fetch the rest before making a new query
+		remaining_rows = cursor.fetchall()
