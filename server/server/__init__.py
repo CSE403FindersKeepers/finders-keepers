@@ -13,21 +13,29 @@ app = Flask(__name__)
 db_handler = DBHandler(app)
 
 # these are all the mock API end points.
+# ---------------------------------------------------------------------
+# -------------------------- MOCK -------------------------------------
+# ---------------------------------------------------------------------
 
-@app.route("/dummy/api/get_user/<int:user_id>", methods=["GET"])
+# ------ USER ----- 
+
+@app.route("/mock/api/get_user/<int:user_id>", methods=["GET"])
 def mock_get_user(user_id):
 	# just a dummy value for now
 	return make_dummy_user(user_id)
 
-@app.route("/dummy/api/new_user", methods=["POST"])
-def mock_new_user():
+@app.route("/mock/api/create_user", methods=["POST"])
+def mock_create_user():
+	json = request.get_json()
+
 	# check for malformed json request
-	if not request.json:
-		abort(400)
+	if not is_valid_json(('email'), json):
+		abort(400, 'invalid post data')
 
-	return jsonify(request.json)
+	return jsonify(user_id='9000')
 
-@app.route("/dummy/api/update_user", methods=["PUT"])
+# NOT DONE DOWN:
+@app.route("/mock/api/update_user", methods=["PUT"])
 def mock_update_user():
 	# check for malformed json request
 	if not request.json:
@@ -35,7 +43,7 @@ def mock_update_user():
 	
 	return jsonify(request.json)
 
-@app.route("/dummy/api/delete_user/<int:user_id>", methods=["DELETE"])
+@app.route("/mock/api/delete_user/<int:user_id>", methods=["DELETE"])
 def mock_delete_user(user_id):
 	return make_dummy_user(user_id)
 
@@ -43,10 +51,28 @@ def mock_delete_user(user_id):
 def make_dummy_user(user_id):
 	return jsonify(
 		user_id=user_id,
+		zipcode=32000,
 		name="test_user" + str(user_id),
-		photo="pretend_this_is_a_photo",
-		zipcode=32,
-		email="test_email" + str(user_id) + "@email.com")
+		email="test_email" + str(user_id) + "@email.com",
+		image_url="pretend_this_is_a_photo_URL",
+		wishlist=["test_tag_1", "test_tag_2"],
+		inventory=[
+			{
+			'item_id': 1000,
+			'user_id': user_id,
+			'name': 'test_item_1',
+			'image_url': 'test_item_url_1',
+			'tags': ['test_item_tag_1', 'test_item_tag_2']
+			},
+			{
+			'item_id': 1001,
+			'user_id': user_id,
+			'name': 'test_item_2',
+			'image_url': 'test_item_url_2',
+			'tags': ['test_item_tag_3', 'test_item_tag_4']
+			}
+			]
+		)
 
 # ---------------------------------------------------------------------
 # --------------------------- API -------------------------------------
@@ -61,4 +87,18 @@ def get_user(user_id):
 	
 	
 	abort(400, "<get_user> is not accessable right now, sorry dawg")
+
+
+def is_valid_json(expected_fields, json):
+	# check that there is json data
+	if not json:
+		return False
+	
+	# validate the expected fields exist
+	for field in expected_fields:
+		if field not in json:
+			return True
+	
+	return True
+
 
