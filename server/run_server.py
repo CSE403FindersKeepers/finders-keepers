@@ -16,9 +16,12 @@ app.run(debug=True)
 			> curl localhost:5000/mock/api/get_user/12345
 
 			(POST)
-			> curl -d '{"email":"test_email@email.com"}' -H "Content-Type:application/json" localhost:5000/mock/api/create_user
+			> curl -X POST -d '{"email":"test_email@email.com"}' -H "Content-Type:application/json" localhost:5000/mock/api/create_user
 			(PUT)
+			> curl -X PUT -d '{"user_id":1234, "name":"test_name", "zipcode":12345}' -H "Content-Type:application/json" localhost:5000/mock/api/update_user
+
 
 			(DELETE)
+			> curl -X DELETE localhost:5000/mock/api/delete_user/100
 
 """

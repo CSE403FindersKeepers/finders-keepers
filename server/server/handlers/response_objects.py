@@ -53,13 +53,11 @@ class Trade:
 		requested_items: Item[]
 		offered_items: Item[]
 		status: string
-		is_recipient: bool
 	"""
 
 	def __init__(
 		self, trade_id=-1, initiator_id=-1, recipient_id=-1,
-		requested_items=[], offered_items=[],
-		status="", is_recipient=False
+		requested_items=[], offered_items=[], status=""
 	):
 
 		self.trade_id = trade_id
@@ -68,7 +66,6 @@ class Trade:
 		self.requested_items = requested_items
 		self.offered_items = offered_items
 		self.status = status
-		self.is_recipient = is_recipient
 
 class Error:
 	"""
