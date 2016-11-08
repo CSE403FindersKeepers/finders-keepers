@@ -1,14 +1,16 @@
 class Item:
 	"""
 	This defines an Item object with the following fields:
-		id: integer
+		item_id: integer
+		user_id: integer
 		name: string
 		image_url: string
 		tags: string[]
 	"""
 
-	def __init__(self, iid=-1, name="", image_url="", tags=[]):
-		self.id = iid
+	def __init__(self, item_id=-1, user_id=-1, name="", image_url="", tags=[]):
+		self.item_id = item_id
+		self.user_id = user_id
 		self.name = name
 		self.image_url = image_url
 		self.tags = tags
@@ -16,7 +18,7 @@ class Item:
 class User:
 	"""
 	This defines a User object with the following fields:
-		id: integer
+		user_id: integer
 		zipcode: integer
 		name: string
 		email: string
@@ -26,12 +28,12 @@ class User:
 	"""
 
 	def __init__(
-		self, uid=-1, zipcode=-1,
+		self, user_id=-1, zipcode=-1,
 		name="", email="", image_url="",
 		wishlist=[], inventory=[]
 	):
 
-		self.id = uid
+		self.user_id = user_id
 		self.zipcode = zipcode
 		self.name = name
 		self.email = email
@@ -45,28 +47,25 @@ class User:
 class Trade:
 	"""
 	This defines a Trade object with the following fields:
-		id: integer
-		initiator: User
-		recipient: User
+		trade_id: integer
+		initiator_id: integer
+		recipient_id: integer
 		requested_items: Item[]
 		offered_items: Item[]
 		status: string
-		is_recipient: bool
 	"""
 
 	def __init__(
-		self, tid=-1, initiator=None, recipient=None,
-		requested_items=[], offered_items=[],
-		status="", is_recipient=False
+		self, trade_id=-1, initiator_id=-1, recipient_id=-1,
+		requested_items=[], offered_items=[], status=""
 	):
 
-		self.id = tid
-		self.initiator = initiator
-		self.recipient = recipient
+		self.trade_id = trade_id
+		self.initiator_id = initiator_id
+		self.recipient_id = recipient_id
 		self.requested_items = requested_items
 		self.offered_items = offered_items
 		self.status = status
-		self.is_recipient = is_recipient
 
 class Error:
 	"""
