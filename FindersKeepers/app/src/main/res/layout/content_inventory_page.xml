@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_inventory_page"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="50dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="cse403.finderskeepers.HomePage"
+    tools:showIn="@layout/activity_inventory_page">
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:text="@string/user_items_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/user_items_text"
+        android:textSize="30sp"
+        android:textColor="@color/bootstrap_brand_secondary_text"
+        android:layout_gravity="start"
+        android:layout_weight=".5"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/user_items_view"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/item_list">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_control_point_black_24dp"
+                android:id="@+id/add_item"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="#FFFFFF"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:text="@string/user_wishlist_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/user_wishlist_text"
+        android:textSize="30sp"
+        android:textColor="@color/bootstrap_brand_secondary_text"
+        android:layout_gravity="start"
+        android:layout_weight=".5"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/user_wishlist_view"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/wish_list">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_control_point_black_24dp"
+                android:id="@+id/add_wishlist_item"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:background="#FFFFFF"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>
