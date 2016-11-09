@@ -46,8 +46,14 @@ public class InventoryActivity extends AppCompatActivity {
         addWishlist.setOnClickListener(this.wishListener);
     }
 
-    //Retrieves Wishlist & Inventory items for given user from server.
+    //Retrieves Wishlist & Inventory items for given user from server, and displays them in the
+    //inventory.
     private void retrieveItems(UserInfoHolder user){
+        /*TODO:
+         * Make API call for inventory of given user. Once we get the response, parse the json
+         * and use it to create AddableItems that we then add to the inventory page.
+         * These AddableItems should be clickable to opens some sort of info page -- haven't gotten
+         * that far yet. */
         String query = "/mock/api/get_inventory/" + UserInfoHolder.getInstance().getUID();
         try {
             URLConnection con = new URL(UserInfoHolder.SERVER_ADDRESS + query).openConnection();
@@ -90,6 +96,6 @@ public class InventoryActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         /*TODO:
          * Refresh inventory when AddItemWindowActivity closes. */
-        }
     }
 }
+

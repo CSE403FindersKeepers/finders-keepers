@@ -55,7 +55,12 @@ public class AddItemWindowActivity extends AppCompatActivity {
            /*TODO:
             * Upload the new item, first ensuring that the imgURL and tags are set,
              * then use the API to add it to inventory.
-             * If successful, close the addItem page, otherwise show an error.*/
+             * If successful, close the addItem page, otherwise show an error.
+             * Note: Should authenticate on user's google token for a successful upload.
+             * This should be done using the getIDToken option for security -- However,
+             * the account login and remote server need to be configured correctly.
+             * See https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInAccount#getId()
+             * and https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions.Builder#requestIdToken(java.lang.String)*/
         }
     };
 
