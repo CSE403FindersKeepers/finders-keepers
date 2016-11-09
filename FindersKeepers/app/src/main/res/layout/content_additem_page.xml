@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_inventory_page"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="50dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="cse403.finderskeepers.HomePage"
+    tools:showIn="@layout/activity_additem"
+    android:weightSum="1">
+
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="135dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/item_image">
+
+        <ImageButton
+            android:layout_width="123dp"
+            android:layout_height="135dp"
+            android:src="@drawable/ic_control_point_black_24dp"
+            android:id="@+id/add_item_img"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:background="#FFFFFF"/>
+
+    </LinearLayout>
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:text="@string/tag_add"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:id="@+id/user_addtag_text"
+        android:textSize="30sp"
+        android:textColor="@color/bootstrap_brand_secondary_text"
+        android:layout_gravity="start" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/user_wishlist_view"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.73">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical">
+
+            <Button
+                android:text="@string/new_tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/add_item_tag" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <Button
+        android:text="Add Item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/upload_button" />
+
+</LinearLayout>

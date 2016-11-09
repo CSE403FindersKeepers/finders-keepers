@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
  */
 
 public class UserInfoHolder {
+    public static final String SERVER_ADDRESS = "http://ec2-35-162-13-93.us-west-2.compute.amazonaws.com";
     private static final UserInfoHolder instance = new UserInfoHolder();
 
     private GoogleSignInResult signInInfo;
@@ -39,6 +40,9 @@ public class UserInfoHolder {
     public String getUserName() {
         return signInInfo.getSignInAccount().getDisplayName();
     }
+
+    //Return unique user ID
+    public String getUID() {return signInInfo.getSignInAccount().getId(); }
 
     // Set user avatar to given Bitmap
     public void setAvatar(Bitmap avatar) { this.avatar = avatar; }

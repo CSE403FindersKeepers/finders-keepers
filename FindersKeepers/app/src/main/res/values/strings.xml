@@ -14,4 +14,6 @@
     <string name="title_activity_user_settings">UserSettingsActivity</string>
     <string name="enter_zip_text">Enter ZIP Code</string>
     <string name="set_zip_button_text">Set ZIP Code</string>
+    <string name="tag_add">Add Tags</string>
+    <string name="new_tag">New Tag</string>
 </resources>
