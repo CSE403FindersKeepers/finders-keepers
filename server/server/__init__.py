@@ -94,10 +94,10 @@ def mock_get_item(item_id):
 def mock_create_item():
 	json = request.get_json()
 
-	if not is_valid_json(('name', 'tags', 'image_url'), json):
+	if not is_valid_json(('name', 'tags', 'item_image_data'), json):
 		abort(400, 'mock_create_item: invalid POST data')
 
-	return jsonify(error=None)
+	return jsonify(tem_id=100, item_url='i.imgur.com/ibsZi5R.png', error=None)
 
 @app.route('/mock/api/update_item', methods=['PUT'])
 def mock_update_item():
