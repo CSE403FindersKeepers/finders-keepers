@@ -20,6 +20,7 @@ public class UserInfoHolder {
     private GoogleSignInResult signInInfo;
     private Bitmap avatar;
     private Location location;
+    private int UID;
 
     // Private constructor to ensure only one instance exists
     private UserInfoHolder() {
@@ -41,8 +42,11 @@ public class UserInfoHolder {
         return signInInfo.getSignInAccount().getDisplayName();
     }
 
+    // Set UID of this user
+    public void setUID(int UID) { this.UID = UID; }
+
     //Return unique user ID
-    public String getUID() {return signInInfo.getSignInAccount().getId(); }
+    public int getUID() {return this.UID; }
 
     // Set user avatar to given Bitmap
     public void setAvatar(Bitmap avatar) { this.avatar = avatar; }
@@ -54,7 +58,8 @@ public class UserInfoHolder {
     public void setLocation(Location location) { this.location = location; }
 
     // Get user location
-    public Location getLocation() { return this.location; };
+    public Location getLocation() { return this.location; }
 
-    public String getEmail() {return signInInfo.getSignInAccount().getEmail();}
+    // Get user email
+    public String getEmail() { return signInInfo.getSignInAccount().getEmail(); }
 }
