@@ -234,9 +234,12 @@ def get_user(user_id):
 	if user_id <= 0:
 		abort(400, '<get_user> only accepts positive user IDs')
 	
-	
-	
-	abort(400, '<get_user> is not accessable right now, sorry dawg')
+	user = db_handler.get_user(user_id)
+	if user is None:
+		abort(400, 'that user does not exist')
+	else:
+		id, name, photo, zipcode, email = user
+		return jsonify(id=id, name=name, photo=photo, zipcode=zipcode, email=email)
 
 
 def is_valid_json(expected_fields, json):

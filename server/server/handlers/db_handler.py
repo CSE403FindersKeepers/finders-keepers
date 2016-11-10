@@ -46,3 +46,10 @@ class DBHandler():
 
 		# but you MUST fetch the rest before making a new query
 		remaining_rows = cursor.fetchall()
+
+	def get_user(self, userId):
+		query = "SELECT * FROM USER WHERE id=" + str(userId)
+		self.cursor.execute(query);
+		user = self.cursor.fetchone()
+		self.cursor.fetchall()
+		return user
