@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import cse403.finderskeepers.data.UserInfoHolder;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okio.BufferedSink;
 
 /**
  * Created by Jared on 11/8/2016.
@@ -43,6 +46,8 @@ public class AddItemWindowActivity extends AppCompatActivity {
     private Bitmap itemImage;
     private List<String> tags;
     private int GET_AVATAR = 1;
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +95,8 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return;
             }
+
+            RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
 
             finish();
         }

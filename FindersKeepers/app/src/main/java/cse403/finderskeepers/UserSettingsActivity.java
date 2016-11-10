@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -12,27 +14,42 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import android.widget.TextView;
 
+import com.google.firebase.auth.UserInfo;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.UserDataHandler;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Scanner;
 
 import cse403.finderskeepers.data.UserInfoHolder;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 public class UserSettingsActivity extends AppCompatActivity {
 
     private static final int GET_AVATAR = 1;
     private Geocoder geoCoder;
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
 
     private View.OnClickListener avatarListener = new View.OnClickListener() {
         @Override
@@ -74,8 +91,41 @@ public class UserSettingsActivity extends AppCompatActivity {
             UserInfoHolder.getInstance().setLocation(userLocation);
 
             locationText.setText("Latitude: " + latitude + " Longitude: " + longitude);
+            UserSettingsActivity.this.updateUser();
         }
     };
+
+    private void updateUser() {
+        ImageView avatar = (ImageView) findViewById(R.id.user_avatar);
+        int UID = UserInfoHolder.getInstance().getUID();
+
+        EditText zipEntered = (EditText) findViewById(R.id.edit_zip_field);
+        int ZIP = Integer.parseInt(zipEntered.getText().toString());
+
+        String name = UserInfoHolder.getInstance().getUserName();
+
+        // encode the current image as base64 JPEG
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Drawable drawable = avatar.getDrawable();
+        Bitmap image = ((BitmapDrawable) drawable).getBitmap();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] imageBytes = stream.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+        // create request JSON
+        JSONObject requestJSON = new JSONObject();
+        try {
+            requestJSON.put("name", name);
+            requestJSON.put("user_id", UID);
+            requestJSON.put("avatar", encodedImage);
+            requestJSON.put("zipcode", ZIP);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,5 +219,6 @@ public class UserSettingsActivity extends AppCompatActivity {
             currentAvatar.setImageBitmap(avatar);
             UserInfoHolder.getInstance().setAvatar(avatar);
         }
+        UserSettingsActivity.this.updateUser();
     }
 }
