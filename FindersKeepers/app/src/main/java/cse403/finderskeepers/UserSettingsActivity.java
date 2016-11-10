@@ -100,7 +100,13 @@ public class UserSettingsActivity extends AppCompatActivity {
         int UID = UserInfoHolder.getInstance().getUID();
 
         EditText zipEntered = (EditText) findViewById(R.id.edit_zip_field);
-        int ZIP = Integer.parseInt(zipEntered.getText().toString());
+        String zipcodeText = zipEntered.getText().toString();
+
+        // Check if zipcode has been entered
+        int ZIP = 0;
+        if(zipcodeText.length() != 0) {
+            ZIP = Integer.parseInt(zipEntered.getText().toString());
+        }
 
         String name = UserInfoHolder.getInstance().getUserName();
 
@@ -118,7 +124,10 @@ public class UserSettingsActivity extends AppCompatActivity {
             requestJSON.put("name", name);
             requestJSON.put("user_id", UID);
             requestJSON.put("avatar", encodedImage);
-            requestJSON.put("zipcode", ZIP);
+
+            //Don't change zipcode unless text placed in zipcode field
+            if(zipcodeText.length() != 0)
+                requestJSON.put("zipcode", ZIP);
         } catch (JSONException e) {
             e.printStackTrace();
             return;
