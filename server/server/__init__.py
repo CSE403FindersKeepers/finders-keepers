@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 # create the MySQL database handler instance
 db_handler = DBHandler(app)
+user_handler = user_handler.UserHandler(db_handler)
 
 # these are all the mock API end points.
 # ---------------------------------------------------------------------
@@ -30,27 +31,26 @@ def mock_get_user(user_id):
 		return jsonify(error='mock_get_user: OH NO, USERS OVER 9000 DON\'T EXIST!')
 
 	# just a dummy value for now
-	return jsonify(make_dummy_user(user_id))
+	return user_handler.get_user(user_id)
 
 @app.route('/mock/api/create_user', methods=['POST'])
 def mock_create_user():
 	json = request.get_json()
 
 	# check for malformed json request
-	if not is_valid_json(('email'), json):
+	if not is_valid_json(["email"], json):
 		abort(400, 'mock_create_user: invalid POST data')
-
-	return jsonify(user_id='9000')
+	return user_handler.create_user(json)
 
 @app.route('/mock/api/update_user', methods=['PUT'])
 def mock_update_user():
 	json = request.get_json()
 
 	# check for malformed json request
-	if not is_valid_json(('user_id', 'name', 'zipcode', 'avatar'), json):
+	if not is_valid_json(['user_id', 'name', 'zipcode', 'avatar'], json):
 		abort(400, 'mock_update_user: invalid PUT data')
 	
-	return jsonify(error=None)
+	return user_handler.update_user(json)
 
 @app.route('/mock/api/delete_user/<int:user_id>', methods=['DELETE'])
 def mock_delete_user(user_id):
@@ -61,7 +61,7 @@ def mock_delete_user(user_id):
 
 @app.route('/mock/api/get_wishlist/<int:user_id>', methods=['GET'])
 def mock_get_wishlist(user_id):
-	if user_id > 9000
+	if user_id > 9000:
 		return jsonify(error='mock_delete_user: OH NO, USERS OVER 9000 DON\'T EXIST!')
 
 	return jsonify(['cool_stuff', 'awful_stuff', 'a_banana_for_scale'])
