@@ -34,7 +34,6 @@ import java.util.Scanner;
 import cse403.finderskeepers.data.UserInfoHolder;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import okio.BufferedSink;
 
 /**
  * Created by Jared on 11/8/2016.
@@ -42,18 +41,16 @@ import okio.BufferedSink;
 
 public class AddItemWindowActivity extends AppCompatActivity {
 
-    private String imgURL;
-    private Bitmap itemImage;
     private List<String> tags;
-    private int GET_AVATAR = 1;
+    private int GET_IMAGE = 1;
     private static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-    private boolean avatarSet;
+    private boolean imageSet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        avatarSet = false;
+        imageSet = false;
         setContentView(R.layout.content_additem_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,7 +66,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
     private View.OnClickListener uploadItemListener = new View.OnClickListener() {
         @Override
         public void onClick(View view){
-            if (!avatarSet) {
+            if (!imageSet) {
                 return;
             }
             EditText tags = (EditText) findViewById(R.id.editTags);
@@ -114,7 +111,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
             Intent getAvatarIntent = new Intent();
             getAvatarIntent.setType("image/*");
             getAvatarIntent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(getAvatarIntent, "Select Image to Use as Avatar"), GET_AVATAR);
+            startActivityForResult(Intent.createChooser(getAvatarIntent, "Select Image to Use as Avatar"), GET_IMAGE);
         }
     };
 
@@ -122,7 +119,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == GET_AVATAR && resultCode == Activity.RESULT_OK) {
+        if(requestCode == GET_IMAGE && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             ParcelFileDescriptor parcelFileDescriptor;
             try {
@@ -149,7 +146,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
             ImageView img = (ImageView) findViewById(R.id.add_item_img);
             img.setImageBitmap(item);
             UserInfoHolder.getInstance().setAvatar(item);
-            avatarSet = true;
+            imageSet = true;
         }
     }
 }
