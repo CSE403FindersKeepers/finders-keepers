@@ -47,7 +47,7 @@ def mock_update_user():
 	json = request.get_json()
 
 	# check for malformed json request
-	if not is_valid_json(('user_id', 'name', 'zipcode'), json):
+	if not is_valid_json(('user_id', 'name', 'zipcode', 'avatar'), json):
 		abort(400, 'mock_update_user: invalid PUT data')
 	
 	return jsonify(error=None)
@@ -59,6 +59,23 @@ def mock_delete_user(user_id):
 
 	return jsonify(error=None)
 
+@app.route('/mock/api/get_wishlist/<int:user_id>', methods=['GET'])
+def mock_get_wishlist(user_id):
+	if user_id > 9000
+		return jsonify(error='mock_delete_user: OH NO, USERS OVER 9000 DON\'T EXIST!')
+
+	return jsonify(['cool_stuff', 'awful_stuff', 'a_banana_for_scale'])
+	
+@app.route('/mock/api/set_wishlist', methods=['PUT'])
+def mock_set_wishlist():
+	json = request.get_json()
+	
+	if not is_valid_json(('user_id', 'wishlist'), json):
+		abort(400, 'mock_set_wishlist: invalid PUT data')
+	
+	return jsonify(error=None)
+
+	
 # helper method
 def make_dummy_user(user_id):
 	return {
