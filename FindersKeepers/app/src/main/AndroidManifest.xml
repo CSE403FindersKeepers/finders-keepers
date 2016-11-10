@@ -28,7 +28,13 @@
             android:name=".UserSettingsActivity"
             android:label="@string/title_activity_user_settings"
             android:theme="@style/AppTheme.NoActionBar"
-            android:exported="true"></activity>
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".AddItemWindowActivity"
+            android:label="AddItemWindowActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.io.FileDescriptor;
@@ -30,7 +31,9 @@ import cse403.finderskeepers.data.UserInfoHolder;
 public class AddItemWindowActivity extends AppCompatActivity {
 
     private String imgURL;
+    private Bitmap itemImage;
     private List<String> tags;
+    private int GET_AVATAR = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +42,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        tags = new ArrayList<String>();
+        tags = new ArrayList<>();
 
         ImageButton addItem = (ImageButton) findViewById(R.id.add_item_img);
         Button addTag = (Button) findViewById(R.id.add_item_tag);
@@ -68,7 +71,10 @@ public class AddItemWindowActivity extends AppCompatActivity {
     private View.OnClickListener itemPicListener = new View.OnClickListener() {
         @Override
         public void onClick(View view){
-
+            Intent getAvatarIntent = new Intent();
+            getAvatarIntent.setType("image/*");
+            getAvatarIntent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(getAvatarIntent, "Select Image to Use as Avatar"), GET_AVATAR);
         }
     };
 
@@ -83,6 +89,40 @@ public class AddItemWindowActivity extends AppCompatActivity {
               * Then create a new button in the Tag list with the designated text.*/
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == GET_AVATAR && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            ParcelFileDescriptor parcelFileDescriptor;
+            try {
+                parcelFileDescriptor = getContentResolver().openFileDescriptor(selectedImage, "r");
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            // error getting file descriptor
+            if (parcelFileDescriptor == null) {
+                return;
+            }
+
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            Bitmap item = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            try {
+                parcelFileDescriptor.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            /*ImageView currentAvatar = (ImageView) findViewById(R.id.user_avatar);
+            currentAvatar.setImageBitmap(avatar);
+            UserInfoHolder.getInstance().setAvatar(avatar);*/
+        }
+    }
 
     /*TODO:
      * Need a button in the layout + a click listener for tags that have already been created,

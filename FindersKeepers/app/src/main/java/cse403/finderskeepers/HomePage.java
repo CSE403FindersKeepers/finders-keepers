@@ -59,10 +59,8 @@ public class HomePage extends AppCompatActivity {
     private View.OnClickListener itemListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent getImageIntent = new Intent();
-            getImageIntent.setType("image/*");
-            getImageIntent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(getImageIntent, "Select Image to Use as Item"), 1);
+            Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
+            startActivity(addItemIntent);
         }
     };
 

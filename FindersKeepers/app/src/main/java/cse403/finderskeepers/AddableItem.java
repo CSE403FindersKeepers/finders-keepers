@@ -12,7 +12,7 @@ import java.util.Scanner;
  * Created by Kieran on 11/7/16.
  * AddableItem is an ImageView which contains image tags
  */
-public class AddableItem extends ImageView{
+public class AddableItem extends ImageView {
     private List<String> tags;
 
     public AddableItem(Context c, String tags){
