@@ -43,5 +43,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.beardedhen:androidbootstrap:2.3.0'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
     testCompile 'junit:junit:4.12'
 }

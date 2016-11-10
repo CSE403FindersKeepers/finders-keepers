@@ -55,4 +55,6 @@ public class UserInfoHolder {
 
     // Get user location
     public Location getLocation() { return this.location; };
+
+    public String getEmail() {return signInInfo.getSignInAccount().getEmail();}
 }

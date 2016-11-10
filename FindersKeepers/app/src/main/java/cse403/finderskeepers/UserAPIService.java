@@ -5,39 +5,54 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import cse403.finderskeepers.data.UserInfoHolder;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+
 import java.util.List;
+
+
 
 /**
  * Created by Jared on 10/27/2016.
  */
 
-public class UserAPIService extends Service {
+public interface UserAPIService {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
+    @POST("/mock/api/create_user")
+    Call<ResponseBody> makeUser(@Body RequestBody request);
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
+    @GET("/mock/api/get_user/{id}")
+    Call<ResponseBody> getUser(@Path("id") int id);
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+    @PUT("/mock/api/update_user")
+    Call<ResponseBody> updateUser(@Body RequestBody request);
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    @GET("/mock/api/get_item/{id}")
+    Call<ResponseBody> getItem(@Path("id") int id, @Body RequestBody request);
 
-    public enum ListType {
-        WISHLIST, INVENTORY
-    }
-    public List<AddableItem> getUserItems(ListType type, UserInfoHolder user){
-        return null;
-    }
+    @POST("/mock/api/create_item")
+    Call<ResponseBody> getItem(@Body RequestBody request);
+
+    @PUT("/mock/api/update_item")
+    Call<ResponseBody> updateItem(@Body RequestBody request);
+
+    @DELETE("/mock/api/delete_item/{id}")
+    Call<ResponseBody> deleteItem(@Path("id") int id);
+
+    @GET("/mock/api/get_wishlist/{id}")
+    Call<ResponseBody> getWishlist(@Path("id") int id);
+
+    @PUT("/mock/api/set_wishlist")
+    Call<ResponseBody> setWishlist(@Body RequestBody request);
+
+    @GET("/mock/api/get_inventory/{id}")
+    Call<ResponseBody> getInventory(@Path("id") int id);
+
 }

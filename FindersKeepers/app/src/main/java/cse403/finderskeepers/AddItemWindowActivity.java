@@ -102,10 +102,5 @@ public class AddItemWindowActivity extends AppCompatActivity {
         }
     }
 
-    /*TODO:
-     * Need a button in the layout + a click listener for tags that have already been created,
-      * to allow us to remove them. Not sure how to do this yet, because the button has to be
-      * dynamically made and bound to the listener, and able to communicate its ID to the listener.*/
-
 
 }
