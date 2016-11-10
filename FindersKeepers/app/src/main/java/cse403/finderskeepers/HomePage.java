@@ -18,8 +18,14 @@ import android.widget.*;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import cse403.finderskeepers.data.UserInfoHolder;
@@ -36,14 +42,95 @@ public class HomePage extends AppCompatActivity {
         TextView userName = (TextView) findViewById(R.id.user_name_text);
         userName.setText(UserInfoHolder.getInstance().getUserName());
 
-        if (UserInfoHolder.getInstance().getAvatar() != null) {
-            ImageView userAvatar = (ImageView) findViewById(R.id.user_avatar);
-            userAvatar.setImageBitmap(UserInfoHolder.getInstance().getAvatar());
-        }
-
         //Button with a click listener which allows user to add an item
         ImageButton img = (ImageButton) findViewById(R.id.add_item);
         img.setOnClickListener(this.itemListener);
+
+        //TODO: get UID - replace this with UID from request
+        int UID = 0;
+        UserInfoHolder.getInstance().setUID(UID);
+
+        //TODO: fetch avatar - populate this URL with URL from response
+        URL getImg = null;
+        try {
+            getImg = new URL("http://....");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (getImg != null) {
+                Bitmap image = BitmapFactory.decodeStream(getImg.openConnection().getInputStream());
+                UserInfoHolder.getInstance().setAvatar(image);
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        ImageView userAvatar = (ImageView) findViewById(R.id.user_avatar);
+        if (UserInfoHolder.getInstance().getAvatar() != null) {
+            userAvatar.setImageBitmap(UserInfoHolder.getInstance().getAvatar());
+        }
+
+        //TODO: fetch tags - replace this array with populated one
+        JSONArray tags = new JSONArray();
+        String tagString = "";
+        try {
+            for(int i = 0; i < tags.length() - 1; i++) {
+                tagString += tags.getString(i) + " ";
+            }
+            tagString += tags.getString(tags.length() - 1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Set tags in TextView
+        TextView tagText = (TextView) findViewById(R.id.editTags);
+        tagText.setText(tagString);
+
+        //TODO: populate inventory - populate this JSONArray with array of items
+        try {
+            JSONArray inventory = new JSONArray();
+            for (int i = 0; i < inventory.length(); i++) {
+                JSONObject item = inventory.getJSONObject(i);
+                URL itemImage = new URL(item.getString("image_url"));
+                JSONArray itemTags = item.getJSONArray("tags");
+
+                // Id, tags, and bitmap of this item
+                int itemID = item.getInt("item_id");
+                String itemTagString = "";
+                Bitmap itemBitmap = null;
+
+                // populate tag string
+                try {
+                    for (int j = 0; i < itemTags.length() - 1; j++) {
+                        itemTagString += itemTags.getString(j) + " ";
+                    }
+                    itemTagString += itemTags.getString(itemTags.length() - 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // populate bitmap
+                try {
+                    itemBitmap = BitmapFactory.decodeStream(itemImage.openConnection().getInputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // Add item to layout as button
+                LinearLayout items = (LinearLayout) findViewById(R.id.item_list);
+                if (itemBitmap != null) {
+                    AddableItem newItemButton = new AddableItem(this, itemTagString, itemID);
+                    newItemButton.setImageBitmap(itemBitmap);
+                    items.addView(newItemButton, 0);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -60,6 +147,7 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
+            finish();
             startActivity(addItemIntent);
         }
     };
@@ -82,48 +170,5 @@ public class HomePage extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            Uri selectedImage = data.getData();
-            ParcelFileDescriptor parcelFileDescriptor;
-            try {
-                parcelFileDescriptor = getContentResolver().openFileDescriptor(selectedImage, "r");
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            // error getting file descriptor
-            if (parcelFileDescriptor == null) {
-                return;
-            }
-
-            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-            Bitmap itemImage = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-            try {
-                parcelFileDescriptor.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            //Get input string for the tags
-            EditText edit = (EditText) findViewById(R.id.editTags);
-
-            //Create the item the user wants to add
-            AddableItem currentAvatar = new AddableItem(getApplicationContext(), edit.getText().toString());
-            currentAvatar.setImageBitmap(itemImage);
-            UserInfoHolder.getInstance().setAvatar(itemImage);
-
-            //Add the item to the beginning to the item list
-            LinearLayout addableItems = (LinearLayout)
-                    findViewById(R.id.item_list);
-            addableItems.addView(currentAvatar, 0);
-        }
     }
 }

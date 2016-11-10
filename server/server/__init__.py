@@ -61,7 +61,7 @@ def mock_delete_user(user_id):
 
 @app.route('/mock/api/get_wishlist/<int:user_id>', methods=['GET'])
 def mock_get_wishlist(user_id):
-	if user_id > 9000
+	if user_id > 9000:
 		return jsonify(error='mock_delete_user: OH NO, USERS OVER 9000 DON\'T EXIST!')
 
 	return jsonify(['cool_stuff', 'awful_stuff', 'a_banana_for_scale'])
@@ -234,9 +234,12 @@ def get_user(user_id):
 	if user_id <= 0:
 		abort(400, '<get_user> only accepts positive user IDs')
 	
-	
-	
-	abort(400, '<get_user> is not accessable right now, sorry dawg')
+	user = db_handler.get_user(user_id)
+	if user is None:
+		abort(400, 'that user does not exist')
+	else:
+		id, name, photo, zipcode, email = user
+		return jsonify(id=id, name=name, photo=photo, zipcode=zipcode, email=email)
 
 
 def is_valid_json(expected_fields, json):

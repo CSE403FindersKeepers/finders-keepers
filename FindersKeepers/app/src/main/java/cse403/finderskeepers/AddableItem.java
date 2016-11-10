@@ -1,7 +1,9 @@
 package cse403.finderskeepers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.media.Image;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -12,36 +14,27 @@ import java.util.Scanner;
  * Created by Kieran on 11/7/16.
  * AddableItem is an ImageView which contains image tags
  */
-public class AddableItem extends ImageView {
-    private List<String> tags;
+public class AddableItem extends ImageButton {
+    private String tags;
+    private int itemId;
 
-    public AddableItem(Context c, String tags){
+    public AddableItem(Context c, String tags, int itemId){
         super(c);
-        this.tags = parseTags(tags);
+        this.tags = tags;
+        this.itemId = itemId;
     }
 
     /**
      * Returns a list of tags for the item
      */
-    public List<String> getTags(){
-        List<String> tagCopy = new ArrayList<String>();
-        for(String item : tags){
-            tagCopy.add(item);
-        }
-        return tagCopy;
+    public String getTags() {
+        return tags;
     }
 
     /**
-     * Takes in the string of tags and returns a list of
-     * tags
+     * Returns itemId of this item
      */
-    private List<String> parseTags(String tags){
-        Scanner scan = new Scanner(tags);
-        List<String> itemTags = new ArrayList<String>();
-        while(scan.hasNext()){
-            itemTags.add(scan.next());
-        }
-        scan.close();
-        return itemTags;
+    public int getItemId() {
+        return itemId;
     }
 }
