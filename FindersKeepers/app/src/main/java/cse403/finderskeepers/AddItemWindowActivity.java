@@ -108,10 +108,10 @@ public class AddItemWindowActivity extends AppCompatActivity {
     private View.OnClickListener itemPicListener = new View.OnClickListener() {
         @Override
         public void onClick(View view){
-            Intent getAvatarIntent = new Intent();
-            getAvatarIntent.setType("image/*");
-            getAvatarIntent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(getAvatarIntent, "Select Image to Use as Avatar"), GET_IMAGE);
+            Intent getImageIntent = new Intent();
+            getImageIntent.setType("image/*");
+            getImageIntent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(getImageIntent, "Select Image for Item"), GET_IMAGE);
         }
     };
 
@@ -145,7 +145,6 @@ public class AddItemWindowActivity extends AppCompatActivity {
 
             ImageView img = (ImageView) findViewById(R.id.add_item_img);
             img.setImageBitmap(item);
-            UserInfoHolder.getInstance().setAvatar(item);
             imageSet = true;
         }
     }

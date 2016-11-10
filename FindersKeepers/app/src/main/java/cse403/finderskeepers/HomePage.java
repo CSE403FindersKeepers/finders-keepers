@@ -53,7 +53,7 @@ public class HomePage extends AppCompatActivity {
         //TODO: fetch avatar - populate this URL with URL from response
         URL getImg = null;
         try {
-             getImg = new URL("http://....");
+            getImg = new URL("http://....");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
