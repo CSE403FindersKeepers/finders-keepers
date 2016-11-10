@@ -35,7 +35,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inventory_page);
+        setContentView(R.layout.content_additem_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -68,11 +68,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
     private View.OnClickListener itemPicListener = new View.OnClickListener() {
         @Override
         public void onClick(View view){
-           /*TODO:
-            * Create an imageIntent
-            * Pass to startActivityForResult -- See HomePage.java for example
-            * In onActivityResult, change the icon for the image to the image returned
-            * And also upload the image via the API. */
+
         }
     };
 
