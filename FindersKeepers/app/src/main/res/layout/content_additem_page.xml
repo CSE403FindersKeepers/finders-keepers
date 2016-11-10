@@ -6,69 +6,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="50dp"
+    android:paddingBottom="100dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cse403.finderskeepers.HomePage"
-    tools:showIn="@layout/activity_additem"
-    android:weightSum="1">
+    tools:showIn="@layout/activity_additem">
 
 
-    <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="135dp"
-            android:orientation="horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:id="@+id/item_image">
-
-        <ImageButton
-            android:layout_width="123dp"
-            android:layout_height="135dp"
-            android:src="@drawable/ic_control_point_black_24dp"
-            android:id="@+id/add_item_img"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:background="#FFFFFF"/>
-
-    </LinearLayout>
+    <ImageButton
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_control_point_black_24dp"
+        android:id="@+id/add_item_img"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:background="#FFFFFF"
+        android:layout_weight="2"/>
 
     <com.beardedhen.androidbootstrap.AwesomeTextView
         android:text="@string/tag_add"
         android:layout_width="wrap_content"
-        android:layout_height="120dp"
+        android:layout_height="0dp"
         android:id="@+id/user_addtag_text"
         android:textSize="30sp"
         android:textColor="@color/bootstrap_brand_secondary_text"
-        android:layout_gravity="start" />
+        android:layout_gravity="start"
+        android:layout_weight="1"/>
 
-    <HorizontalScrollView
+    <EditText
         android:layout_width="match_parent"
-        android:id="@+id/user_wishlist_view"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.73">
-
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical">
-
-            <Button
-                android:text="@string/new_tag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/add_item_tag" />
-        </LinearLayout>
-    </HorizontalScrollView>
+        android:layout_height="0dp"
+        android:inputType="textCapWords"
+        android:hint="@string/item_add_tags_hint"
+        android:id="@+id/editTags"
+        android:layout_weight="1" />
 
     <Button
         android:text="Add Item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/upload_button" />
+        android:layout_height="0dp"
+        android:id="@+id/upload_button"
+        android:layout_weight="1"/>
 
 </LinearLayout>

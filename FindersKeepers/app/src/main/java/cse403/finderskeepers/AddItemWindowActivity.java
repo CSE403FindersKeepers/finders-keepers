@@ -45,25 +45,15 @@ public class AddItemWindowActivity extends AppCompatActivity {
         tags = new ArrayList<>();
 
         ImageButton addItem = (ImageButton) findViewById(R.id.add_item_img);
-        Button addTag = (Button) findViewById(R.id.add_item_tag);
         Button upload = (Button) findViewById(R.id.upload_button);
         upload.setOnClickListener(this.uploadItemListener);
         addItem.setOnClickListener(this.itemPicListener);
-        addTag.setOnClickListener(this.itemTagListener);
     }
 
     private View.OnClickListener uploadItemListener = new View.OnClickListener() {
         @Override
         public void onClick(View view){
-           /*TODO:
-            * Upload the new item, first ensuring that the imgURL and tags are set,
-             * then use the API to add it to inventory.
-             * If successful, close the addItem page, otherwise show an error.
-             * Note: Should authenticate on user's google token for a successful upload.
-             * This should be done using the getIDToken option for security -- However,
-             * the account login and remote server need to be configured correctly.
-             * See https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInAccount#getId()
-             * and https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions.Builder#requestIdToken(java.lang.String)*/
+          finish();
         }
     };
 
@@ -75,18 +65,6 @@ public class AddItemWindowActivity extends AppCompatActivity {
             getAvatarIntent.setType("image/*");
             getAvatarIntent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(getAvatarIntent, "Select Image to Use as Avatar"), GET_AVATAR);
-        }
-    };
-
-    //Listener for item add buttons
-    private View.OnClickListener itemTagListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view){
-            /*TODO:
-             * Open an interactive text-entry box that allows user to type in a tag,
-              * then press enter. (There must be some view for this?)
-              * Then, add the tag to the list.
-              * Then create a new button in the Tag list with the designated text.*/
         }
     };
 
@@ -118,9 +96,9 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 return;
             }
 
-            /*ImageView currentAvatar = (ImageView) findViewById(R.id.user_avatar);
-            currentAvatar.setImageBitmap(avatar);
-            UserInfoHolder.getInstance().setAvatar(avatar);*/
+            ImageView img = (ImageView) findViewById(R.id.add_item_img);
+            img.setImageBitmap(item);
+            UserInfoHolder.getInstance().setAvatar(item);
         }
     }
 

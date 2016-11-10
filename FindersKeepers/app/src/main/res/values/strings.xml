@@ -16,4 +16,5 @@
     <string name="set_zip_button_text">Set ZIP Code</string>
     <string name="tag_add">Add Tags</string>
     <string name="new_tag">New Tag</string>
+    <string name="item_add_tags_hint">Tags Separated By Spaces</string>
 </resources>
