@@ -17,4 +17,6 @@
     <string name="tag_add">Add Tags</string>
     <string name="new_tag">New Tag</string>
     <string name="item_add_tags_hint">Tags Separated By Spaces</string>
+    <string name="change_avatar_text">Change Avatar</string>
+    <string name="update_button_text">Update Avatar and ZIP</string>
 </resources>

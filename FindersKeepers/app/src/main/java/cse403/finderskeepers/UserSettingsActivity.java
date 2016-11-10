@@ -61,7 +61,7 @@ public class UserSettingsActivity extends AppCompatActivity {
         }
     };
 
-    private View.OnClickListener locationListener = new View.OnClickListener() {
+    private View.OnClickListener updateListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
 
@@ -72,7 +72,7 @@ public class UserSettingsActivity extends AppCompatActivity {
             double longitude, latitude;
 
             try {
-                List<Address> addresses = geoCoder.getFromLocationName(zipEntered.getText().toString() + ", United States", 1);
+                List<Address> addresses = geoCoder.getFromLocationName(zipEntered.getText().toString().trim() + ", United States", 1);
                 if (addresses == null || zipEntered.getText().toString().equals("")) {
                     Log.d("zip", zipEntered.getText().toString());
                     locationText.setText("Invalid ZIP code");
@@ -85,6 +85,7 @@ public class UserSettingsActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return;
             }
+
             Location userLocation = new Location("");
             userLocation.setLatitude(latitude);
             userLocation.setLongitude(longitude);
@@ -134,6 +135,8 @@ public class UserSettingsActivity extends AppCompatActivity {
         }
 
         RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+
+        //TODO: DO CALLS TO UPDATE AVATAR/LOCATION VIA API SERVER
     }
 
     @Override
@@ -147,7 +150,7 @@ public class UserSettingsActivity extends AppCompatActivity {
         avatarButton.setOnClickListener(this.avatarListener);
 
         Button locationButton  = (Button) findViewById(R.id.action_change_location);
-        locationButton.setOnClickListener(this.locationListener);
+        locationButton.setOnClickListener(this.updateListener);
 
         if (UserInfoHolder.getInstance().getAvatar() != null) {
             ImageView userAvatar = (ImageView) findViewById(R.id.user_avatar);
@@ -228,6 +231,5 @@ public class UserSettingsActivity extends AppCompatActivity {
             currentAvatar.setImageBitmap(avatar);
             UserInfoHolder.getInstance().setAvatar(avatar);
         }
-        UserSettingsActivity.this.updateUser();
     }
 }
