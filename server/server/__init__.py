@@ -61,7 +61,7 @@ def mock_delete_user(user_id):
 
 @app.route('/mock/api/get_wishlist/<int:user_id>', methods=['GET'])
 def mock_get_wishlist(user_id):
-	if user_id > 9000
+	if user_id > 9000:
 		return jsonify(error='mock_delete_user: OH NO, USERS OVER 9000 DON\'T EXIST!')
 
 	return jsonify(['cool_stuff', 'awful_stuff', 'a_banana_for_scale'])
