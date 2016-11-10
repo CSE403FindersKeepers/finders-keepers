@@ -46,12 +46,14 @@ public class AddItemWindowActivity extends AppCompatActivity {
     private Bitmap itemImage;
     private List<String> tags;
     private int GET_AVATAR = 1;
-    public static final MediaType JSON
+    private static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+    private boolean avatarSet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        avatarSet = false;
         setContentView(R.layout.content_additem_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,6 +69,9 @@ public class AddItemWindowActivity extends AppCompatActivity {
     private View.OnClickListener uploadItemListener = new View.OnClickListener() {
         @Override
         public void onClick(View view){
+            if (!avatarSet) {
+                return;
+            }
             EditText tags = (EditText) findViewById(R.id.editTags);
             Scanner scanner = new Scanner(tags.getText().toString());
 
@@ -144,6 +149,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
             ImageView img = (ImageView) findViewById(R.id.add_item_img);
             img.setImageBitmap(item);
             UserInfoHolder.getInstance().setAvatar(item);
+            avatarSet = true;
         }
     }
 }
