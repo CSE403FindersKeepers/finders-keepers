@@ -13,7 +13,6 @@ class DBHandler():
 
 		# $NOTE-yoont4: currently I've set this to return until we have a test
 		# database to query. I don't want to risk muddying the production db
-		return
 
 		# connect to the database and create a cursor
 		self.connection = self.my_sql.connect()
@@ -21,10 +20,10 @@ class DBHandler():
 
 	def configure(self):
 		# Configure the MySQL database connection settings here
-		self.app.config['MYSQL_DATABASE_USER'] = ''
-		self.app.config['MYSQL_DATABASE_PASSWORD'] = ''
-		self.app.config['MYSQL_DATABASE_DB'] = ''
-		self.app.config['MYSQL_DATABASE_HOST'] = ''
+		self.app.config['MYSQL_DATABASE_USER'] = 'finderskeepers'
+		self.app.config['MYSQL_DATABASE_PASSWORD'] = '403student'
+		self.app.config['MYSQL_DATABASE_DB'] = 'finderskeepersappdb'
+		self.app.config['MYSQL_DATABASE_HOST'] = 'finderskeepersappdb.crxiugvetln0.us-west-2.rds.amazonaws.com'
 
 	def sample_method(self):
 		# using the connection cursor, call one of the stored procedures and pass in the 
