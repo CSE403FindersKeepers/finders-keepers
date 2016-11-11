@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="50dp"
+    android:paddingBottom="70dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -84,9 +84,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:inputType="textCapWords"
-        android:text="Tag1 Tag2 Tag3 Tag4"
+        android:hint="@string/wishlist_tags_hint"
         android:ems="10"
         android:id="@+id/editTags"
         android:layout_weight=".5" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/update_tags_text"
+        android:id="@+id/update_tags"
+        android:layout_weight=".5"/>
 
 </LinearLayout>

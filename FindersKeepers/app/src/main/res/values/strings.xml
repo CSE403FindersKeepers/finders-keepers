@@ -21,4 +21,6 @@
     <string name="update_button_text">Update Avatar and ZIP</string>
     <string name="title_activity_view_item">ViewItemActivity</string>
     <string name="delete_item_text">Delete Item</string>
+    <string name="update_tags_text">Update Tags</string>
+    <string name="wishlist_tags_hint">Tag1 Tag2 Tag3 Tag4</string>
 </resources>

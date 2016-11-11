@@ -75,7 +75,8 @@ public class HomePage extends AppCompatActivity {
         ImageButton img = (ImageButton) findViewById(R.id.add_item);
         img.setOnClickListener(this.itemListener);
 
-
+        Button updateTagsButton = (Button) findViewById(R.id.update_tags);
+        updateTagsButton.setOnClickListener(this.updateTagsListener);
     }
 
     @Override
@@ -93,6 +94,16 @@ public class HomePage extends AppCompatActivity {
         public void onClick(View view) {
             Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
             startActivity(addItemIntent);
+        }
+    };
+
+    /**
+     * Listener for tag update button
+     */
+    private View.OnClickListener updateTagsListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
         }
     };
 
