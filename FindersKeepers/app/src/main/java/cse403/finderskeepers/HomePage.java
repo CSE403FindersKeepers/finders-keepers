@@ -41,10 +41,13 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static android.Manifest.*;
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 import static cse403.finderskeepers.UserSettingsActivity.JSON;
 
 public class HomePage extends AppCompatActivity {
+
+    private static final int REQUEST_STUFF = 14582;
 
     private void disconnectionError(){
         Intent intent = new Intent(HomePage.this, DisconnectionError.class);
@@ -77,9 +80,24 @@ public class HomePage extends AppCompatActivity {
         //Button with a click listener which allows user to add an item
         ImageButton img = (ImageButton) findViewById(R.id.add_item);
         img.setOnClickListener(this.itemListener);
-        
+
         Button updateTagsButton = (Button) findViewById(R.id.update_tags);
         updateTagsButton.setOnClickListener(this.updateTagsListener);
+       requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STUFF);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch(requestCode){
+            case REQUEST_STUFF: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    return;
+                }
+                else {
+                    finish();
+                }
+            }
+        }
     }
 
     @Override
@@ -280,11 +298,16 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
+            Log.d("spot1", "hi!");
             Drawable drawable = ((AddableItem) view).getDrawable();
+            Log.d("spot2", "hi!");
             Bitmap image = ((BitmapDrawable) drawable).getBitmap();
-            addItemIntent.putExtra("IMAGE", image);
+            Log.d("spot3", "hi!");
+            Log.d("spot4", "hi!");
             addItemIntent.putExtra("ITEM_ID", ((AddableItem) view).getItemId());
+            Log.d("spot5", "hi!");
             addItemIntent.putExtra("TAGS", ((AddableItem) view).getTags());
+            Log.d("spot6", "hi!");
             startActivity(addItemIntent);
         }
     };
