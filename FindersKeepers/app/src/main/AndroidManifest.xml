@@ -29,11 +29,12 @@
             android:name=".UserSettingsActivity"
             android:exported="true"
             android:label="@string/title_activity_user_settings"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddItemWindowActivity"
             android:label="AddItemWindowActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".DisconnectionError"></activity>
     </application>
 
 </manifest>
