@@ -83,7 +83,7 @@ def make_dummy_user(user_id):
 		'zipcode': 12345,
 		'name': 'test_user_' + str(user_id),
 		'email': 'test_email_' + str(user_id) + '@email.com',
-		'image_url': 'pretend_this_is_a_photo_URL',
+		'image_url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hausziege_04.jpg/220px-Hausziege_04.jpg',
 		'wishlist': ['test_tag_1', 'test_tag_2'],
 		'inventory': [
 			make_dummy_item(1, user_id),
@@ -149,7 +149,7 @@ def make_dummy_item(item_id, user_id=1234):
 		'item_id': item_id,
 		'user_id': user_id,
 		'name': 'test_item_' + str(item_id),
-		'image_url': 'test_item_url_1',
+		'image_url': 'http://cdn.newsapi.com.au/image/v1/26a2476dc344c27ac3e7670c9df711b2?width=650',
 		'tags': ['test_item_tag_1', 'test_item_tag_2']
 		}
 
