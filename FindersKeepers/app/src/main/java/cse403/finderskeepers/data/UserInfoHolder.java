@@ -16,7 +16,7 @@ import cse403.finderskeepers.UserAPIService;
  */
 
 public class UserInfoHolder {
-    public static final String SERVER_ADDRESS = "http://ec2-35-162-13-93.us-west-2.compute.amazonaws.com";
+    public static final String SERVER_ADDRESS = "http://ec2-35-163-100-235.us-west-2.compute.amazonaws.com";
     private static final UserInfoHolder instance = new UserInfoHolder();
 
     private UserAPIService userapiservice;
@@ -29,6 +29,14 @@ public class UserInfoHolder {
     private UserInfoHolder() {
         signInInfo = null;
     }
+
+    // Set the userapiservice object
+
+    public void setAPIService(UserAPIService userapiservice){ this.userapiservice = userapiservice; }
+
+    // Get the userapiservice object
+
+    public UserAPIService getAPIService(){ return userapiservice; }
 
     // Return the one instance of this object
     public static UserInfoHolder getInstance() {

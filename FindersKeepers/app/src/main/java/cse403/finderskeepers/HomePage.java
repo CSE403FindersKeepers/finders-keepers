@@ -57,6 +57,7 @@ public class HomePage extends AppCompatActivity {
                 .build();
 
         UserAPIService userapiservice = retrofit.create(UserAPIService.class);
+        UserInfoHolder.getInstance().setAPIService(userapiservice);
 
         setContentView(R.layout.activity_home_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,12 +70,44 @@ public class HomePage extends AppCompatActivity {
         ImageButton img = (ImageButton) findViewById(R.id.add_item);
         img.setOnClickListener(this.itemListener);
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_home_page, menu);
+        return true;
+    }
+
+    /**
+     * Listener which opens item addition page
+     */
+    private View.OnClickListener itemListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
+            startActivity(addItemIntent);
+        }
+    };
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        populateUserPage();
+    }
+
+    private void populateUserPage(){
         //get UID - replace this with UID from request
+
+        UserAPIService userapiservice = UserInfoHolder.getInstance().getAPIService();
+
         int UID = 0;
         try {
             Call<ResponseBody> userID = userapiservice.makeUser(
                     RequestBody.create(JSON,
                             new JSONObject().put("email", UserInfoHolder.getInstance().getEmail()).toString()));
+            Log.d("URL Accessed: ", userID.request().url().toString());
             Response<ResponseBody> doCall = userID.execute();
 
             Log.d("Response val for uid:", " " + doCall.code());
@@ -104,7 +137,7 @@ public class HomePage extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        JSONObject UserJSON;
+        JSONObject UserJSON = null;
         try {
             Call <ResponseBody> user = userapiservice.getUser(UID);
             Response<ResponseBody> doCall = user.execute();
@@ -140,9 +173,10 @@ public class HomePage extends AppCompatActivity {
         }
 
         //TODO: fetch tags - replace this array with populated one
-        JSONArray tags = null;
+
         String tagString = "";
         try {
+            JSONArray tags = UserJSON.getJSONArray("wishlist");
             if(UserJSON == null) throw new JSONException("OH NOE");
             UserJSON.getJSONArray("wishlist");
             for(int i = 0; i < tags.length() - 1; i++) {
@@ -205,24 +239,6 @@ public class HomePage extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home_page, menu);
-        return true;
-    }
-
-    /**
-     * Listener which opens item addition page
-     */
-    private View.OnClickListener itemListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
-            startActivity(addItemIntent);
-        }
-    };
 
     /**
      * Listener which opens item editing window
