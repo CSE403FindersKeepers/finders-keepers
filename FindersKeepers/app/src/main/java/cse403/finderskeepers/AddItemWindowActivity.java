@@ -1,5 +1,6 @@
 package cse403.finderskeepers;
 
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -79,6 +80,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.content_additem_page);
         userapiservice = UserInfoHolder.getInstance().getAPIService();
         Button upload = (Button) findViewById(R.id.upload_button); //TODO: URGENT: RETURNING NULL?!
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("ITEM_ID") && getIntent().getExtras().containsKey("TAGS")) {
@@ -124,7 +126,6 @@ public class AddItemWindowActivity extends AppCompatActivity {
             this.edit = false;
             imageSet = false;
         }
-        setContentView(R.layout.content_additem_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -158,17 +159,39 @@ public class AddItemWindowActivity extends AppCompatActivity {
             String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
             // create request JSON
-            JSONObject requestJSON = new JSONObject();
-            try {
-                requestJSON.put("tags", jsonTags);
-                requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
-                requestJSON.put("item_image_data", encodedImage);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return;
-            }
+            if(edit) {
+                JSONObject requestJSON = new JSONObject();
+                try {
+                    requestJSON.put("tags", jsonTags);
+                    requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
+                    requestJSON.put("item_image_data", encodedImage);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
 
-            RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+                RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+                Call<ResponseBody> itemUpdate = userapiservice.updateItem(requestBody);
+
+                try {
+                   Response<ResponseBody> updateResult = itemUpdate.execute();
+                    if (updateResult.code() != 200){
+                        throw new IOException("HTTP Error");
+                    }
+                    JSONObject updateResJSON = new JSONObject(updateResult.body().string());
+                    String err = updateResJSON.getString("error");
+                    if(!err.equals("")) throw new NetworkErrorException(err);
+
+                } catch (IOException e) {
+                    disconnectionError();
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (NetworkErrorException e) {
+                    e.printStackTrace();
+                }
+
+            }
 
             finish();
         }
