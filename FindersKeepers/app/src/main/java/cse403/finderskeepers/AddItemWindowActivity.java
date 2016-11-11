@@ -63,6 +63,15 @@ public class AddItemWindowActivity extends AppCompatActivity {
     // Is item being edited: true = being edited, false = being created
     private boolean edit;
 
+    // id of item, if edited
+    private int itemId;
+
+    // tags of item, if edited
+    private String tags;
+
+    // image of item, if being edited
+    private Bitmap image;
+
     //API Service for network communication
     private UserAPIService userapiservice;
 
@@ -102,7 +111,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
             layout.addView(deleteItemButton);
 
             try {
-                Response<ResponseBody> doCall = userapiservice.getItem(itemId).execute();
+                Response<ResponseBody> doCall = userapiservice.getItem(this.itemId).execute();
 
                 if (doCall.code() != 200) {
                     throw new IOException("OMG HTTP ERROR");
@@ -172,7 +181,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 JSONObject requestJSON = new JSONObject();
                 try {
                     requestJSON.put("tags", jsonTags);
-                    requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
+                    requestJSON.put("item_id", AddItemWindowActivity.this.itemId);
                     requestJSON.put("item_image_data", encodedImage);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -200,6 +209,39 @@ public class AddItemWindowActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+            } else if (!edit) {
+                JSONObject requestJSON = new JSONObject();
+                try {
+                    requestJSON.put("tags", jsonTags);
+                    requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
+                    requestJSON.put("item_image_data", encodedImage);
+                    requestJSON.put("title", "");
+                    requestJSON.put("description", "");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+                Call<ResponseBody> itemCreate = userapiservice.makeItem(requestBody);
+
+                try {
+                    Response<ResponseBody> updateResult = itemCreate.execute();
+                    if (updateResult.code() != 200){
+                        throw new IOException("HTTP Error " + updateResult.code());
+                    }
+                    JSONObject updateResJSON = new JSONObject(updateResult.body().string());
+                    String err = updateResJSON.getString("error");
+                    if(!err.equals("")) throw new NetworkErrorException(err);
+
+                } catch (IOException e) {
+                    disconnectionError();
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (NetworkErrorException e) {
+                    e.printStackTrace();
+                }
             }
 
             finish();
