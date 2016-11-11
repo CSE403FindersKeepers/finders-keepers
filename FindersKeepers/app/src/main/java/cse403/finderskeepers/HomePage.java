@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,6 +57,7 @@ public class HomePage extends AppCompatActivity {
                 .build();
 
         UserAPIService userapiservice = retrofit.create(UserAPIService.class);
+        UserInfoHolder.getInstance().setAPIService(userapiservice);
 
         setContentView(R.layout.activity_home_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -67,12 +70,44 @@ public class HomePage extends AppCompatActivity {
         ImageButton img = (ImageButton) findViewById(R.id.add_item);
         img.setOnClickListener(this.itemListener);
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_home_page, menu);
+        return true;
+    }
+
+    /**
+     * Listener which opens item addition page
+     */
+    private View.OnClickListener itemListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
+            startActivity(addItemIntent);
+        }
+    };
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        populateUserPage();
+    }
+
+    private void populateUserPage(){
         //get UID - replace this with UID from request
+
+        UserAPIService userapiservice = UserInfoHolder.getInstance().getAPIService();
+
         int UID = 0;
         try {
             Call<ResponseBody> userID = userapiservice.makeUser(
                     RequestBody.create(JSON,
                             new JSONObject().put("email", UserInfoHolder.getInstance().getEmail()).toString()));
+            Log.d("URL Accessed: ", userID.request().url().toString());
             Response<ResponseBody> doCall = userID.execute();
 
             Log.d("Response val for uid:", " " + doCall.code());
@@ -88,7 +123,6 @@ public class HomePage extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.toString();
             e.printStackTrace();
             finish();
         }
@@ -125,7 +159,7 @@ public class HomePage extends AppCompatActivity {
         }
 
         try {
-            if (getImg.toString() != "") {
+            if (getImg != null && !getImg.toString().equals("")) {
                 Bitmap image = BitmapFactory.decodeStream(getImg.openConnection().getInputStream());
                 UserInfoHolder.getInstance().setAvatar(image);
             }
@@ -139,9 +173,12 @@ public class HomePage extends AppCompatActivity {
         }
 
         //TODO: fetch tags - replace this array with populated one
-        JSONArray tags = new JSONArray();
+
         String tagString = "";
         try {
+            JSONArray tags = UserJSON.getJSONArray("wishlist");
+            if(UserJSON == null) throw new JSONException("OH NOE");
+            UserJSON.getJSONArray("wishlist");
             for(int i = 0; i < tags.length() - 1; i++) {
                 tagString += tags.getString(i) + " ";
             }
@@ -157,8 +194,8 @@ public class HomePage extends AppCompatActivity {
         //TODO: populate inventory - populate this JSONArray with array of items
 
         try {
-            JSONObject responseJSON = new JSONObject();
-            JSONArray inventory = responseJSON.getJSONArray("inventory");
+            if(UserJSON == null) throw new JSONException("OH NOE");
+            JSONArray inventory = UserJSON.getJSONArray("inventory");
             for (int i = 0; i < inventory.length(); i++) {
                 JSONObject item = inventory.getJSONObject(i);
                 URL itemImage = new URL(item.getString("image_url"));
@@ -192,6 +229,7 @@ public class HomePage extends AppCompatActivity {
                 if (itemBitmap != null) {
                     AddableItem newItemButton = new AddableItem(this, itemTagString, itemID);
                     newItemButton.setImageBitmap(itemBitmap);
+                    newItemButton.setOnClickListener(editItemListener);
                     items.addView(newItemButton, 0);
                 }
             }
@@ -202,21 +240,18 @@ public class HomePage extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home_page, menu);
-        return true;
-    }
-
     /**
-     * Listener which opens image gallery for user to select item image
+     * Listener which opens item editing window
      */
-    private View.OnClickListener itemListener = new View.OnClickListener() {
+    private View.OnClickListener editItemListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
-            finish();
+            Drawable drawable = ((AddableItem) view).getDrawable();
+            Bitmap image = ((BitmapDrawable) drawable).getBitmap();
+            addItemIntent.putExtra("IMAGE", image);
+            addItemIntent.putExtra("ITEM_ID", ((AddableItem) view).getItemId());
+            addItemIntent.putExtra("TAGS", ((AddableItem) view).getTags());
             startActivity(addItemIntent);
         }
     };

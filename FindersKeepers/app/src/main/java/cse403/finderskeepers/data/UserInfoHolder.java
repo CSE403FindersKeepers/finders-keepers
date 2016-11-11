@@ -5,6 +5,8 @@ import android.location.Location;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
+import cse403.finderskeepers.UserAPIService;
+
 /**
  * Created by Artem on 11/1/2016.
  *
@@ -14,9 +16,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
  */
 
 public class UserInfoHolder {
-    public static final String SERVER_ADDRESS = "http://ec2-35-162-13-93.us-west-2.compute.amazonaws.com";
+    public static final String SERVER_ADDRESS = "http://ec2-35-163-100-235.us-west-2.compute.amazonaws.com";
     private static final UserInfoHolder instance = new UserInfoHolder();
 
+    private UserAPIService userapiservice;
     private GoogleSignInResult signInInfo;
     private Bitmap avatar;
     private Location location;
@@ -26,6 +29,14 @@ public class UserInfoHolder {
     private UserInfoHolder() {
         signInInfo = null;
     }
+
+    // Set the userapiservice object
+
+    public void setAPIService(UserAPIService userapiservice){ this.userapiservice = userapiservice; }
+
+    // Get the userapiservice object
+
+    public UserAPIService getAPIService(){ return userapiservice; }
 
     // Return the one instance of this object
     public static UserInfoHolder getInstance() {
