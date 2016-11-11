@@ -218,7 +218,6 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
-            finish();
             startActivity(addItemIntent);
         }
     };
@@ -235,7 +234,6 @@ public class HomePage extends AppCompatActivity {
             addItemIntent.putExtra("IMAGE", image);
             addItemIntent.putExtra("ITEM_ID", ((AddableItem) view).getItemId());
             addItemIntent.putExtra("TAGS", ((AddableItem) view).getTags());
-            finish();
             startActivity(addItemIntent);
         }
     };
