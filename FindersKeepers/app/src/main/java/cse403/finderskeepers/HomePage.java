@@ -137,6 +137,12 @@ public class HomePage extends AppCompatActivity {
     private void populateUserPage(){
         //get UID - replace this with UID from request
 
+
+        LinearLayout items = (LinearLayout) findViewById(R.id.item_list);
+        while (items.getChildCount() > 1) {
+            items.removeViewAt(0);
+        }
+
         UserAPIService userapiservice = UserInfoHolder.getInstance().getAPIService();
 
         int UID = -1;
@@ -274,7 +280,6 @@ public class HomePage extends AppCompatActivity {
 
                 // Add item to layout as button
                 //TODO: Default image if itemBitmap == null
-                LinearLayout items = (LinearLayout) findViewById(R.id.item_list);
                 if (itemBitmap != null) {
                     AddableItem newItemButton = new AddableItem(this, itemTagString, itemID);
                     newItemButton.setImageBitmap(itemBitmap);
