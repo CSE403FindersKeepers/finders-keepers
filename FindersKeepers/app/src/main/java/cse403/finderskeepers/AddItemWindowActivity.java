@@ -58,19 +58,11 @@ public class AddItemWindowActivity extends AppCompatActivity {
 
     // Item info
 
-    private int itemId;
-
     // Is item being edited: true = being edited, false = being created
     private boolean edit;
 
     // id of item, if edited
     private int itemId;
-
-    // tags of item, if edited
-    private String tags;
-
-    // image of item, if being edited
-    private Bitmap image;
 
     //API Service for network communication
     private UserAPIService userapiservice;
@@ -209,7 +201,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-            } else if (!edit) {
+            } else {
                 JSONObject requestJSON = new JSONObject();
                 try {
                     requestJSON.put("tags", jsonTags);
