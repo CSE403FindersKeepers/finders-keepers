@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import abort, jsonify, request
 from db_handler import DBHandler
+import image_handler
 
 # create the app instance
 app = Flask(__name__)
@@ -34,13 +35,20 @@ class UserHandler():
 	# create_user: Takes in a json containing a user_id, name, zipcode, photo, and email returns a json with a null error field on success,
 	# and an error field with a message upon failure
 	def update_user(self,json):
-		# For when CDN is up and running
-		#url = image_handler.get_image(json['avatar'])
-		self.db_handler.cursor.execute("SELECT * FROM USER WHERE USER.id=" + str(json['user_id']))
+		# Make sure user exists
+		url = 'http://i.imgur.com/0bGFP47.jpg'
+		self.db_handler.cursor.execute("SELECT USER.photo FROM USER WHERE USER.id=" + str(json['user_id']))
 		data = self.db_handler.cursor.fetchone()
 		if data is None:
 			return jsonify(error="Error. User not found")
-		self.db_handler.cursor.execute("UPDATE USER SET name='" + json['name'] + "', zipcode=" + str(json['zipcode']) + ", photo='http://i.imgur.com/0bGFP47.jpg', email='" + json["email"] + "' WHERE id =" + str(json['user_id']))
-		# avatar is temporarily set to this default image: http://i.imgur.com/0bGFP47.jpg
+		else:
+			url = data[0]
+		# If avatar is null, leave the default value. Otherwise get a url
+		if json['avatar'] is not None:
+			url = image_handler.upload_image(json['avatar'])
+		# If image handler returns nothing due to an error, set url to be default image
+		if url is None:
+			url = data[0]
+		self.db_handler.cursor.execute("UPDATE USER SET name='" + json['name'] + "', zipcode=" + str(json['zipcode']) + ", photo='" + url + "', email='" + json["email"] + "' WHERE id =" + str(json['user_id']))
 		self.db_handler.connection.commit()
 		return jsonify(error=None)
