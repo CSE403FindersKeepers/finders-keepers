@@ -35,7 +35,7 @@ public interface UserAPIService {
     Call<ResponseBody> updateUser(@Body RequestBody request);
 
     @GET("/mock/api/get_item/{id}")
-    Call<ResponseBody> getItem(@Path("id") int id, @Body RequestBody request);
+    Call<ResponseBody> getItem(@Path("id") int id);
 
     @POST("/mock/api/create_item")
     Call<ResponseBody> getItem(@Body RequestBody request);

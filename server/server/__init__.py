@@ -2,7 +2,7 @@ from flask import Flask
 from flask import abort, jsonify, request
 from handlers.response_objects import Item, User, Trade, Error
 from handlers import user_handler
-from handlers import item_handler
+from handlers.item_handler import ItemHandler
 from handlers import trade_handler
 from handlers.db_handler import DBHandler
 
@@ -12,6 +12,7 @@ app = Flask(__name__)
 # create the MySQL database handler instance
 db_handler = DBHandler(app)
 user_handler = user_handler.UserHandler(db_handler)
+item_handler = ItemHandler(db_handler)
 
 # these are all the mock API end points.
 # ---------------------------------------------------------------------
@@ -237,13 +238,6 @@ def get_user(user_id):
 	
 	return user_handler.get_user(user_id)
 
-@app.route('/mock/api/get_item/<int:item_id>', methods=['GET'])
-def get_item(item_id):
-	if item_id > 9000:
-		return jsonify(error='mock_get_item: OH NO, ITEM IDS OVER 9000 DON\'T EXIST!')
-
-	return get_item(item_id)
-
 @app.route('/api/create_user', methods=['POST'])
 def create_user():
 	json = request.get_json()
@@ -261,6 +255,25 @@ def update_user():
 		abort(400, 'mock_update_user: invalid PUT data')
 	
 	return user_handler.update_user(json)
+
+#----------------------------------------------------------------#
+
+@app.route('/api/get_item/<int:item_id>', methods=['GET'])
+def get_item(item_id):
+	return item_handler.get_item(item_id)
+
+@app.route('/api/create_item/', methods=['POST'])
+def create_item():
+	json = request.get_json()
+	if not is_valid_json(('owner_id', 'title', 'description', 'tags', 'image_url'), json):
+		abort(400, 'create_item: invalid PUT data')
+	return item_handler.create_item(json)
+
+@app.route('/api/get_all_items/', methods=['GET'])
+def get_all_items():
+	return item_handler.get_all_items()
+
+#------------------------------ utility -------------------------------#
 
 def is_valid_json(expected_fields, json):
 	# check that there is json data

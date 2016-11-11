@@ -1,7 +1,9 @@
 package cse403.finderskeepers;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -39,9 +41,13 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static android.Manifest.*;
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
 import static cse403.finderskeepers.UserSettingsActivity.JSON;
 
 public class HomePage extends AppCompatActivity {
+
+    private static final int REQUEST_STUFF = 14582;
 
     private void disconnectionError(){
         Intent intent = new Intent(HomePage.this, DisconnectionError.class);
@@ -75,7 +81,23 @@ public class HomePage extends AppCompatActivity {
         ImageButton img = (ImageButton) findViewById(R.id.add_item);
         img.setOnClickListener(this.itemListener);
 
+        Button updateTagsButton = (Button) findViewById(R.id.update_tags);
+        updateTagsButton.setOnClickListener(this.updateTagsListener);
+       requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STUFF);
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch(requestCode){
+            case REQUEST_STUFF: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    return;
+                }
+                else {
+                    finish();
+                }
+            }
+        }
     }
 
     @Override
@@ -96,6 +118,16 @@ public class HomePage extends AppCompatActivity {
         }
     };
 
+    /**
+     * Listener for tag update button
+     */
+    private View.OnClickListener updateTagsListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    };
+
     @Override
     public void onStart(){
         super.onStart();
@@ -107,11 +139,11 @@ public class HomePage extends AppCompatActivity {
 
         UserAPIService userapiservice = UserInfoHolder.getInstance().getAPIService();
 
-        int UID = 0;
+        int UID = -1;
         try {
-            Call<ResponseBody> userID = userapiservice.makeUser(
-                    RequestBody.create(JSON,
-                            new JSONObject().put("email", UserInfoHolder.getInstance().getEmail()).toString()));
+            String instr = new JSONObject().put("email", UserInfoHolder.getInstance().getEmail()).toString();
+            Log.d("JSON sent: ", instr);
+            Call<ResponseBody> userID = userapiservice.makeUser(RequestBody.create(JSON, instr));
             Log.d("URL Accessed: ", userID.request().url().toString());
             Response<ResponseBody> doCall = userID.execute();
 
@@ -156,8 +188,11 @@ public class HomePage extends AppCompatActivity {
                 throw new IOException("OMG HTTP \n\n\n\n\n\n\nn\n\n ERRUR");
             }
 
+            String jsonval = doCall.body().string();
 
-            UserJSON = new JSONObject(doCall.body().string());
+            Log.d("UserJSON String:", jsonval);
+
+            UserJSON = new JSONObject(jsonval);
             getImg = new URL(UserJSON.getString("image_url"));
 
         } catch (JSONException e) {
@@ -187,8 +222,8 @@ public class HomePage extends AppCompatActivity {
 
         String tagString = "";
         try {
-            JSONArray tags = UserJSON.getJSONArray("wishlist");
             if(UserJSON == null) throw new JSONException("OH NOE");
+            JSONArray tags = UserJSON.getJSONArray("wishlist");
             UserJSON.getJSONArray("wishlist");
             for(int i = 0; i < tags.length() - 1; i++) {
                 tagString += tags.getString(i) + " ";
@@ -220,7 +255,7 @@ public class HomePage extends AppCompatActivity {
 
                 // populate tag string
                 try {
-                    for (int j = 0; i < itemTags.length() - 1; j++) {
+                    for (int j = 0; j < itemTags.length() - 1; j++) {
                         itemTagString += itemTags.getString(j) + " ";
                     }
                     itemTagString += itemTags.getString(itemTags.length() - 1);
@@ -263,11 +298,16 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
+            Log.d("spot1", "hi!");
             Drawable drawable = ((AddableItem) view).getDrawable();
+            Log.d("spot2", "hi!");
             Bitmap image = ((BitmapDrawable) drawable).getBitmap();
-            addItemIntent.putExtra("IMAGE", image);
+            Log.d("spot3", "hi!");
+            Log.d("spot4", "hi!");
             addItemIntent.putExtra("ITEM_ID", ((AddableItem) view).getItemId());
+            Log.d("spot5", "hi!");
             addItemIntent.putExtra("TAGS", ((AddableItem) view).getTags());
+            Log.d("spot6", "hi!");
             startActivity(addItemIntent);
         }
     };

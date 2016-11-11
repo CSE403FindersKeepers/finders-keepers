@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -34,6 +37,11 @@ import java.util.Scanner;
 import cse403.finderskeepers.data.UserInfoHolder;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
+
+import static cse403.finderskeepers.UserSettingsActivity.JSON;
 
 /**
  * Created by Jared on 11/8/2016.
@@ -60,30 +68,68 @@ public class AddItemWindowActivity extends AppCompatActivity {
     // image of item, if being edited
     private Bitmap image;
 
+    //API Service for network communication
+    private UserAPIService userapiservice;
+
+    private void disconnectionError(){
+        Intent intent = new Intent(AddItemWindowActivity.this, DisconnectionError.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().getExtras().containsKey("ITEM_ID") && getIntent().getExtras().containsKey("TAGS")) {
+        userapiservice = UserInfoHolder.getInstance().getAPIService();
+        Button upload = (Button) findViewById(R.id.upload_button); //TODO: URGENT: RETURNING NULL?!
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("ITEM_ID") && getIntent().getExtras().containsKey("TAGS")) {
+
             this.itemId = getIntent().getExtras().getInt("ITEM_ID");
             this.tags = getIntent().getExtras().getString("TAGS");
-            this.image = (Bitmap) getIntent().getExtras().get("IMAGE");
+            this.image = null;
+
+            try {
+                Response<ResponseBody> doCall = userapiservice.getItem(this.itemId).execute();
+
+                if (doCall.code() != 200) {
+                    throw new IOException("OMG HTTP ERROR");
+                }
+
+                String jsonval = doCall.body().string();
+                JSONObject itemObj = new JSONObject(jsonval);
+                URL imgloc = new URL(itemObj.getString("image_url"));
+
+                try {
+                    if (imgloc != null && !imgloc.toString().equals("")) {
+                        this.image = BitmapFactory.decodeStream(imgloc.openConnection().getInputStream());
+                    }
+                } catch (IOException e) {
+                    disconnectionError();
+                    e.printStackTrace();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             // Change text of add item button if item info exists
-            Button addItemButton = (Button) findViewById(R.id.upload_button);
-            addItemButton.setText("Update Item");
+            if(upload != null) upload.setText("Update Item");
             this.edit = true;
+            ImageView img = (ImageView) findViewById(R.id.add_item_img);
+            img.setImageBitmap(this.image);
+            imageSet = true;
         } else {
             this.itemId = 0;
             this.edit = false;
+            imageSet = false;
         }
-        imageSet = false;
         setContentView(R.layout.content_additem_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ImageButton addItem = (ImageButton) findViewById(R.id.add_item_img);
-        Button upload = (Button) findViewById(R.id.upload_button);
-        upload.setOnClickListener(this.uploadItemListener);
+        if (upload != null) upload.setOnClickListener(this.uploadItemListener);
         addItem.setOnClickListener(this.itemPicListener);
     }
 
