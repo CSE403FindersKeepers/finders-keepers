@@ -102,11 +102,11 @@ public class HomePage extends AppCompatActivity {
 
         UserAPIService userapiservice = UserInfoHolder.getInstance().getAPIService();
 
-        int UID = 0;
+        int UID = -1;
         try {
-            Call<ResponseBody> userID = userapiservice.makeUser(
-                    RequestBody.create(JSON,
-                            new JSONObject().put("email", UserInfoHolder.getInstance().getEmail()).toString()));
+            String instr = new JSONObject().put("email", UserInfoHolder.getInstance().getEmail()).toString();
+            Log.d("JSON sent: ", instr);
+            Call<ResponseBody> userID = userapiservice.makeUser(RequestBody.create(JSON, instr));
             Log.d("URL Accessed: ", userID.request().url().toString());
             Response<ResponseBody> doCall = userID.execute();
 
@@ -148,6 +148,7 @@ public class HomePage extends AppCompatActivity {
                 throw new IOException("OMG HTTP \n\n\n\n\n\n\nn\n\n ERRUR");
             }
 
+            Log.d("UserJSON String:", doCall.body().string());
 
             UserJSON = new JSONObject(doCall.body().string());
             getImg = new URL(UserJSON.getString("image_url"));
@@ -176,8 +177,8 @@ public class HomePage extends AppCompatActivity {
 
         String tagString = "";
         try {
-            JSONArray tags = UserJSON.getJSONArray("wishlist");
             if(UserJSON == null) throw new JSONException("OH NOE");
+            JSONArray tags = UserJSON.getJSONArray("wishlist");
             UserJSON.getJSONArray("wishlist");
             for(int i = 0; i < tags.length() - 1; i++) {
                 tagString += tags.getString(i) + " ";
