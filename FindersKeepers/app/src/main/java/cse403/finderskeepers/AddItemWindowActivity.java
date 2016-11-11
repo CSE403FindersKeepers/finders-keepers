@@ -163,7 +163,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             ImageButton addItem = (ImageButton) findViewById(R.id.add_item_img);
             Drawable drawable = addItem.getDrawable();
-            Bitmap image = ((BitmapDrawable) drawable).getBitmap();
+            Bitmap image = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), 500, 500, true);
             image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] imageBytes = stream.toByteArray();
             String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
