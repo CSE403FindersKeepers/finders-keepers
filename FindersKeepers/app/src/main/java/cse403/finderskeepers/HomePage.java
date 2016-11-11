@@ -139,9 +139,11 @@ public class HomePage extends AppCompatActivity {
         }
 
         //TODO: fetch tags - replace this array with populated one
-        JSONArray tags = new JSONArray();
+        JSONArray tags = null;
         String tagString = "";
         try {
+            if(UserJSON == null) throw new JSONException("OH NOE");
+            UserJSON.getJSONArray("wishlist");
             for(int i = 0; i < tags.length() - 1; i++) {
                 tagString += tags.getString(i) + " ";
             }
@@ -157,8 +159,8 @@ public class HomePage extends AppCompatActivity {
         //TODO: populate inventory - populate this JSONArray with array of items
 
         try {
-            JSONObject responseJSON = new JSONObject();
-            JSONArray inventory = responseJSON.getJSONArray("inventory");
+            if(UserJSON == null) throw new JSONException("OH NOE");
+            JSONArray inventory = UserJSON.getJSONArray("inventory");
             for (int i = 0; i < inventory.length(); i++) {
                 JSONObject item = inventory.getJSONObject(i);
                 URL itemImage = new URL(item.getString("image_url"));
