@@ -24,6 +24,9 @@ item_handler = ItemHandler(db_handler)
 # create_user
 # update_user
 # delete_user
+# get_wishlist
+# set_wishlist
+# get_inventory
 # * helper methods
 
 @app.route('/mock/api/get_user/<int:user_id>', methods=['GET'])
@@ -32,7 +35,7 @@ def mock_get_user(user_id):
 		return jsonify(error='mock_get_user: OH NO, USERS OVER 9000 DON\'T EXIST!')
 
 	# just a dummy value for now
-	return jsonify(make_dummy_user(user_id))
+	return jsonify(user=make_dummy_user(user_id), error='')
 
 @app.route('/mock/api/create_user', methods=['POST'])
 def mock_create_user():
@@ -42,7 +45,7 @@ def mock_create_user():
 	if not is_valid_json(['email'], json):
 		abort(400, 'mock_create_user: invalid POST data')
 
-	return jsonify(user_id='9000')
+	return jsonify(user_id='9000', error='')
 
 @app.route('/mock/api/update_user', methods=['PUT'])
 def mock_update_user():
@@ -52,21 +55,27 @@ def mock_update_user():
 	if not is_valid_json(['user_id', 'name', 'zipcode', 'avatar'], json):
 		abort(400, 'mock_update_user: invalid PUT data')
 	
-	return jsonify(error=None)
+	return jsonify(error='')
 
 @app.route('/mock/api/delete_user/<int:user_id>', methods=['DELETE'])
 def mock_delete_user(user_id):
 	if user_id > 9000:
 		return jsonify(error='mock_delete_user: OH NO, USERS OVER 9000 DON\'T EXIST!')
 
-	return jsonify(error=None)
+	return jsonify(error='')
 
 @app.route('/mock/api/get_wishlist/<int:user_id>', methods=['GET'])
 def mock_get_wishlist(user_id):
 	if user_id > 9000:
 		return jsonify(error='mock_delete_user: OH NO, USERS OVER 9000 DON\'T EXIST!')
 
-	return jsonify(['cool_stuff', 'awful_stuff', 'a_banana_for_scale'])
+	return jsonify(
+		wishlist=[
+			'cool_stuff',
+			'awful_stuff',
+			'a_banana_for_scale']
+		error=''
+		)
 	
 @app.route('/mock/api/set_wishlist', methods=['PUT'])
 def mock_set_wishlist():
@@ -75,9 +84,21 @@ def mock_set_wishlist():
 	if not is_valid_json(['user_id', 'wishlist'], json):
 		abort(400, 'mock_set_wishlist: invalid PUT data')
 	
-	return jsonify(error=None)
-
+	return jsonify(error='')
 	
+@app.route('/mock/api/get_inventory/<int:user_id>', methods=['GET'])
+def mock_get_inventory(user_id):
+	if user_id > 9000:
+		return jsonify(error='mock_get_inventory: OH NO, USERS OVER 9000 DON\'T EXIST!')
+
+	return jsonify(
+		items=[
+			make_dummy_item(1),
+			make_dummy_item(2),
+			make_dummy_item(3)],
+		error=''
+		)
+
 # helper method
 def make_dummy_user(user_id):
 	return {
@@ -89,8 +110,7 @@ def make_dummy_user(user_id):
 		'wishlist': ['test_tag_1', 'test_tag_2'],
 		'inventory': [
 			make_dummy_item(1, user_id),
-			make_dummy_item(2, user_id)
-			]
+			make_dummy_item(2, user_id)]
 		}
 
 # ------ ITEM ------
@@ -98,7 +118,6 @@ def make_dummy_user(user_id):
 # create_item
 # update_item
 # delete_item
-# get_inventory
 # * helper methods
 
 @app.route('/mock/api/get_item/<int:item_id>', methods=['GET'])
@@ -106,26 +125,26 @@ def mock_get_item(item_id):
 	if item_id > 9000:
 		return jsonify(error='mock_get_item: OH NO, ITEM IDS OVER 9000 DON\'T EXIST!')
 
-	return jsonify(make_dummy_item(item_id))
+	return jsonify(item=make_dummy_item(item_id), error='')
 
 
 @app.route('/mock/api/create_item', methods=['POST'])
 def mock_create_item():
 	json = request.get_json()
 
-	if not is_valid_json(['name', 'tags', 'item_image_data'], json):
+	if not is_valid_json(['user_id', 'title', 'description', 'tags', 'item_image'], json):
 		abort(400, 'mock_create_item: invalid POST data')
 
-	return jsonify(item_id=100, item_url='i.imgur.com/ibsZi5R.png', error=None)
+	return jsonify(item_id=100, item_image_url='i.imgur.com/ibsZi5R.png', error='')
 
 @app.route('/mock/api/update_item', methods=['PUT'])
 def mock_update_item():
 	json = request.get_json()
 
-	if not is_valid_json([], json):
+	if not is_valid_json(['item_id'], json):
 		abort(400, 'mock_update_item: invalid PUT data')
 
-	return jsonify(error=None)
+	return jsonify(error='')
 
 @app.route('/mock/api/delete_item/<int:item_id>', methods=['DELETE'])
 def mock_delete_item(item_id):
@@ -133,17 +152,6 @@ def mock_delete_item(item_id):
 		return jsonify(error='mock_delete_item: OH NO, ITEM IDS OVER 9000 DON\'T EXIST!')
 
 	return jsonify(error='')
-
-@app.route('/mock/api/get_inventory/<int:user_id>', methods=['GET'])
-def mock_get_inventory(user_id):
-	if user_id > 9000:
-		return jsonify(error='mock_get_inventory: OH NO, USERS OVER 9000 DON\'T EXIST!')
-
-	return jsonify([
-		make_dummy_item(1),
-		make_dummy_item(2),
-		make_dummy_item(3)
-		])
 
 # helper method
 def make_dummy_item(item_id, user_id=1234):
@@ -168,27 +176,29 @@ def mock_get_trade(trade_id):
 	if trade_id > 9000:
 		return jsonify(error='mock_get_trade: OH NO, TRADE IDS OVER 9000 DON\'T EXIST!')
 	
-	return jsonify(make_dummy_trade(trade_id))
+	return jsonify(trade=make_dummy_trade(trade_id), error='')
 
 @app.route('/mock/api/get_trades/<int:user_id>', methods=['GET'])
 def mock_get_trades(user_id):
 	if user_id > 9000:
 		return jsonify(error='mock_get_trades: OH NO, USERS OVER 9000 DON\'T EXIST!')
 	
-	return jsonify([
-		make_dummy_trade(1),
-		make_dummy_trade(2),
-		make_dummy_trade(3)
-		])
+	return jsonify(
+		trades=[
+			make_dummy_trade(1),
+			make_dummy_trade(2),
+			make_dummy_trade(3)]
+		error=''
+		)
 
 @app.route('/mock/api/start_trade', methods=['POST'])
 def mock_start_trade():
 	json = request.get_json()
 
-	if not is_valid_json(['user_id', 'recipient_id' ,'offered_items' ,'requested_items'], json):
+	if not is_valid_json(['initiator_id', 'recipient_id' ,'offered_items' ,'requested_items'], json):
 		abort(400, 'mock_start_trade: invalid POST data')
 
-	return jsonify(error=None)
+	return jsonify(trade_id=100, error='')
 
 @app.route('/mock/api/accept_trade', methods=['PUT'])
 def mock_accept_trade():
@@ -197,7 +207,7 @@ def mock_accept_trade():
 	if not is_valid_json(['user_id', 'trade_id'], json):
 		abort(400, 'mock_accept_trade: invalid PUT data')
 
-	return jsonify(error=None)
+	return jsonify(error='')
 
 @app.route('/mock/api/deny_trade', methods=['PUT'])
 def mock_deny_trade():
@@ -206,7 +216,7 @@ def mock_deny_trade():
 	if not is_valid_json(['user_id', 'trade_id'], json):
 		abort(400, 'mock_deny_trade: invalid PUT data')
 
-	return jsonify(error=None)
+	return jsonify(error='')
 
 # helper method
 def make_dummy_trade(trade_id):
@@ -217,11 +227,9 @@ def make_dummy_trade(trade_id):
 		'requested_items': [
 			make_dummy_item(1),
 			make_dummy_item(2),
-			make_dummy_item(3)
-			],
+			make_dummy_item(3)],
 		'offered_items': [
-			make_dummy_item(1000)
-			],
+			make_dummy_item(1000)],
 		'status': '',
 	}
 
@@ -242,7 +250,7 @@ def get_user(user_id):
 def create_user():
 	json = request.get_json()
 	# check for malformed json request
-	if not is_valid_json(["email"], json):
+	if not is_valid_json(['email'], json):
 		abort(400, 'mock_create_user: invalid POST data')
 	return user_handler.create_user(json)
 
@@ -288,5 +296,5 @@ def is_valid_json(expected_fields, json):
 	return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 	app.run()
