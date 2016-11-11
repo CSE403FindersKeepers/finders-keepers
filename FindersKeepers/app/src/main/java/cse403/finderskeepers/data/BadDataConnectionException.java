@@ -5,4 +5,5 @@ package cse403.finderskeepers.data;
  */
 
 public class BadDataConnectionException extends Exception {
+
 }
