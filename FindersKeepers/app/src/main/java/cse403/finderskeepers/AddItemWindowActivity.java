@@ -41,21 +41,45 @@ import okhttp3.RequestBody;
 
 public class AddItemWindowActivity extends AppCompatActivity {
 
-    private List<String> tags;
     private int GET_IMAGE = 1;
     private static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     private boolean imageSet;
 
+    // Item info
+
+    // Is item being edited: true = being edited, false = being created
+    private boolean edit;
+
+    // id of item, if edited
+    private int itemId;
+
+    // tags of item, if edited
+    private String tags;
+
+    // image of item, if being edited
+    private Bitmap image;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().getExtras().containsKey("ITEM_ID") && getIntent().getExtras().containsKey("TAGS")) {
+            this.itemId = getIntent().getExtras().getInt("ITEM_ID");
+            this.tags = getIntent().getExtras().getString("TAGS");
+            this.image = (Bitmap) getIntent().getExtras().get("IMAGE");
+
+            // Change text of add item button if item info exists
+            Button addItemButton = (Button) findViewById(R.id.upload_button);
+            addItemButton.setText("Update Item");
+            this.edit = true;
+        } else {
+            this.itemId = 0;
+            this.edit = false;
+        }
         imageSet = false;
         setContentView(R.layout.content_additem_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        tags = new ArrayList<>();
 
         ImageButton addItem = (ImageButton) findViewById(R.id.add_item_img);
         Button upload = (Button) findViewById(R.id.upload_button);

@@ -88,7 +88,6 @@ public class HomePage extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.toString();
             e.printStackTrace();
             finish();
         }
@@ -103,7 +102,7 @@ public class HomePage extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        JSONObject UserJSON = null;
+        JSONObject UserJSON;
         try {
             Call <ResponseBody> user = userapiservice.getUser(UID);
             Response<ResponseBody> doCall = user.execute();
@@ -125,7 +124,7 @@ public class HomePage extends AppCompatActivity {
         }
 
         try {
-            if (getImg.toString() != "") {
+            if (getImg != null && !getImg.toString().equals("")) {
                 Bitmap image = BitmapFactory.decodeStream(getImg.openConnection().getInputStream());
                 UserInfoHolder.getInstance().setAvatar(image);
             }
