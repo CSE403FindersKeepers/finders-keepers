@@ -241,6 +241,12 @@ def get_user(user_id):
 		id, name, photo, zipcode, email = user
 		return jsonify(id=id, name=name, photo=photo, zipcode=zipcode, email=email)
 
+@app.route('/mock/api/get_item/<int:item_id>', methods=['GET'])
+def get_item(item_id):
+	if item_id > 9000:
+		return jsonify(error='mock_get_item: OH NO, ITEM IDS OVER 9000 DON\'T EXIST!')
+
+	return get_item(item_id)
 
 def is_valid_json(expected_fields, json):
 	# check that there is json data
@@ -255,3 +261,5 @@ def is_valid_json(expected_fields, json):
 	return True
 
 
+if __name__ == "__main__":
+	app.run()
