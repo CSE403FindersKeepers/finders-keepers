@@ -83,7 +83,7 @@ def make_dummy_user(user_id):
 		'zipcode': 12345,
 		'name': 'test_user_' + str(user_id),
 		'email': 'test_email_' + str(user_id) + '@email.com',
-		'image_url': 'pretend_this_is_a_photo_URL',
+		'image_url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hausziege_04.jpg/220px-Hausziege_04.jpg',
 		'wishlist': ['test_tag_1', 'test_tag_2'],
 		'inventory': [
 			make_dummy_item(1, user_id),
