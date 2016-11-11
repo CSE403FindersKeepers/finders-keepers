@@ -113,7 +113,7 @@ def mock_get_item(item_id):
 def mock_create_item():
 	json = request.get_json()
 
-	if not is_valid_json(['name', 'tags', 'item_image_data'], json):
+	if not is_valid_json(['title', 'tags', 'item_image_data', 'user_id', 'description'], json):
 		abort(400, 'mock_create_item: invalid POST data')
 
 	return jsonify(item_id=100, item_url='i.imgur.com/ibsZi5R.png', error=None)
@@ -122,7 +122,7 @@ def mock_create_item():
 def mock_update_item():
 	json = request.get_json()
 
-	if not is_valid_json([], json):
+	if not is_valid_json(['tags', 'item_id', 'item_image_data'], json):
 		abort(400, 'mock_update_item: invalid PUT data')
 
 	return jsonify(error=None)

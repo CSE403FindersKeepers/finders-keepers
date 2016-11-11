@@ -163,7 +163,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 JSONObject requestJSON = new JSONObject();
                 try {
                     requestJSON.put("tags", jsonTags);
-                    requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
+                    requestJSON.put("item_id", AddItemWindowActivity.this.itemId);
                     requestJSON.put("item_image_data", encodedImage);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -210,7 +210,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 try {
                     Response<ResponseBody> updateResult = itemCreate.execute();
                     if (updateResult.code() != 200){
-                        throw new IOException("HTTP Error");
+                        throw new IOException("HTTP Error " + updateResult.code());
                     }
                     JSONObject updateResJSON = new JSONObject(updateResult.body().string());
                     String err = updateResJSON.getString("error");
