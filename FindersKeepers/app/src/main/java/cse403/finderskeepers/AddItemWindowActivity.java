@@ -63,7 +63,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().getExtras().containsKey("ITEM_ID") && getIntent().getExtras().containsKey("TAGS")) {
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("ITEM_ID") && getIntent().getExtras().containsKey("TAGS")) {
             this.itemId = getIntent().getExtras().getInt("ITEM_ID");
             this.tags = getIntent().getExtras().getString("TAGS");
             this.image = (Bitmap) getIntent().getExtras().get("IMAGE");

@@ -1,7 +1,9 @@
 package cse403.finderskeepers;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -39,6 +41,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
 import static cse403.finderskeepers.UserSettingsActivity.JSON;
 
 public class HomePage extends AppCompatActivity {
@@ -74,6 +77,8 @@ public class HomePage extends AppCompatActivity {
         //Button with a click listener which allows user to add an item
         ImageButton img = (ImageButton) findViewById(R.id.add_item);
         img.setOnClickListener(this.itemListener);
+
+
 
 
     }
@@ -156,9 +161,11 @@ public class HomePage extends AppCompatActivity {
                 throw new IOException("OMG HTTP \n\n\n\n\n\n\nn\n\n ERRUR");
             }
 
-            Log.d("UserJSON String:", doCall.body().string());
+            String jsonval = doCall.body().string();
 
-            UserJSON = new JSONObject(doCall.body().string());
+            Log.d("UserJSON String:", jsonval);
+
+            UserJSON = new JSONObject(jsonval);
             getImg = new URL(UserJSON.getString("image_url"));
 
         } catch (JSONException e) {
@@ -221,7 +228,7 @@ public class HomePage extends AppCompatActivity {
 
                 // populate tag string
                 try {
-                    for (int j = 0; i < itemTags.length() - 1; j++) {
+                    for (int j = 0; j < itemTags.length() - 1; j++) {
                         itemTagString += itemTags.getString(j) + " ";
                     }
                     itemTagString += itemTags.getString(itemTags.length() - 1);
