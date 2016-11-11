@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -191,6 +193,7 @@ public class HomePage extends AppCompatActivity {
                 if (itemBitmap != null) {
                     AddableItem newItemButton = new AddableItem(this, itemTagString, itemID);
                     newItemButton.setImageBitmap(itemBitmap);
+                    newItemButton.setOnClickListener(editItemListener);
                     items.addView(newItemButton, 0);
                 }
             }
@@ -209,12 +212,29 @@ public class HomePage extends AppCompatActivity {
     }
 
     /**
-     * Listener which opens image gallery for user to select item image
+     * Listener which opens item addition page
      */
     private View.OnClickListener itemListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
+            finish();
+            startActivity(addItemIntent);
+        }
+    };
+
+    /**
+     * Listener which opens item editing window
+     */
+    private View.OnClickListener editItemListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
+            Drawable drawable = ((AddableItem) view).getDrawable();
+            Bitmap image = ((BitmapDrawable) drawable).getBitmap();
+            addItemIntent.putExtra("IMAGE", image);
+            addItemIntent.putExtra("ITEM_ID", ((AddableItem) view).getItemId());
+            addItemIntent.putExtra("TAGS", ((AddableItem) view).getTags());
             finish();
             startActivity(addItemIntent);
         }
