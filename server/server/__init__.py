@@ -11,11 +11,8 @@ app = Flask(__name__)
 
 # create the MySQL database handler instance
 db_handler = DBHandler(app)
-<<<<<<< Updated upstream
 user_handler = user_handler.UserHandler(db_handler)
-=======
 item_handler = ItemHandler(db_handler)
->>>>>>> Stashed changes
 
 # these are all the mock API end points.
 # ---------------------------------------------------------------------
