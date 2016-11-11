@@ -43,6 +43,11 @@ import static cse403.finderskeepers.UserSettingsActivity.JSON;
 
 public class HomePage extends AppCompatActivity {
 
+    private void disconnectionError(){
+        Intent intent = new Intent(HomePage.this, DisconnectionError.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,8 +126,10 @@ public class HomePage extends AppCompatActivity {
             UID = UIDJson.getInt("user_id");
 
         } catch (JSONException e) {
+            disconnectionError();
             e.printStackTrace();
         } catch (IOException e) {
+            disconnectionError();
             e.printStackTrace();
             finish();
         }
@@ -134,6 +141,7 @@ public class HomePage extends AppCompatActivity {
         try {
             getImg = new URL("http://i.imgur.com/ibsZi5R.png");
         } catch (MalformedURLException e) {
+            disconnectionError();
             e.printStackTrace();
         }
 
@@ -153,8 +161,10 @@ public class HomePage extends AppCompatActivity {
             getImg = new URL(UserJSON.getString("image_url"));
 
         } catch (JSONException e) {
+            disconnectionError();
             e.printStackTrace();
         } catch (IOException e) {
+            disconnectionError();
             e.printStackTrace();
         }
 
@@ -164,6 +174,7 @@ public class HomePage extends AppCompatActivity {
                 UserInfoHolder.getInstance().setAvatar(image);
             }
         } catch(IOException e) {
+            disconnectionError();
             e.printStackTrace();
         }
 
@@ -184,6 +195,7 @@ public class HomePage extends AppCompatActivity {
             }
             tagString += tags.getString(tags.length() - 1);
         } catch (JSONException e) {
+            disconnectionError();
             e.printStackTrace();
         }
 
@@ -213,6 +225,7 @@ public class HomePage extends AppCompatActivity {
                     }
                     itemTagString += itemTags.getString(itemTags.length() - 1);
                 } catch (JSONException e) {
+                    disconnectionError();
                     e.printStackTrace();
                 }
 
@@ -220,6 +233,7 @@ public class HomePage extends AppCompatActivity {
                 try {
                     itemBitmap = BitmapFactory.decodeStream(itemImage.openConnection().getInputStream());
                 } catch (IOException e) {
+                    disconnectionError();
                     e.printStackTrace();
                 }
 
@@ -234,8 +248,10 @@ public class HomePage extends AppCompatActivity {
                 }
             }
         } catch (JSONException e) {
+            disconnectionError();
             e.printStackTrace();
         } catch (MalformedURLException e) {
+            disconnectionError();
             e.printStackTrace();
         }
     }
@@ -255,6 +271,11 @@ public class HomePage extends AppCompatActivity {
             startActivity(addItemIntent);
         }
     };
+
+    private void err(){
+        Intent intent = new Intent(HomePage.this, DisconnectionError.class);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
