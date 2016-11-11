@@ -82,7 +82,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_additem_page);
         userapiservice = UserInfoHolder.getInstance().getAPIService();
-        Button upload = (Button) findViewById(R.id.upload_button); //TODO: URGENT: RETURNING NULL?!
+        Button upload = (Button) findViewById(R.id.upload_button);
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("ITEM_ID") && getIntent().getExtras().containsKey("TAGS")) {
 
             this.itemId = getIntent().getExtras().getInt("ITEM_ID");
@@ -191,6 +191,39 @@ public class AddItemWindowActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+            } else if (!edit) {
+                JSONObject requestJSON = new JSONObject();
+                try {
+                    requestJSON.put("tags", jsonTags);
+                    requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
+                    requestJSON.put("item_image_data", encodedImage);
+                    requestJSON.put("title", "");
+                    requestJSON.put("description", "");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+                Call<ResponseBody> itemCreate = userapiservice.makeItem(requestBody);
+
+                try {
+                    Response<ResponseBody> updateResult = itemCreate.execute();
+                    if (updateResult.code() != 200){
+                        throw new IOException("HTTP Error");
+                    }
+                    JSONObject updateResJSON = new JSONObject(updateResult.body().string());
+                    String err = updateResJSON.getString("error");
+                    if(!err.equals("")) throw new NetworkErrorException(err);
+
+                } catch (IOException e) {
+                    disconnectionError();
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (NetworkErrorException e) {
+                    e.printStackTrace();
+                }
             }
 
             finish();
