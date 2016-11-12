@@ -81,6 +81,6 @@ class UserHandler():
 		# If image handler returns nothing due to an error, set url to be default image
 		if url is None:
 			url = data[0]
-		self.db_handler.cursor.execute("UPDATE USER SET name='" + json['name'] + "', zipcode=" + str(json['zipcode']) + ", photo='" + url + "', email='" + json["email"] + "' WHERE id =" + str(json['user_id']))
+		self.db_handler.cursor.execute("UPDATE USER SET name='" + json['name'] + "', zipcode=" + str(json['zipcode']) + ", photo='" + url + "' WHERE id =" + str(json['user_id']))
 		self.db_handler.connection.commit()
 		return jsonify(error=None)
