@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -141,6 +142,7 @@ public class HomePage extends AppCompatActivity {
                 e.printStackTrace();
                 return;
             }
+            Log.d("WishlistJSON: ", requestJSON.toString() );
             RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
             Call<ResponseBody> updateTagsCall = userapiservice.setWishlist(requestBody);
             try {
@@ -262,7 +264,8 @@ public class HomePage extends AppCompatActivity {
             for(int i = 0; i < tags.length() - 1; i++) {
                 tagString += tags.getString(i) + " ";
             }
-            tagString += tags.getString(tags.length() - 1);
+            if(tags.length() > 0) tagString += tags.getString(tags.length() - 1);
+            else tagString = "";
         } catch (JSONException e) {
             disconnectionError();
             e.printStackTrace();
@@ -310,7 +313,12 @@ public class HomePage extends AppCompatActivity {
                 //TODO: Default image if itemBitmap == null
                 if (itemBitmap != null) {
                     AddableItem newItemButton = new AddableItem(this, itemTagString, itemID);
+                    LinearLayout.LayoutParams params = new LinearLayout
+                            .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     newItemButton.setImageBitmap(itemBitmap);
+                    newItemButton.setLayoutParams(params);
+                    newItemButton.setAdjustViewBounds(true);
+                    newItemButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     newItemButton.setOnClickListener(editItemListener);
                     items.addView(newItemButton, 0);
                 }
