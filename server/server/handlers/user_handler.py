@@ -40,7 +40,18 @@ class UserHandler():
 						"image_url": photo,
 						"tags": [tag1, tag2]
 					})
-			return jsonify(user_id=data[0], name=data[1], image_url=data[2], zipcode=data[3], email=data[4], wishlist=[], inventory=inventory)
+
+			user = {
+				"user_id": data[0],
+				"name": data[1],
+				"image_url": data[2],
+				"zipcode": data[3],
+				"email": data[4],
+				"wishlist": [], 
+				"inventory": inventory
+			}
+
+			return jsonify(user=user)
 
 	# create_user: Takes in a json containing an email, returns a user id. User id is -1 if there is an error
 	def create_user(self, json):

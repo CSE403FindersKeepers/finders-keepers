@@ -32,14 +32,14 @@ class ItemHandler():
 
 	def create_item(self, json):
 		query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1, tag2) VALUES ("
-		query += concat_params(json['owner_id'], json['title'], json['description'], json['image_url'], json['tags'][0], json['tags'][1])
+		query += concat_params(json['user_id'], json['title'], json['description'], json['item_image'], json['tags'][0], json['tags'][1])
 		query += ")"
 
 		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
 		
 		query = "SELECT id FROM ITEM WHERE"
-		query += "ownerId=" + str(json['owner_id'])
+		query += "ownerId=" + str(json['user_id'])
 		query += "title=" + str(json['title'])
 		item = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
