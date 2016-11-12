@@ -25,34 +25,34 @@ import java.util.List;
 
 public interface UserAPIService {
 
-    @POST("/mock/api/create_user")
+    @POST("/api/create_user")
     Call<ResponseBody> makeUser(@Body RequestBody request);
 
-    @GET("/mock/api/get_user/{id}")
+    @GET("/api/get_user/{id}")
     Call<ResponseBody> getUser(@Path("id") int id);
 
-    @PUT("/mock/api/update_user")
+    @PUT("/api/update_user")
     Call<ResponseBody> updateUser(@Body RequestBody request);
 
-    @GET("/mock/api/get_item/{id}")
+    @GET("/api/get_item/{id}")
     Call<ResponseBody> getItem(@Path("id") int id);
 
-    @POST("/mock/api/create_item")
+    @POST("/api/create_item")
     Call<ResponseBody> makeItem(@Body RequestBody request);
 
-    @PUT("/mock/api/update_item")
+    @PUT("/api/update_item")
     Call<ResponseBody> updateItem(@Body RequestBody request);
 
-    @DELETE("/mock/api/delete_item/{id}")
+    @DELETE("/api/delete_item/{id}")
     Call<ResponseBody> deleteItem(@Path("id") int id);
 
-    @GET("/mock/api/get_wishlist/{id}")
+    @GET("/api/get_wishlist/{id}")
     Call<ResponseBody> getWishlist(@Path("id") int id);
 
-    @PUT("/mock/api/set_wishlist")
+    @PUT("/api/set_wishlist")
     Call<ResponseBody> setWishlist(@Body RequestBody request);
 
-    @GET("/mock/api/get_inventory/{id}")
+    @GET("/api/get_inventory/{id}")
     Call<ResponseBody> getInventory(@Path("id") int id);
 
 }

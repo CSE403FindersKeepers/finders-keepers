@@ -273,7 +273,7 @@ def get_item(item_id):
 @app.route('/api/create_item', methods=['POST'])
 def create_item():
 	json = request.get_json()
-	if not is_valid_json(('owner_id', 'title', 'description', 'tags', 'item_image'), json):
+	if not is_valid_json(('user_id', 'title', 'description', 'tags', 'item_image'), json):
 		abort(400, 'create_item: invalid PUT data')
 	return item_handler.create_item(json)
 
