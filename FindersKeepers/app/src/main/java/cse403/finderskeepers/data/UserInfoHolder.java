@@ -16,8 +16,9 @@ import cse403.finderskeepers.UserAPIService;
  */
 
 public class UserInfoHolder {
-    public static final String SERVER_ADDRESS = "http://10.0.2.2:5000"; //For local testing (note: still uses remote db)
-    /*"http://ec2-35-163-100-235.us-west-2.compute.amazonaws.com"; //For remote testing */
+    public static final String SERVER_ADDRESS = "http://ec2-35-163-100-235.us-west-2.compute.amazonaws.com"; //For remote testing
+     /*"http://10.0.2.2:5000"; //For local testing (note: still uses remote db)
+      */
     private static final UserInfoHolder instance = new UserInfoHolder();
 
     private UserAPIService userapiservice;
