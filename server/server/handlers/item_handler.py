@@ -45,6 +45,33 @@ class ItemHandler():
 		self.db_handler.cursor.fetchall()
 		return jsonify(item_id=item)
 
+	def update_item(self, json):
+		ATTRS = ['title', 'description', 'image_url']
+		query = "UPDATE ITEM SET "
+		query += "id=" + str(json['item_id'])
+		if 'title' in json:
+			query += ",title='" + json['title'] + "'"
+		if 'description' in json:
+			query += ",description='" + json['description'] + "'"
+		if 'image_url' in json:
+			query += ",photo='" + json['image_url'] + "'"
+		if 'tags' in json:
+			query += ",tag1='" + json['tags'][0] + "'"
+			query += ",tag2='" + json['tags'][0] + "'"
+		query += " WHERE id=" + str(json['item_id'])
+
+		self.db_handler.cursor.execute(query)
+		self.db_handler.connection.commit()
+		
+		return jsonify(errors=None) # TODO actually do an error
+
+	def delete_item(self, item_id):
+		query = "DELETE FROM ITEM WHERE id=" + str(item_id)
+		self.db_handler.cursor.execute(query)
+		self.db_handler.connection.commit()
+		
+		return jsonify(errors=None) # TODO actually do an error
+
 	def get_inventory(self, owner_id):
 		query = "SELECT * FROM ITEM WHERE ownerId=" + str(owner_id)
 		self.db_handler.cursor.execute(query);
@@ -70,7 +97,7 @@ class ItemHandler():
 		user_id, wishlist = json['user_id'], json['wishlist']
 		query = "UPDATE USER (wishlist) VALUES ("
 		query += ",".join(wishlist)
-		query += ") WHERE id=" + user_id
+		query += ") WHERE id=" + str(user_id)
 		
 		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
@@ -91,4 +118,5 @@ class ItemHandler():
 
 def concat_params(*args):
 	return ",".join(w if w.isnumeric() else "'{0}'".format(w) for w in args)
+
 		

@@ -277,18 +277,29 @@ def create_item():
 		abort(400, 'create_item: invalid PUT data')
 	return item_handler.create_item(json)
 
-@app.route('/api/get_inventory/<int:user_id>', methods=['GET'])
-def get_inventory(user_id):
-	return item_handler.get_inventory(user_id)
+@app.route('/api/update_item/', methods=['PUT'])
+def update_item():
+	json = request.get_json()
+	if not is_valid_json_update('item_id', ('title', 'description', 'tags', 'image_url'), json):
+		abort(400, 'update_item: invalid PUT data')
+	return item_handler.update_item(json)
+
+@app.route('/api/delete_item/<int:item_id>', methods=['DELETE'])
+def delete_item(item_id):
+	return item_handler.delete_item(item_id)
 
 @app.route('/api/get_all_items/', methods=['GET']) # basically for testing
 def get_all_items():
 	return item_handler.get_all_items()
 
-@app.route('/api/set_wishlist/', methods=['POST']) #TODO won't work until wishlistitem table is up
-def add_wishlist_item():
+@app.route('/api/get_inventory/<int:user_id>', methods=['GET'])
+def get_inventory(user_id):
+	return item_handler.get_inventory(user_id)
+
+@app.route('/api/set_wishlist/', methods=['PUT']) #TODO won't work until wishlistitem table is up
+def set_wishlist():
 	json = request.get_json()
-	if not is_valid_json(('userId', 'tags'), json):
+	if not is_valid_json(('userId', 'wishlist'), json):
 		abort(400, 'create_item: invalid PUT data')
 	return item_handler.set_wishlist(json)
 
@@ -310,6 +321,19 @@ def is_valid_json(expected_fields, json):
 	
 	return True
 
+# check that there is an id field and at least one other valid field
+def is_valid_json_update(required_field, expected_fields, json):
+	if not json:
+		return False
+
+	if required_field not in json:
+		return False
+
+	flag = False 
+	for field in expected_fields:
+		if field in json:
+			flag = True
+	return flag
 
 if __name__ == '__main__':
 	app.run()
