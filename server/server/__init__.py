@@ -73,7 +73,7 @@ def mock_get_wishlist(user_id):
 		wishlist=[
 			'cool_stuff',
 			'awful_stuff',
-			'a_banana_for_scale']
+			'a_banana_for_scale'],
 		error=''
 		)
 	
@@ -187,7 +187,7 @@ def mock_get_trades(user_id):
 		trades=[
 			make_dummy_trade(1),
 			make_dummy_trade(2),
-			make_dummy_trade(3)]
+			make_dummy_trade(3)],
 		error=''
 		)
 
