@@ -6,13 +6,13 @@ import uuid
 
 # upload_image: Takes in a base64 string and returns a url that hosts the image. Returns None on error
 def upload_image(img_data):
+	# configuration information. 
 	AWS_ACCESS_KEY_ID = "AKIAIG2UWRA6GNQ67AVA"
 	AWS_SECRET_ACCESS_KEY = "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"
 	AWS_BUCKET_NAME = "finderskeepersimages"
 	conn = boto.s3.connect_to_region('us-west-2',
 	       aws_access_key_id=AWS_ACCESS_KEY_ID,
 	       aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-	       #is_secure=True,               # uncomment if you are not using ssl
 	       calling_format = boto.s3.connection.OrdinaryCallingFormat(),
 	       )
 

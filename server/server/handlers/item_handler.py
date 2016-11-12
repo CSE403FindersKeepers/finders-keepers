@@ -1,25 +1,34 @@
 from flask import jsonify, abort
 from image_handler import upload_image, delete_image
 
+"""
+The ItemHandler class deals with all DB and API interactions regarding items and inventory.
+"""
 class ItemHandler():
 	def __init__(self, db_handler):
 		self.db_handler = db_handler
 
+	# TODO: this is a test method
 	def get_all_items(self):
 		query = "SELECT id FROM ITEM"
 		self.db_handler.cursor.execute(query);
 		items = self.db_handler.cursor.fetchall()
 		return jsonify(items=items)
 
+	# get_item: uses an item ID to return the other information
+	# about the item.
 	def get_item(self, item_id):
+		# query the database
 		query = "SELECT * FROM ITEM WHERE id=" + str(item_id)
 		self.db_handler.cursor.execute(query);
 		result = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()		
 
+		# handle querying failures
 		if result is None:
 			abort(400, 'that item does not exist')
 		else:
+			# parse the results
 			(id, owner_id, photo, tag1, tag2, description, title) = result
 			tags = []
 			if tag1 is not None:
