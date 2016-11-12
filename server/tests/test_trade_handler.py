@@ -3,8 +3,8 @@
 import unittest
 import json
 from flask import Flask
-from server.handlers import trade_handler
-from server.handlers import db_handler
+from server.server.handlers import trade_handler
+from server.server.handlers import db_handler
 
 # create the app instance
 app = Flask(__name__)
