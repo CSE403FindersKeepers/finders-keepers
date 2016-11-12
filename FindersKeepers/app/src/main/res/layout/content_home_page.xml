@@ -86,7 +86,7 @@
         android:inputType="textCapWords"
         android:hint="@string/wishlist_tags_hint"
         android:ems="10"
-        android:id="@+id/editTags"
+        android:id="@+id/edit_tags"
         android:layout_weight=".5" />
 
     <Button

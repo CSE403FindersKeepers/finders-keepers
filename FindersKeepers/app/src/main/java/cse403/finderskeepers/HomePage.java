@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import cse403.finderskeepers.data.UserInfoHolder;
 import cse403.finderskeepers.UserAPIService;
@@ -48,6 +49,7 @@ import static cse403.finderskeepers.UserSettingsActivity.JSON;
 public class HomePage extends AppCompatActivity {
 
     private static final int REQUEST_STUFF = 14582;
+    private UserAPIService userapiservice;
 
     private void disconnectionError(){
         Intent intent = new Intent(HomePage.this, DisconnectionError.class);
@@ -67,7 +69,7 @@ public class HomePage extends AppCompatActivity {
                 .baseUrl(UserInfoHolder.SERVER_ADDRESS)
                 .build();
 
-        UserAPIService userapiservice = retrofit.create(UserAPIService.class);
+        userapiservice = retrofit.create(UserAPIService.class);
         UserInfoHolder.getInstance().setAPIService(userapiservice);
 
         setContentView(R.layout.activity_home_page);
@@ -124,7 +126,33 @@ public class HomePage extends AppCompatActivity {
     private View.OnClickListener updateTagsListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            userapiservice = UserInfoHolder.getInstance().getAPIService();
+            JSONObject requestJSON = new JSONObject();
+            try {
+                EditText tags = (EditText) findViewById(R.id.edit_tags);
+                Scanner scanner = new Scanner(tags.getText().toString());
+                JSONArray wishlist = new JSONArray();
+                while (scanner.hasNext()) {
+                    wishlist.put(scanner.next());
+                }
+                requestJSON.put("wishlist", wishlist);
+                requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return;
+            }
+            RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+            Call<ResponseBody> updateTagsCall = userapiservice.setWishlist(requestBody);
+            try {
+                Response<ResponseBody> response = updateTagsCall.execute();
+                if (response.code() != 200) {
+                    throw new IOException("HTTP Error " + response.code());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Intent intent = new Intent(HomePage.this, DisconnectionError.class);
+                startActivity(intent);
+            }
         }
     };
 
@@ -136,6 +164,12 @@ public class HomePage extends AppCompatActivity {
 
     private void populateUserPage(){
         //get UID - replace this with UID from request
+
+
+        LinearLayout items = (LinearLayout) findViewById(R.id.item_list);
+        while (items.getChildCount() > 1) {
+            items.removeViewAt(0);
+        }
 
         UserAPIService userapiservice = UserInfoHolder.getInstance().getAPIService();
 
@@ -235,7 +269,7 @@ public class HomePage extends AppCompatActivity {
         }
 
         // Set tags in TextView
-        TextView tagText = (TextView) findViewById(R.id.editTags);
+        TextView tagText = (TextView) findViewById(R.id.edit_tags);
         tagText.setText(tagString);
 
         //TODO: populate inventory - populate this JSONArray with array of items
@@ -274,7 +308,6 @@ public class HomePage extends AppCompatActivity {
 
                 // Add item to layout as button
                 //TODO: Default image if itemBitmap == null
-                LinearLayout items = (LinearLayout) findViewById(R.id.item_list);
                 if (itemBitmap != null) {
                     AddableItem newItemButton = new AddableItem(this, itemTagString, itemID);
                     newItemButton.setImageBitmap(itemBitmap);

@@ -1,5 +1,6 @@
 package cse403.finderskeepers;
 
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -62,12 +64,6 @@ public class AddItemWindowActivity extends AppCompatActivity {
     // id of item, if edited
     private int itemId;
 
-    // tags of item, if edited
-    private String tags;
-
-    // image of item, if being edited
-    private Bitmap image;
-
     //API Service for network communication
     private UserAPIService userapiservice;
 
@@ -79,13 +75,32 @@ public class AddItemWindowActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.content_additem_page);
         userapiservice = UserInfoHolder.getInstance().getAPIService();
-        Button upload = (Button) findViewById(R.id.upload_button); //TODO: URGENT: RETURNING NULL?!
+        ImageButton img = (ImageButton) findViewById(R.id.add_item_img);
+        Button upload = (Button) findViewById(R.id.upload_button); //TODO: URGENT: RETURNING NULL?!\
+
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("ITEM_ID") && getIntent().getExtras().containsKey("TAGS")) {
 
-            this.itemId = getIntent().getExtras().getInt("ITEM_ID");
-            this.tags = getIntent().getExtras().getString("TAGS");
-            this.image = null;
+            itemId = getIntent().getExtras().getInt("ITEM_ID");
+            Bitmap image = null;
+
+            String tags = getIntent().getExtras().getString("TAGS");
+            EditText editTags = (EditText) findViewById(R.id.editTags);
+            editTags.setText(tags);
+
+            LinearLayout layout = (LinearLayout) findViewById(R.id.content_inventory_page);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    0,
+                    1);
+
+            // add button to delete item
+            Button deleteItemButton = new Button(this);
+            deleteItemButton.setText("Delete Item");
+            deleteItemButton.setOnClickListener(deleteItemListener);
+            deleteItemButton.setLayoutParams(params);
+            layout.addView(deleteItemButton);
 
             try {
                 Response<ResponseBody> doCall = userapiservice.getItem(this.itemId).execute();
@@ -99,12 +114,12 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 URL imgloc = new URL(itemObj.getString("image_url"));
 
                 try {
-                    if (imgloc != null && !imgloc.toString().equals("")) {
-                        this.image = BitmapFactory.decodeStream(imgloc.openConnection().getInputStream());
+                    if (!imgloc.toString().equals("")) {
+                        image = BitmapFactory.decodeStream(imgloc.openConnection().getInputStream());
                     }
                 } catch (IOException e) {
-                    disconnectionError();
                     e.printStackTrace();
+                    disconnectionError();
                 }
 
             } catch (IOException e) {
@@ -116,21 +131,17 @@ public class AddItemWindowActivity extends AppCompatActivity {
             // Change text of add item button if item info exists
             if(upload != null) upload.setText("Update Item");
             this.edit = true;
-            ImageView img = (ImageView) findViewById(R.id.add_item_img);
-            img.setImageBitmap(this.image);
+            img.setImageBitmap(image);
             imageSet = true;
         } else {
-            this.itemId = 0;
             this.edit = false;
             imageSet = false;
         }
-        setContentView(R.layout.content_additem_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ImageButton addItem = (ImageButton) findViewById(R.id.add_item_img);
         if (upload != null) upload.setOnClickListener(this.uploadItemListener);
-        addItem.setOnClickListener(this.itemPicListener);
+        img.setOnClickListener(this.itemPicListener);
     }
 
     private View.OnClickListener uploadItemListener = new View.OnClickListener() {
@@ -152,23 +163,78 @@ public class AddItemWindowActivity extends AppCompatActivity {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             ImageButton addItem = (ImageButton) findViewById(R.id.add_item_img);
             Drawable drawable = addItem.getDrawable();
-            Bitmap image = ((BitmapDrawable) drawable).getBitmap();
+            Bitmap image = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), 500, 500, true);
             image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] imageBytes = stream.toByteArray();
             String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
             // create request JSON
-            JSONObject requestJSON = new JSONObject();
-            try {
-                requestJSON.put("tags", jsonTags);
-                requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
-                requestJSON.put("item_image_data", encodedImage);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return;
-            }
+            if(edit) {
+                JSONObject requestJSON = new JSONObject();
+                try {
+                    requestJSON.put("tags", jsonTags);
+                    requestJSON.put("item_id", AddItemWindowActivity.this.itemId);
+                    requestJSON.put("item_image_data", encodedImage);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
 
-            RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+                RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+                Call<ResponseBody> itemUpdate = userapiservice.updateItem(requestBody);
+
+                try {
+                   Response<ResponseBody> updateResult = itemUpdate.execute();
+                    if (updateResult.code() != 200){
+                        throw new IOException("HTTP Error " + updateResult.code());
+                    }
+                    JSONObject updateResJSON = new JSONObject(updateResult.body().string());
+                    String err = updateResJSON.getString("error");
+                    if(!err.equals("")) throw new NetworkErrorException(err);
+
+                } catch (IOException e) {
+                    disconnectionError();
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (NetworkErrorException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                JSONObject requestJSON = new JSONObject();
+                try {
+                    requestJSON.put("tags", jsonTags);
+                    requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
+                    requestJSON.put("item_image_data", encodedImage);
+                    requestJSON.put("title", "");
+                    requestJSON.put("description", "");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+                Call<ResponseBody> itemCreate = userapiservice.makeItem(requestBody);
+
+                try {
+                    Response<ResponseBody> updateResult = itemCreate.execute();
+                    if (updateResult.code() != 200){
+                        throw new IOException("HTTP Error " + updateResult.code());
+                    }
+                    JSONObject updateResJSON = new JSONObject(updateResult.body().string());
+                    String err = updateResJSON.getString("error");
+                    if(!err.equals("")) throw new NetworkErrorException(err);
+
+                } catch (IOException e) {
+                    disconnectionError();
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (NetworkErrorException e) {
+                    e.printStackTrace();
+                }
+            }
 
             finish();
         }
@@ -182,6 +248,28 @@ public class AddItemWindowActivity extends AppCompatActivity {
             getImageIntent.setType("image/*");
             getImageIntent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(getImageIntent, "Select Image for Item"), GET_IMAGE);
+        }
+    };
+
+    //Listener for item delete button
+    private View.OnClickListener deleteItemListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view){
+            userapiservice = UserInfoHolder.getInstance().getAPIService();
+            Call<ResponseBody> deleteCall = userapiservice.deleteItem(AddItemWindowActivity.this.itemId);
+            Response<ResponseBody> response;
+            try {
+                response = deleteCall.execute();
+                if (response.code() != 200) {
+                    Log.d("HTTP ERROR CODE: ", "" + response.code());
+                    throw new IOException("Disconnected");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Intent intent = new Intent(AddItemWindowActivity.this, DisconnectionError.class);
+                startActivity(intent);
+            }
+            finish();
         }
     };
 

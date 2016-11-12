@@ -1,5 +1,6 @@
 package cse403.finderskeepers;
 
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -43,6 +44,9 @@ import java.util.Scanner;
 import cse403.finderskeepers.data.UserInfoHolder;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class UserSettingsActivity extends AppCompatActivity {
 
@@ -50,6 +54,11 @@ public class UserSettingsActivity extends AppCompatActivity {
     private Geocoder geoCoder;
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+
+    private void disconnectionError(){
+        Intent intent = new Intent(UserSettingsActivity.this, DisconnectionError.class);
+        startActivity(intent);
+    }
 
     private View.OnClickListener avatarListener = new View.OnClickListener() {
         @Override
@@ -114,7 +123,7 @@ public class UserSettingsActivity extends AppCompatActivity {
         // encode the current image as base64 JPEG
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         Drawable drawable = avatar.getDrawable();
-        Bitmap image = ((BitmapDrawable) drawable).getBitmap();
+        Bitmap image = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(), 500, 500, true);
         image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] imageBytes = stream.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
@@ -135,6 +144,25 @@ public class UserSettingsActivity extends AppCompatActivity {
         }
 
         RequestBody requestBody = RequestBody.create(JSON, requestJSON.toString());
+
+        Call<ResponseBody> userUpdate = UserInfoHolder.getInstance().getAPIService().updateUser(requestBody);
+
+        try {
+            Response<ResponseBody> updateRes = userUpdate.execute();
+            if (updateRes.code() != 200){
+                throw new IOException("HTTP Error " + updateRes.code());
+            }
+            JSONObject updateResJSON = new JSONObject(updateRes.body().string());
+            String err = updateResJSON.getString("error");
+            if(!err.equals("")) throw new NetworkErrorException(err);
+        } catch (IOException e) {
+            disconnectionError();
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (NetworkErrorException e) {
+            e.printStackTrace();
+        }
 
         //TODO: DO CALLS TO UPDATE AVATAR/LOCATION VIA API SERVER
     }

@@ -277,9 +277,24 @@ def create_item():
 		abort(400, 'create_item: invalid PUT data')
 	return item_handler.create_item(json)
 
-@app.route('/api/get_all_items/', methods=['GET'])
+@app.route('/api/get_inventory/<int:user_id>', methods=['GET'])
+def get_inventory(user_id):
+	return item_handler.get_inventory(user_id)
+
+@app.route('/api/get_all_items/', methods=['GET']) # basically for testing
 def get_all_items():
 	return item_handler.get_all_items()
+
+@app.route('/api/set_wishlist/', methods=['POST']) #TODO won't work until wishlistitem table is up
+def add_wishlist_item():
+	json = request.get_json()
+	if not is_valid_json(('userId', 'tags'), json):
+		abort(400, 'create_item: invalid PUT data')
+	return item_handler.set_wishlist(json)
+
+@app.route('/api/get_wishlist/<int:user_id>', methods=['GET'])
+def get_wishlist(user_id):
+	return item_handler.get_wishlist(user_id)
 
 #------------------------------ utility -------------------------------#
 
