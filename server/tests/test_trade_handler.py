@@ -1,10 +1,10 @@
 # TestTradeHandler: Tests for a class that's currently not implemented
 # Fulfilling the requirement on the spec
 import unittest
-from flask import Flask
 import json
-import trade_handler
-import db_handler
+from flask import Flask
+from server.handlers import trade_handler
+from server.handlers import db_handler
 
 # create the app instance
 app = Flask(__name__)
