@@ -11,9 +11,6 @@ class DBHandler():
 		# initialize the app
 		self.my_sql.init_app(app)
 
-		# $NOTE-yoont4: currently I've set this to return until we have a test
-		# database to query. I don't want to risk muddying the production db
-
 		# connect to the database and create a cursor
 		self.connection = self.my_sql.connect()
 		self.cursor = self.connection.cursor()
