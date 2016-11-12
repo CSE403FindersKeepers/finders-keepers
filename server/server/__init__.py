@@ -296,7 +296,7 @@ def get_all_items():
 def get_inventory(user_id):
 	return item_handler.get_inventory(user_id)
 
-@app.route('/api/set_wishlist', methods=['PUT']) #TODO won't work until wishlistitem table is up
+@app.route('/api/set_wishlist', methods=['PUT']) # TODO won't work until wishlistitem table is up
 def set_wishlist():
 	json = request.get_json()
 	if not is_valid_json(('user_id', 'wishlist'), json):
