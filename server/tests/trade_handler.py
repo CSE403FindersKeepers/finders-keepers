@@ -2,7 +2,6 @@
 from flask import Flask
 from flask import abort, jsonify, request
 from db_handler import DBHandler
-import image_handler
 
 # create the app instance
 app = Flask(__name__)
