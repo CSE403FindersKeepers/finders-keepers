@@ -1,4 +1,5 @@
 from flask import jsonify, abort
+from image_handler import upload_image, delete_image
 
 class ItemHandler():
 	def __init__(self, db_handler):
@@ -31,8 +32,11 @@ class ItemHandler():
 			return jsonify(item=item)
 
 	def create_item(self, json):
+		# upload the image to S3 first and get the image URL
+		item_image_url = upload_image(json['item_image']);
+
 		query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1, tag2) VALUES ("
-		query += concat_params(json['user_id'], json['title'], json['description'], json['item_image'], json['tags'][0], json['tags'][1])
+		query += concat_params(json['user_id'], json['title'], json['description'], item_image_url, json['tags'][0], json['tags'][1])
 		query += ")"
 
 		self.db_handler.cursor.execute(query)
@@ -52,18 +56,32 @@ class ItemHandler():
 			return jsonify(item_id=item, item_image_url=url)
 
 	def update_item(self, json):
-		ATTRS = ['title', 'description', 'image_url']
+		ATTRS = ['title', 'description', 'item_image']
 		query = "UPDATE ITEM SET "
 		query += "id=" + str(json['item_id'])
 		if 'title' in json:
 			query += ",title='" + json['title'] + "'"
+
 		if 'description' in json:
 			query += ",description='" + json['description'] + "'"
-		if 'image_url' in json:
-			query += ",photo='" + json['image_url'] + "'"
+
+		if 'item_image' in json:
+			# delete the old image first
+			url_query = 'SELECT photo FROM ITEM WHERE id=' + str(json['item_id'])
+			self.db_handler.cursor.execute(url_query)
+			image_url = self.db_handler.cursor.fetchone()
+			self.db_handler.cursor.fetchall()
+			delete_image(image_url)
+
+			# upload the new image
+			new_url = upload_image(json['item_image'])
+
+			query += ",photo='" + new_url + "'"
+
 		if 'tags' in json:
 			query += ",tag1='" + json['tags'][0] + "'"
 			query += ",tag2='" + json['tags'][0] + "'"
+
 		query += " WHERE id=" + str(json['item_id'])
 
 		self.db_handler.cursor.execute(query)

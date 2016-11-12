@@ -6,8 +6,8 @@ import uuid
 
 # upload_image: Takes in a base64 string and returns a url that hosts the image. Returns None on error
 def upload_image(img_data):
-	AWS_ACCESS_KEY_ID = ""
-	AWS_SECRET_ACCESS_KEY = ""
+	AWS_ACCESS_KEY_ID = "AKIAIG2UWRA6GNQ67AVA"
+	AWS_SECRET_ACCESS_KEY = "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"
 	AWS_BUCKET_NAME = "finderskeepersimages"
 	conn = boto.s3.connect_to_region('us-west-2',
 	       aws_access_key_id=AWS_ACCESS_KEY_ID,
@@ -15,17 +15,29 @@ def upload_image(img_data):
 	       #is_secure=True,               # uncomment if you are not using ssl
 	       calling_format = boto.s3.connection.OrdinaryCallingFormat(),
 	       )
+
 	b = conn.get_bucket(AWS_BUCKET_NAME, validate=False)
 	k = Key(b)
 	path = str(uuid.uuid1()) + ".jpg"
 	k.key = path
+
 	try:
 		k.set_contents_from_string(base64.b64decode(img_data))
 	except:
 		return None
-	k.set_metadata('Content-Type', 'image/jpeg') # from http://stackoverflow.com/a/22730676 and http://stackoverflow.com/questions/16156062/using-amazon-s3-boto-library-how-can-i-get-the-url-of-a-saved-key
+
 	k.set_acl('public-read')
+
+	# from http://stackoverflow.com/a/22730676 
+	# and http://stackoverflow.com/questions/16156062/using-amazon-s3-boto-library-how-can-i-get-the-url-of-a-saved-key
+	k.set_metadata('Content-Type', 'image/jpeg')	
 	return "https://s3-us-west-2.amazonaws.com/finderskeepersimages/" + path
+
+# delete_image: Takes in the url of an image on file, and deletes it
+# TODO: implement this
+def delete_image(img_url):
+	return
+
 
 # main method for testing purposes
 #if __name__ == "__main__":	
