@@ -47,7 +47,7 @@ class UserHandler():
 				"image_url": data[2],
 				"zipcode": data[3],
 				"email": data[4],
-				"wishlist": [], 
+				"wishlist": data[5].split(","), 
 				"inventory": inventory
 			}
 

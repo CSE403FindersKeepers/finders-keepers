@@ -48,7 +48,7 @@ class ItemHandler():
 	def create_item(self, json):
 		if len(json['tags']) < 1:
 			abort(400, "Must give item at least one tag")
-			
+
 		item_image_url = upload_image(json['item_image']);
 		query = ""
 		if len(json['tags']) < 2:
@@ -144,9 +144,9 @@ class ItemHandler():
 
 	def set_wishlist(self, json): #TODO need wishlist col in USER
 		user_id, wishlist = json['user_id'], json['wishlist']
-		query = "UPDATE USER SET wishlist VALUES ("
-		query += ",".join(wishlist)
-		query += ") WHERE id=" + str(user_id)
+		query = "UPDATE USER SET wishlist="
+		query += "'" + ",".join(wishlist) + "'"
+		query += " WHERE id=" + str(user_id)
 		
 		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
@@ -156,8 +156,9 @@ class ItemHandler():
 	def get_wishlist(self, user_id): #TODO need wishlist col in USER
 		query = "SELECT id, wishlist FROM USER WHERE id=" + str(user_id)
 		self.db_handler.cursor.execute(query);
-		result = self.db_handler.cursor.fetchall()
-
+		result = self.db_handler.cursor.fetchone()
+		self.db_handler.cursor.fetchall()
+		
 		if result is None:
 			abort(400, "That user DNE or doesn't have a wishlist")
 		else:

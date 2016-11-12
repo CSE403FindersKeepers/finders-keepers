@@ -299,8 +299,8 @@ def get_inventory(user_id):
 @app.route('/api/set_wishlist', methods=['PUT']) #TODO won't work until wishlistitem table is up
 def set_wishlist():
 	json = request.get_json()
-	if not is_valid_json(('userId', 'wishlist'), json):
-		abort(400, 'create_item: invalid PUT data')
+	if not is_valid_json(('user_id', 'wishlist'), json):
+		abort(400, 'set_wishlist: invalid PUT data')
 	return item_handler.set_wishlist(json)
 
 @app.route('/api/get_wishlist/<int:user_id>', methods=['GET'])
