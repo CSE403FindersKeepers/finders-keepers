@@ -226,7 +226,7 @@ public class HomePage extends AppCompatActivity {
 
             Log.d("UserJSON String:", jsonval);
 
-            UserJSON = new JSONObject(jsonval);
+            UserJSON = new JSONObject(jsonval).getJSONObject("user");
             getImg = new URL(UserJSON.getString("image_url"));
 
         } catch (JSONException e) {
@@ -331,16 +331,10 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
-            Log.d("spot1", "hi!");
             Drawable drawable = ((AddableItem) view).getDrawable();
-            Log.d("spot2", "hi!");
             Bitmap image = ((BitmapDrawable) drawable).getBitmap();
-            Log.d("spot3", "hi!");
-            Log.d("spot4", "hi!");
             addItemIntent.putExtra("ITEM_ID", ((AddableItem) view).getItemId());
-            Log.d("spot5", "hi!");
             addItemIntent.putExtra("TAGS", ((AddableItem) view).getTags());
-            Log.d("spot6", "hi!");
             startActivity(addItemIntent);
         }
     };
