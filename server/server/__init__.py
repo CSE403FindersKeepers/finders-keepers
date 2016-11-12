@@ -270,17 +270,17 @@ def update_user():
 def get_item(item_id):
 	return item_handler.get_item(item_id)
 
-@app.route('/api/create_item/', methods=['POST'])
+@app.route('/api/create_item', methods=['POST'])
 def create_item():
 	json = request.get_json()
-	if not is_valid_json(('owner_id', 'title', 'description', 'tags', 'image_url'), json):
+	if not is_valid_json(('owner_id', 'title', 'description', 'tags', 'item_image'), json):
 		abort(400, 'create_item: invalid PUT data')
 	return item_handler.create_item(json)
 
-@app.route('/api/update_item/', methods=['PUT'])
+@app.route('/api/update_item', methods=['PUT'])
 def update_item():
 	json = request.get_json()
-	if not is_valid_json_update('item_id', ('title', 'description', 'tags', 'image_url'), json):
+	if not is_valid_json_update('item_id', ('title', 'description', 'tags', 'item_image'), json):
 		abort(400, 'update_item: invalid PUT data')
 	return item_handler.update_item(json)
 
@@ -288,7 +288,7 @@ def update_item():
 def delete_item(item_id):
 	return item_handler.delete_item(item_id)
 
-@app.route('/api/get_all_items/', methods=['GET']) # basically for testing
+@app.route('/api/get_all_items', methods=['GET']) # basically for testing
 def get_all_items():
 	return item_handler.get_all_items()
 
@@ -296,7 +296,7 @@ def get_all_items():
 def get_inventory(user_id):
 	return item_handler.get_inventory(user_id)
 
-@app.route('/api/set_wishlist/', methods=['PUT']) #TODO won't work until wishlistitem table is up
+@app.route('/api/set_wishlist', methods=['PUT']) #TODO won't work until wishlistitem table is up
 def set_wishlist():
 	json = request.get_json()
 	if not is_valid_json(('userId', 'wishlist'), json):
