@@ -105,8 +105,8 @@ public class AddItemWindowActivity extends AppCompatActivity {
                         this.image = BitmapFactory.decodeStream(imgloc.openConnection().getInputStream());
                     }
                 } catch (IOException e) {
-                    disconnectionError();
                     e.printStackTrace();
+                    disconnectionError();
                 }
 
             } catch (IOException e) {
@@ -176,7 +176,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 try {
                    Response<ResponseBody> updateResult = itemUpdate.execute();
                     if (updateResult.code() != 200){
-                        throw new IOException("HTTP Error");
+                        throw new IOException("HTTP Error " + updateResult.code());
                     }
                     JSONObject updateResJSON = new JSONObject(updateResult.body().string());
                     String err = updateResJSON.getString("error");
