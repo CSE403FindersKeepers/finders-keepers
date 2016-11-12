@@ -18,8 +18,29 @@ class UserHandler():
 		if data is None:
 			return jsonify(user_id=-1)
 		else:
-			userJson = jsonify(user_id=data[0], name=data[1], image_url=data[2], zipcode=data[3], email=data[4], wishlist=[], inventory=[])
-			return userJson
+			query = "SELECT * FROM ITEM WHERE ownerId=" + str(user_id)
+			self.db_handler.cursor.execute(query);
+			items = self.db_handler.cursor.fetchall()		
+
+			# TODO needs wishlistitem table
+			# query = "SELECT tag FROM WISHLISTITEM WHERE userId=" + str(user_id)
+			# self.db_handler.cursor.execute(query);
+			# result = self.db_handler.cursor.fetchall()
+			# wishitems = item for (item,) in result
+
+			inventory = []
+			if items is not None:
+				for item in items:
+					(item_id, owner_id, photo, tag1, tag2, description, title) = item
+					inventory.append({
+						"item_id": item_id,
+						"owner_id": owner_id,
+						"title": title,
+						"description": description,
+						"image_url": photo,
+						"tags": [tag1, tag2]
+					})
+			return jsonify(user_id=data[0], name=data[1], image_url=data[2], zipcode=data[3], email=data[4], wishlist=[], inventory=inventory)
 
 	# create_user: Takes in a json containing an email, returns a user id. User id is -1 if there is an error
 	def create_user(self, json):
