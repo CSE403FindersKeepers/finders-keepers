@@ -254,8 +254,6 @@ public class HomePage extends AppCompatActivity {
             userAvatar.setImageBitmap(UserInfoHolder.getInstance().getAvatar());
         }
 
-        //TODO: fetch tags - replace this array with populated one
-
         String tagString = "";
         try {
             if(UserJSON == null) throw new JSONException("OH NOE");
@@ -298,9 +296,9 @@ public class HomePage extends AppCompatActivity {
                 // populate tag string
                 try {
                     for (int j = 0; j < itemTags.length() - 1; j++) {
-                        itemTagString += itemTags.getString(j) + " ";
+                        if (!itemTags.getString(j).equals("null"))itemTagString += itemTags.getString(j) + " ";
                     }
-                    itemTagString += itemTags.getString(itemTags.length() - 1);
+                    if (!itemTags.getString(itemTags.length() - 1).equals("null")) itemTagString += itemTags.getString(itemTags.length() - 1);
                 } catch (JSONException e) {
                     disconnectionError();
                     e.printStackTrace();
