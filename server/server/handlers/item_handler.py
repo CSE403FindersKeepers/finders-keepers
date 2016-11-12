@@ -22,7 +22,7 @@ class ItemHandler():
 			(id, owner_id, photo, tag1, tag2, description, title) = result
 			item = {
 				"item_id":id, 
-				"owner_id":owner_id, 
+				"user_id":owner_id, 
 				"title":title, 
 				"description":description, 
 				"image_url":photo, 
@@ -38,12 +38,18 @@ class ItemHandler():
 		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
 		
-		query = "SELECT id FROM ITEM WHERE"
-		query += "ownerId=" + str(json['user_id'])
-		query += "title=" + str(json['title'])
-		item = self.db_handler.cursor.fetchone()
+		query = "SELECT id, photo FROM ITEM WHERE"
+		query += " ownerId=" + str(json['user_id'])
+		query += " AND title='" + str(json['title']) + "'"
+		self.db_handler.cursor.execute(query)
+		result = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
-		return jsonify(item_id=item)
+
+		if result is None:
+			abort(400, "Create was unnsuccessful even though you provided the correct info")
+		else:
+			item, url = result
+			return jsonify(item_id=item, item_image_url=url)
 
 	def update_item(self, json):
 		ATTRS = ['title', 'description', 'image_url']
@@ -85,7 +91,7 @@ class ItemHandler():
 				(item_id, owner_id, photo, tag1, tag2, description, title) = item
 				arr.append({
 					"item_id": item_id,
-					"owner_id": owner_id,
+					"user_id": owner_id,
 					"title": title,
 					"description": description,
 					"image_url": photo,
@@ -117,6 +123,6 @@ class ItemHandler():
 			return jsonify(wishlist=arr)
 
 def concat_params(*args):
-	return ",".join(w if w.isnumeric() else "'{0}'".format(w) for w in args)
+	return ",".join("'{0}'".format(w) for w in args)
 
 		
