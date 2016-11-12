@@ -108,9 +108,12 @@ class ItemHandler():
 
 			query += ",photo='" + new_url + "'"
 
-		if 'tags' in json:
+		if 'tags' in json and len(json['tags']) > 0 :
 			query += ",tag1='" + json['tags'][0] + "'"
-			query += ",tag2='" + json['tags'][0] + "'"
+			if len(json['tags']) > 1:
+				query += ",tag2='" + json['tags'][1] + "'"
+			else:
+				query += ",tag2=NULL"
 
 		query += " WHERE id=" + str(json['item_id'])
 
@@ -174,7 +177,7 @@ class ItemHandler():
 		self.db_handler.cursor.execute(query);
 		result = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
-		
+
 		if result is None:
 			abort(400, "That user DNE or doesn't have a wishlist")
 		else:
