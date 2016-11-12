@@ -6,6 +6,8 @@ import image_handler
 # create the app instance
 app = Flask(__name__)
 
+# the UserHandler encapsulates DB operations relating to users
+# this includes creating, getting, and updating users
 class UserHandler():
 	def __init__(self, db_handler):
 		self.db_handler = db_handler
