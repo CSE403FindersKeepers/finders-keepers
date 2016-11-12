@@ -110,7 +110,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 }
 
                 String jsonval = doCall.body().string();
-                JSONObject itemObj = new JSONObject(jsonval);
+                JSONObject itemObj = new JSONObject(jsonval).getJSONObject("item");
                 URL imgloc = new URL(itemObj.getString("image_url"));
 
                 try {
