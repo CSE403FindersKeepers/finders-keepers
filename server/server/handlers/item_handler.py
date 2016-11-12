@@ -21,22 +21,33 @@ class ItemHandler():
 			abort(400, 'that item does not exist')
 		else:
 			(id, owner_id, photo, tag1, tag2, description, title) = result
+			tags = []
+			if tag1 is not None:
+				tags.append(tag1)
+			if tag2 is not None:
+				tags.append(tag2)
 			item = {
 				"item_id":id, 
 				"user_id":owner_id, 
 				"title":title, 
 				"description":description, 
 				"image_url":photo, 
-				"tags":[tag1,tag2]
+				"tags":tags
 			}
 			return jsonify(item=item)
 
 	def create_item(self, json):
-		# upload the image to S3 first and get the image URL
+		if len(json['tags']) < 1:
+			abort(400, "Must give item at least one tag")
+			
 		item_image_url = upload_image(json['item_image']);
-
-		query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1, tag2) VALUES ("
-		query += concat_params(json['user_id'], json['title'], json['description'], item_image_url, json['tags'][0], json['tags'][1])
+		query = ""
+		if len(json['tags']) < 2:
+			query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1) VALUES ("
+			query += concat_params(json['user_id'], json['title'], json['description'], item_image_url, json['tags'][0])
+		else:	
+			query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1, tag2) VALUES ("
+			query += concat_params(json['user_id'], json['title'], json['description'], item_image_url, json['tags'][0], json['tags'][1])
 		query += ")"
 
 		self.db_handler.cursor.execute(query)
@@ -107,19 +118,24 @@ class ItemHandler():
 			arr = []
 			for item in items:
 				(item_id, owner_id, photo, tag1, tag2, description, title) = item
+				tags = []
+				if tag1 is not None:
+					tags.append(tag1)
+				if tag2 is not None:
+					tags.append(tag2)
 				arr.append({
 					"item_id": item_id,
 					"user_id": owner_id,
 					"title": title,
 					"description": description,
 					"image_url": photo,
-					"tags": [tag1, tag2]
+					"tags": tags
 				})
 			return jsonify(items=arr)
 
 	def set_wishlist(self, json): #TODO need wishlist col in USER
 		user_id, wishlist = json['user_id'], json['wishlist']
-		query = "UPDATE USER (wishlist) VALUES ("
+		query = "UPDATE USER SET wishlist VALUES ("
 		query += ",".join(wishlist)
 		query += ") WHERE id=" + str(user_id)
 		
@@ -143,4 +159,5 @@ class ItemHandler():
 def concat_params(*args):
 	return ",".join("'{0}'".format(w) for w in args)
 
-		
+def concat_arr(arr):
+	return ",".join(arr)
