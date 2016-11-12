@@ -13,14 +13,22 @@ class ItemHandler():
 	def get_item(self, item_id):
 		query = "SELECT * FROM ITEM WHERE id=" + str(item_id)
 		self.db_handler.cursor.execute(query);
-		item = self.db_handler.cursor.fetchone()
+		result = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()		
 
-		if item is None:
+		if result is None:
 			abort(400, 'that item does not exist')
 		else:
-			(id, owner_id, photo, tag1, tag2, description, title) = item
-			return jsonify(item_id=id, owner_id=owner_id, title=title, description=description, image_url=photo, tags=[tag1,tag2])
+			(id, owner_id, photo, tag1, tag2, description, title) = result
+			item = {
+				"item_id":id, 
+				"owner_id":owner_id, 
+				"title":title, 
+				"description":description, 
+				"image_url":photo, 
+				"tags":[tag1,tag2]
+			}
+			return jsonify(item=item)
 
 	def create_item(self, json):
 		query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1, tag2) VALUES ("
@@ -36,7 +44,50 @@ class ItemHandler():
 		item = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
 		return jsonify(item_id=item)
+
+	def get_inventory(self, owner_id):
+		query = "SELECT * FROM ITEM WHERE ownerId=" + str(owner_id)
+		self.db_handler.cursor.execute(query);
+		items = self.db_handler.cursor.fetchall()		
+
+		if items is None:
+			abort(400, 'that user does not exist or does not own any items')
+		else:
+			arr = []
+			for item in items:
+				(item_id, owner_id, photo, tag1, tag2, description, title) = item
+				arr.append({
+					"item_id": item_id,
+					"owner_id": owner_id,
+					"title": title,
+					"description": description,
+					"image_url": photo,
+					"tags": [tag1, tag2]
+				})
+			return jsonify(items=arr)
+
+	def set_wishlist(self, json): #TODO need wishlist col in USER
+		user_id, wishlist = json['user_id'], json['wishlist']
+		query = "UPDATE USER (wishlist) VALUES ("
+		query += ",".join(wishlist)
+		query += ") WHERE id=" + user_id
 		
+		self.db_handler.cursor.execute(query)
+		self.db_handler.connection.commit()
+
+		return jsonify(error=None) # TODO return error if it didn't work?
+
+	def get_wishlist(self, user_id): #TODO need wishlist col in USER
+		query = "SELECT id, wishlist FROM USER WHERE id=" + str(user_id)
+		self.db_handler.cursor.execute(query);
+		result = self.db_handler.cursor.fetchall()
+
+		if result is None:
+			abort(400, "That user DNE or doesn't have a wishlist")
+		else:
+			user_id, wishlist = result
+			arr = wishlist.split(",")
+			return jsonify(wishlist=arr)
 
 def concat_params(*args):
 	return ",".join(w if w.isnumeric() else "'{0}'".format(w) for w in args)
