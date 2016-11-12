@@ -275,7 +275,12 @@ public class HomePage extends AppCompatActivity {
         TextView tagText = (TextView) findViewById(R.id.edit_tags);
         tagText.setText(tagString);
 
-        //TODO: populate inventory - populate this JSONArray with array of items
+        try {
+            if(UserJSON == null) throw new JSONException("OH NOE");
+            UserInfoHolder.getInstance().setZip( UserJSON.getInt("zipcode"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         try {
             if(UserJSON == null) throw new JSONException("OH NOE");

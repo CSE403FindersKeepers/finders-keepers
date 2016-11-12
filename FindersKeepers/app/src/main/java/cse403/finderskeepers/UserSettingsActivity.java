@@ -98,7 +98,7 @@ public class UserSettingsActivity extends AppCompatActivity {
             Location userLocation = new Location("");
             userLocation.setLatitude(latitude);
             userLocation.setLongitude(longitude);
-            UserInfoHolder.getInstance().setLocation(userLocation);
+            UserInfoHolder.getInstance().setZip(Integer.parseInt(zipEntered.getText().toString()));
 
             locationText.setText("Latitude: " + latitude + " Longitude: " + longitude);
             UserSettingsActivity.this.updateUser();
@@ -187,16 +187,12 @@ public class UserSettingsActivity extends AppCompatActivity {
 
         geoCoder = new Geocoder(getApplicationContext(), Locale.getDefault());
 
-        Location userLocation;
+        int userLocation;
 
-        if((userLocation = UserInfoHolder.getInstance().getLocation()) != null) {
+        if((userLocation = UserInfoHolder.getInstance().getZip()) != -1) {
             EditText zipEntered = (EditText) findViewById(R.id.edit_zip_field);
-            try {
-                List<Address> addresses = geoCoder.getFromLocation(userLocation.getLatitude(),userLocation.getLongitude(), 1);
-                zipEntered.setText(addresses.get(0).getPostalCode());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            zipEntered.setText(String.format("%05d", UserInfoHolder.getInstance().getZip()));
+
         }
     }
 
