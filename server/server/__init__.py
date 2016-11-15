@@ -195,7 +195,7 @@ def mock_get_trades(user_id):
 def mock_start_trade():
 	json = request.get_json()
 
-	if not is_valid_json(['initiator_id', 'recipient_id' ,'offered_items' ,'requested_items'], json):
+	if not is_valid_json(['initiator_id', 'recipient_id' ,'offered_item_ids' ,'requested_item_ids'], json):
 		abort(400, 'mock_start_trade: invalid POST data')
 
 	return jsonify(trade_id=100, error='')
@@ -224,12 +224,8 @@ def make_dummy_trade(trade_id):
 		'trade_id': trade_id,
 		'initiator_id': 1000,
 		'recipient_id': 2000,
-		'requested_items': [
-			make_dummy_item(1),
-			make_dummy_item(2),
-			make_dummy_item(3)],
-		'offered_items': [
-			make_dummy_item(1000)],
+		'requested_item_ids': [1, 2, 3],
+		'offered_item_ids': [1000, 1001],
 		'status': '',
 	}
 
@@ -311,7 +307,7 @@ def get_wishlist(user_id):
 def start_trade():
 	json = request.get_json()
 
-	if not is_valid_json(['initiator_id', 'recipient_id' ,'offered_items' ,'requested_items'], json):
+	if not is_valid_json(['initiator_id', 'recipient_id' ,'offered_item_ids' ,'requested_item_ids'], json):
 		abort(400, 'start_trade: invalid POST data')
 
 	return trade_handler.start_trade(json)
