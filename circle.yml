@@ -8,6 +8,8 @@
 test:
   pre:
     - pip install flask
+    - pip install flask-mysql
+    - pip install boto
   override:
     - python -m unittest discover -s ./server/tests -v 
     - cd FindersKeepers; chmod +x gradlew; ./gradlew cleanTest testDebugUnitTest -i

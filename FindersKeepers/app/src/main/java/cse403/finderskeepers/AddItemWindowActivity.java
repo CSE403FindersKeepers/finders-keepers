@@ -153,11 +153,17 @@ public class AddItemWindowActivity extends AppCompatActivity {
             EditText tags = (EditText) findViewById(R.id.editTags);
             Scanner scanner = new Scanner(tags.getText().toString());
 
+            if (!scanner.hasNext()){
+                return;
+            }
+
             // create tags array
             JSONArray jsonTags = new JSONArray();
             while(scanner.hasNext()) {
                 jsonTags.put(scanner.next());
             }
+
+            Log.d("Harambe's Tags:", jsonTags.toString());
 
             // encode the current image as base64 JPEG
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -174,7 +180,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 try {
                     requestJSON.put("tags", jsonTags);
                     requestJSON.put("item_id", AddItemWindowActivity.this.itemId);
-                    requestJSON.put("item_image_data", encodedImage);
+                    requestJSON.put("item_image", encodedImage);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return;
@@ -189,8 +195,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                         throw new IOException("HTTP Error " + updateResult.code());
                     }
                     JSONObject updateResJSON = new JSONObject(updateResult.body().string());
-                    String err = updateResJSON.getString("error");
-                    if(!err.equals("")) throw new NetworkErrorException(err);
+                    if(updateResJSON.has("error") && !updateResJSON.getString("error").equals("")) throw new NetworkErrorException(updateResJSON.getString("error"));
 
                 } catch (IOException e) {
                     disconnectionError();
@@ -206,7 +211,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                 try {
                     requestJSON.put("tags", jsonTags);
                     requestJSON.put("user_id", UserInfoHolder.getInstance().getUID());
-                    requestJSON.put("item_image_data", encodedImage);
+                    requestJSON.put("item_image", encodedImage);
                     requestJSON.put("title", "");
                     requestJSON.put("description", "");
                 } catch (JSONException e) {
@@ -223,8 +228,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
                         throw new IOException("HTTP Error " + updateResult.code());
                     }
                     JSONObject updateResJSON = new JSONObject(updateResult.body().string());
-                    String err = updateResJSON.getString("error");
-                    if(!err.equals("")) throw new NetworkErrorException(err);
+                    if(updateResJSON.has("error") && !updateResJSON.getString("error").equals("")) throw new NetworkErrorException(updateResJSON.getString("error"));
 
                 } catch (IOException e) {
                     disconnectionError();

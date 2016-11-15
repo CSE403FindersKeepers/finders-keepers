@@ -16,19 +16,21 @@ import cse403.finderskeepers.UserAPIService;
  */
 
 public class UserInfoHolder {
-    public static final String SERVER_ADDRESS = "http://10.0.2.2:5000"; //For local testing (note: still uses remote db)
-    /*"http://ec2-35-163-100-235.us-west-2.compute.amazonaws.com"; //For remote testing */
+    public static final String SERVER_ADDRESS = "http://ec2-35-163-100-235.us-west-2.compute.amazonaws.com"; //For remote testing
+     /*"http://10.0.2.2:5000"; //For local testing (note: still uses remote db)
+      */
     private static final UserInfoHolder instance = new UserInfoHolder();
 
     private UserAPIService userapiservice;
     private GoogleSignInResult signInInfo;
     private Bitmap avatar;
-    private Location location;
+    private int zip;
     private int UID;
 
     // Private constructor to ensure only one instance exists
     private UserInfoHolder() {
         signInInfo = null;
+        zip = -1;
     }
 
     // Set the userapiservice object
@@ -67,10 +69,10 @@ public class UserInfoHolder {
     public Bitmap getAvatar() { return this.avatar; }
 
     // Set user location to current
-    public void setLocation(Location location) { this.location = location; }
+    public void setZip(int zip) { this.zip = zip; }
 
     // Get user location
-    public Location getLocation() { return this.location; }
+    public int getZip() { return this.zip; }
 
     // Get user email
     public String getEmail() { return signInInfo.getSignInAccount().getEmail(); }

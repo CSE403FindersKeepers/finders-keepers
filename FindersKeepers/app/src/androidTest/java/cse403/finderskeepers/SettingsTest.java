@@ -15,7 +15,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -34,24 +36,14 @@ import static org.junit.matchers.JUnitMatchers.containsString;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class SettingsTest {
     @Rule
     public final ActivityTestRule<UserSettingsActivity> main
             = new ActivityTestRule<UserSettingsActivity>(UserSettingsActivity.class);
     @Test
     public void useAppContext() throws Exception {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
-        //assertEquals("cse40.finderskeepers", appContext.getPackageName());
+        onView(withId(R.id.edit_zip_field)).perform(typeText(""), closeSoftKeyboard());
         onView(withId(R.id.action_change_location)).perform(click());
         onView(withId(R.id.location_text)).check(matches(withText("Invalid ZIP code")));
-    }
-
-    @Test
-    public void validZipTest() throws Exception {
-        onView(withId(R.id.edit_zip_field)).perform(typeText("98233"));
-        onView(withId(R.id.action_change_location)).perform(click());
-        //onView(withId(R.id.location_text)).check(matches(withText(containsString("Latitude"))));
     }
 }
