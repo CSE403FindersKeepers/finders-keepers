@@ -307,6 +307,15 @@ def set_wishlist():
 def get_wishlist(user_id):
 	return item_handler.get_wishlist(user_id)
 
+@app.route('/api/start_trade', methods=['POST'])
+def start_trade():
+	json = request.get_json()
+
+	if not is_valid_json(['initiator_id', 'recipient_id' ,'offered_items' ,'requested_items'], json):
+		abort(400, 'start_trade: invalid POST data')
+
+	return trade_handler.start_trade(json)
+
 #------------------------------ utility -------------------------------#
 
 def is_valid_json(expected_fields, json):
