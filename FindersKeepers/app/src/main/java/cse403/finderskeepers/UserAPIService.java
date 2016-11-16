@@ -21,6 +21,9 @@ import java.util.List;
 
 /**
  * Created by Jared on 10/27/2016.
+ * Note: API specifications may change. To facilitate frontend/backend communication,
+ * please refer to and update the separate API specification document for documentation of
+ * API calls and functionality.
  */
 
 public interface UserAPIService {
@@ -54,5 +57,20 @@ public interface UserAPIService {
 
     @GET("/api/get_inventory/{id}")
     Call<ResponseBody> getInventory(@Path("id") int id);
+
+    @GET("/mock/api/get_trade/{id}")
+    Call<ResponseBody> getTrade(@Path("id") int id);
+
+    @GET("/mock/api/get_trades/{id}")
+    Call<ResponseBody> getTrades(@Path("id") int id);
+
+    @POST("/mock/api/start_trade")
+    Call<ResponseBody> startTrade(@Body RequestBody request);
+
+    @PUT("/mock/api/accept_trade")
+    Call<ResponseBody> acceptTrade(@Body RequestBody request);
+
+    @GET("/mock/api/get_users_within_radius")
+    Call<ResponseBody> getNearbyUsers(@Body RequestBody request);
 
 }

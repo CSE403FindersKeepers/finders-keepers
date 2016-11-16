@@ -11,9 +11,11 @@
     tools:context="cse403.finderskeepers.DisconnectionError">
 
     <TextView
-        android:text="Please connect to your local network"
+        android:text="Finders Keepers could not connect to the server.
+Please make sure you are connected to the internet."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:id="@+id/textView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
