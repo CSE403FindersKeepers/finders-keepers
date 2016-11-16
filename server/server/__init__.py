@@ -1,19 +1,21 @@
 from flask import Flask
 from flask import abort, jsonify, request
 from handlers.response_objects import Item, User, Trade, Error
-from handlers import user_handler
-from handlers.item_handler import ItemHandler
-from handlers import trade_handler
 from handlers.db_handler import DBHandler
+from handlers.user_handler import UserHandler
+from handlers.item_handler import ItemHandler
+from handlers.trade_handler import TradeHandler
+from handlers.search_handler import SearchHandler
 
 # create the app instance
 app = Flask(__name__)
 
 # create the MySQL database handler instance
 db_handler = DBHandler(app)
-user_handler = user_handler.UserHandler(db_handler)
+user_handler = UserHandler(db_handler)
 item_handler = ItemHandler(db_handler)
-trade_handler = trade_handler.TradeHandler(db_handler)
+trade_handler = TradeHandler(db_handler)
+search_handler = SearchHandler(db_handler)
 
 # these are all the mock API end points.
 # ---------------------------------------------------------------------
@@ -239,7 +241,7 @@ def make_dummy_trade(trade_id):
 def get_user(user_id):
 	# check for malformed request
 	if user_id <= 0:
-		abort(400, '<get_user> only accepts positive user IDs')
+		abort(400, 'get_user: only accepts positive user IDs')
 	
 	return user_handler.get_user(user_id)
 
@@ -248,7 +250,7 @@ def create_user():
 	json = request.get_json()
 	# check for malformed json request
 	if not is_valid_json(['email'], json):
-		abort(400, 'mock_create_user: invalid POST data')
+		abort(400, 'create_user: invalid POST data')
 	return user_handler.create_user(json)
 
 @app.route('/api/update_user', methods=['PUT'])
@@ -256,8 +258,8 @@ def update_user():
 	json = request.get_json()
 
 	# check for malformed json request
-	if not is_valid_json(['user_id', 'name', 'zipcode', 'avatar'], json):
-		abort(400, 'mock_update_user: invalid PUT data')
+	if not is_valid_json(['user_id'], json):
+		abort(400, 'update_user: invalid PUT data')
 	
 	return user_handler.update_user(json)
 
@@ -292,6 +294,8 @@ def get_all_items():
 @app.route('/api/get_inventory/<int:user_id>', methods=['GET'])
 def get_inventory(user_id):
 	return item_handler.get_inventory(user_id)
+	
+#----------------------------------------------------------------#
 
 @app.route('/api/set_wishlist', methods=['PUT']) # TODO won't work until wishlistitem table is up
 def set_wishlist():
@@ -303,6 +307,8 @@ def set_wishlist():
 @app.route('/api/get_wishlist/<int:user_id>', methods=['GET'])
 def get_wishlist(user_id):
 	return item_handler.get_wishlist(user_id)
+	
+#----------------------------------------------------------------#
 
 @app.route('/api/get_trade/<int:trade_id>', methods=['GET'])
 def get_trade(trade_id):
@@ -338,6 +344,25 @@ def deny_trade():
 		abort(400, 'deny_trade: invalid PUT data')
 
 	return trade_handler.deny_trade(json)
+	
+#----------------------------------------------------------------#
+
+@app.route('/api/get_users_within_radius', methods=['GET'])
+def get_users_within_radius():
+	zipcode = request.args.get('zipcode')
+	radius = request.args.get('radius')
+	
+	if zipcode is None or radius is None:
+		abort(400, 'get_users_within_radius: invalid GET arguments')
+	
+	result = search_handler.get_users_within_radius(zipcode, radius)
+	
+	# check if there was an error
+	if result is None:
+		abort(400, 'get_users_within_radius: invalid zipcode or radius')
+		
+		
+	return result
 
 
 #------------------------------ utility -------------------------------#

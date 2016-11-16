@@ -24,12 +24,6 @@ class UserHandler():
 			self.db_handler.cursor.execute(query);
 			items = self.db_handler.cursor.fetchall()		
 
-			# TODO needs wishlistitem table
-			# query = "SELECT tag FROM WISHLISTITEM WHERE userId=" + str(user_id)
-			# self.db_handler.cursor.execute(query);
-			# result = self.db_handler.cursor.fetchall()
-			# wishitems = item for (item,) in result
-
 			inventory = []
 			if items is not None:
 				for item in items:
@@ -77,12 +71,38 @@ class UserHandler():
 			return jsonify(error="Error. User not found")
 		else:
 			url = data[0]
+			
 		# If avatar is null, leave the default value. Otherwise get a url
-		if json['avatar'] is not None:
+		if 'avatar' in json and json['avatar'] is not None:
 			url = image_handler.upload_image(json['avatar'])
 		# If image handler returns nothing due to an error, set url to be default image
 		if url is None:
 			url = data[0]
+			
+		# build the query string based on what arguments are provided
+		query = "UPDATE USER SET "
+		needs_comma = True
+		if 'name' in json:
+			query += " name='" + json['name'] + "'"
+		else:
+			needs_comma = False
+			
+		if 'zipcode' in json:
+			if needs_comma:
+				query += ","
+			else:
+				needs_comma = True
+			query += " zipcode=" + str(json['zipcode'])
+			
+		if 'avatar' in json:
+			if needs_comma:
+				query += ","
+			else:
+				needs_comma = True
+			query += " photo='" + url + "'"
+			
+		query += " WHERE id=" + str(json['user_id'])
+		
 		self.db_handler.cursor.execute("UPDATE USER SET name='" + json['name'] + "', zipcode=" + str(json['zipcode']) + ", photo='" + url + "' WHERE id =" + str(json['user_id']))
 		self.db_handler.connection.commit()
 		return jsonify(error=None)
