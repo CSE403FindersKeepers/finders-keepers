@@ -1,11 +1,5 @@
 # trade_handler deals with functionality related to trade
-from flask import Flask
 from flask import abort, jsonify, request
-from db_handler import DBHandler
-import image_handler
-
-# create the app instance
-app = Flask(__name__)
 
 class TradeHandler():
 	def __init__(self, db_handler):
@@ -20,7 +14,7 @@ class TradeHandler():
 		if result is None:
 			return jsonify(error="Cannot find trade with id" + str(trade_id))
 
-		return jsonify(trade=readTradeIntoObj(result))
+		return jsonify(trade=format_trade_json(result))
 
 	def get_trades(self, user_id):
 		query = "SELECT * FROM TRADES WHERE "
@@ -33,7 +27,7 @@ class TradeHandler():
 
 		trades = []
 		for result in results:
-			trades.append(readTradeIntoObj(result))
+			trades.append(format_trade_json(result))
 		return jsonify(trades=trades)
 
 	def start_trade(self, json):
@@ -75,7 +69,11 @@ class TradeHandler():
 		self.db_handler.connection.commit()
 		return jsonify(error=None) # todo change to match spec
 
-def readTradeIntoObj(result):
+def send_confirmation_emails():
+	# TODO: implement this
+	return
+		
+def format_trade_json(result):
 	initiator_id, recipient_id, offered_item1, offered_item2, requested_item1, requested_item2, status, trade_id = result
 	offered_items = []
 	offered_items.append(offered_item1) if offered_item1 is not None else None
