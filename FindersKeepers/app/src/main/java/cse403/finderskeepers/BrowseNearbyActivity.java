@@ -84,6 +84,11 @@ public class BrowseNearbyActivity extends AppCompatActivity {
                 return true;
             case R.id.action_browse_users:
                 return true;
+            case R.id.action_view_trades:
+                Intent viewTradesIntent = new Intent(BrowseNearbyActivity.this, ViewTradesActivity.class);
+                finish();
+                startActivity(viewTradesIntent);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

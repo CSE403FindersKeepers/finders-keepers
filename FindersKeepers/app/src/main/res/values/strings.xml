@@ -38,4 +38,8 @@
     <string name="their_items_text">Their Items</string>
     <string name="their_selected_items_text">Their Chosen Items</string>
     <string name="send_trade_text">Send Trade Request</string>
+    <string name="title_activity_view_trades">ViewTradesActivity</string>
+    <string name="incoming_trades_text">Incoming Trades</string>
+    <string name="outgoing_trades_text">Outgoing Trades</string>
+    <string name="completed_trades_text">Completed/Rejected Trades</string>
 </resources>

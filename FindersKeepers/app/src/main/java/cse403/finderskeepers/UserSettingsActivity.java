@@ -223,6 +223,11 @@ public class UserSettingsActivity extends AppCompatActivity {
                 finish();
                 startActivity(browseIntent);
                 return true;
+            case R.id.action_view_trades:
+                Intent viewTradesIntent = new Intent(UserSettingsActivity.this, ViewTradesActivity.class);
+                finish();
+                startActivity(viewTradesIntent);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

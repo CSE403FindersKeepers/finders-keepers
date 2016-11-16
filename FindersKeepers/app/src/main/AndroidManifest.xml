@@ -52,6 +52,10 @@
         <activity
             android:name=".ProposeTradeActivity"
             android:label="@string/title_activity_propose_trade"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewTradesActivity"
+            android:label="@string/title_activity_view_trades"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
