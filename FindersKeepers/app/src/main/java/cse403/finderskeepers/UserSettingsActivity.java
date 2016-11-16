@@ -218,6 +218,11 @@ public class UserSettingsActivity extends AppCompatActivity {
                 finish();
                 startActivity(intent);
                 return true;
+            case R.id.action_browse_users:
+                Intent browseIntent = new Intent(UserSettingsActivity.this, BrowseNearbyActivity.class);
+                finish();
+                startActivity(browseIntent);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

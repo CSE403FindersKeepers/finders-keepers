@@ -4,8 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-                     />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -37,7 +36,23 @@
             android:exported="true"
             android:label="AddItemWindowActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DisconnectionError"></activity>
+        <activity android:name=".DisconnectionError" />
+        <activity
+            android:name=".BrowseNearbyActivity"
+            android:label="@string/title_activity_browse_nearby"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OtherUserPageActivity"
+            android:label="@string/title_activity_other_user_page"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OtherUserItemViewActivity"
+            android:label="@string/title_activity_other_user_item_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ProposeTradeActivity"
+            android:label="@string/title_activity_propose_trade"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
