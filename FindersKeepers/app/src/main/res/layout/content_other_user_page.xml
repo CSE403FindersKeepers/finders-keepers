@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_other_user_page"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="70dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="cse403.finderskeepers.OtherUserPageActivity"
+    tools:showIn="@layout/activity_other_user_page">
+
+    <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:bootstrapBrand="primary"
+        app:hasBorder="true"
+        android:src="@mipmap/ic_launcher"
+        android:id="@+id/user_avatar"
+        android:gravity="top"
+        android:layout_gravity="center"
+        android:layout_weight="1" />
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:text="@string/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/user_name_text"
+        android:textSize="30sp"
+        android:textColor="@color/bootstrap_brand_secondary_text"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight=".5"/>
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:text="@string/other_user_items_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/user_items_text"
+        android:textSize="30sp"
+        android:textColor="@color/bootstrap_brand_secondary_text"
+        android:layout_gravity="start"
+        android:layout_weight=".5"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/user_items_view"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/item_list">
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:text="@string/other_user_tags_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/user_tags_text"
+        android:textSize="30sp"
+        android:textColor="@color/bootstrap_brand_secondary_text"
+        android:layout_gravity="start"
+        android:layout_weight=".5"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:id="@+id/user_tags"
+        android:layout_weight=".5" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/propose_trade_text"
+        android:id="@+id/propose_trade"
+        android:layout_weight=".5"/>
+
+</LinearLayout>

@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="cse403.finderskeepers.BrowseNearbyActivity">
+    <item
+        android:title="@string/action_user_page"
+        android:orderInCategory="101"
+        android:id="@+id/action_user_page" />
+    <item
+        android:id="@+id/action_browse_users"
+        android:orderInCategory="200"
+        android:title="@string/action_browse_users" />
+    <item
+        android:id="@+id/action_view_trades"
+        android:orderInCategory="201"
+        android:title="@string/action_view_trades" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="302"
+        android:title="@string/action_settings" />
+</menu>
