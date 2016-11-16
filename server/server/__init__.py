@@ -13,6 +13,7 @@ app = Flask(__name__)
 db_handler = DBHandler(app)
 user_handler = user_handler.UserHandler(db_handler)
 item_handler = ItemHandler(db_handler)
+trade_handler = trade_handler.TradeHandler(db_handler)
 
 # these are all the mock API end points.
 # ---------------------------------------------------------------------
@@ -303,6 +304,14 @@ def set_wishlist():
 def get_wishlist(user_id):
 	return item_handler.get_wishlist(user_id)
 
+@app.route('/api/get_trade/<int:trade_id>', methods=['GET'])
+def get_trade(trade_id):
+	return trade_handler.get_trade(trade_id)
+
+@app.route('/api/get_trades/<int:user_id>', methods=['GET'])
+def get_trades(user_id):
+	return trade_handler.get_trades(user_id)
+
 @app.route('/api/start_trade', methods=['POST'])
 def start_trade():
 	json = request.get_json()
@@ -311,6 +320,25 @@ def start_trade():
 		abort(400, 'start_trade: invalid POST data')
 
 	return trade_handler.start_trade(json)
+
+@app.route('/api/accept_trade', methods=['PUT'])
+def accept_trade():
+	json = request.get_json()
+
+	if not is_valid_json(['user_id', 'trade_id'], json):
+		abort(400, 'accept_trade: invalid PUT data')
+
+	return trade_handler.accept_trade(json)
+
+@app.route('/api/deny_trade', methods=['PUT'])
+def deny_trade():
+	json = request.get_json()
+
+	if not is_valid_json(['user_id', 'trade_id'], json):
+		abort(400, 'deny_trade: invalid PUT data')
+
+	return trade_handler.deny_trade(json)
+
 
 #------------------------------ utility -------------------------------#
 
