@@ -42,4 +42,9 @@
     <string name="incoming_trades_text">Incoming Trades</string>
     <string name="outgoing_trades_text">Outgoing Trades</string>
     <string name="completed_trades_text">Completed/Rejected Trades</string>
+    <string name="title_activity_view_user_trade">ViewUserTradeActivity</string>
+    <string name="accept_trade_text">Accept Trade</string>
+    <string name="reject_trade_text">Reject Trade</string>
+    <string name="trade_view_your_items_text">Your Items</string>
+    <string name="trade_view_their_items_text">Their Items</string>
 </resources>
