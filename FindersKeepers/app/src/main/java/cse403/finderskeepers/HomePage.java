@@ -1,20 +1,14 @@
 package cse403.finderskeepers;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.os.StrictMode;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,23 +22,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import cse403.finderskeepers.data.UserInfoHolder;
-import cse403.finderskeepers.UserAPIService;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static android.Manifest.*;
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
 import static cse403.finderskeepers.UserSettingsActivity.JSON;
 
 public class HomePage extends AppCompatActivity {
@@ -95,8 +84,7 @@ public class HomePage extends AppCompatActivity {
             case REQUEST_STUFF: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     return;
-                }
-                else {
+                } else {
                     finish();
                 }
             }
@@ -342,8 +330,9 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent addItemIntent = new Intent(HomePage.this, AddItemWindowActivity.class);
+            /*
             Drawable drawable = ((AddableItem) view).getDrawable();
-            Bitmap image = ((BitmapDrawable) drawable).getBitmap();
+            Bitmap image = ((BitmapDrawable) drawable).getBitmap();*/
             addItemIntent.putExtra("ITEM_ID", ((AddableItem) view).getItemId());
             addItemIntent.putExtra("TAGS", ((AddableItem) view).getTags());
             startActivity(addItemIntent);
@@ -364,11 +353,16 @@ public class HomePage extends AppCompatActivity {
 
         switch(id) {
             case R.id.action_settings:
-                Intent intent = new Intent(HomePage.this, UserSettingsActivity.class);
+                Intent settingsIntent = new Intent(HomePage.this, UserSettingsActivity.class);
                 finish();
-                startActivity(intent);
+                startActivity(settingsIntent);
                 return true;
             case R.id.action_user_page:
+                return true;
+            case R.id.action_browse_users:
+                Intent browseIntent = new Intent(HomePage.this, BrowseNearbyActivity.class);
+                finish();
+                startActivity(browseIntent);
                 return true;
         }
 

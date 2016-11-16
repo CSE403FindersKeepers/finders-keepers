@@ -23,4 +23,19 @@
     <string name="delete_item_text">Delete Item</string>
     <string name="update_tags_text">Update Tags</string>
     <string name="wishlist_tags_hint">Tag1 Tag2 Tag3 Tag4</string>
+    <string name="title_activity_browse_nearby">BrowseNearby</string>
+    <string name="browse_nearby_users_text">Browse Nearby Users</string>
+    <string name="action_browse_users">Browse Users</string>
+    <string name="title_activity_other_user_page">OtherUserPageActivity</string>
+    <string name="other_user_items_text">User\'s Items</string>
+    <string name="other_user_tags_text">User\'s Tags</string>
+    <string name="title_activity_other_user_item_view">OtherUserItemViewActivity</string>
+    <string name="view_tags">Tags</string>
+    <string name="propose_trade_text">Propose Trade</string>
+    <string name="title_activity_propose_trade">ProposeTradeActivity</string>
+    <string name="this_user_items_text">Your Items</string>
+    <string name="this_user_selected_items_text">Your Chosen Items</string>
+    <string name="their_items_text">Their Items</string>
+    <string name="their_selected_items_text">Their Chosen Items</string>
+    <string name="send_trade_text">Send Trade Request</string>
 </resources>

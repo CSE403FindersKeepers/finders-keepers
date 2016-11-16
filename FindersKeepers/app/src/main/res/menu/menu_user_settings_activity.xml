@@ -1,14 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cse403.finderskeepers.HomePage">
+    tools:context="cse403.finderskeepers.UserSettingsActivity">
     <item
         android:title="@string/action_user_page"
         android:orderInCategory="101"
         android:id="@+id/action_user_page" />
     <item
-        android:id="@+id/action_browse_items"
+        android:id="@+id/action_browse_users"
         android:orderInCategory="200"
-        android:title="@string/action_browse_items" />
+        android:title="@string/action_browse_users" />
     <item
         android:id="@+id/action_view_trades"
         android:orderInCategory="201"
