@@ -1,20 +1,29 @@
 # trade_handler deals with functionality related to trade
+from flask import Flask
 from flask import abort, jsonify, request
+from db_handler import DBHandler
+import image_handler
+
+# create the app instance
+app = Flask(__name__)
 
 class TradeHandler():
 	def __init__(self, db_handler):
 		self.db_handler = db_handler
 
 	def get_trade(self, trade_id):
-		query = "SELECT * FROM TRADES WHERE id=" + str(trade_id)
-		self.db_handler.cursor.execute(query)
-		result = self.db_handler.cursor.fetchone()
+		tradeQuery = "SELECT * FROM TRADES WHERE tradeId=" + str(trade_id)
+		self.db_handler.cursor.execute(tradeQuery)
+		tradeRes = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
+		if tradeRes is None:
+			return jsonify(error="Cannot find trade with id " + str(trade_id))
 
-		if result is None:
-			return jsonify(error="Cannot find trade with id" + str(trade_id))
-
-		return jsonify(trade=format_trade_json(result))
+		initiator = tradeRes[0]
+		recipient = tradeRes[1]
+		offered_items = self.get_item_array(trade_id, initiator)
+		requested_items = self.get_item_array(trade_id, recipient)
+		return jsonify(trade=format_trade_json(tradeRes, offered_items, requested_items))
 
 	def get_trades(self, user_id):
 		query = "SELECT * FROM TRADES WHERE "
@@ -22,69 +31,85 @@ class TradeHandler():
 		self.db_handler.cursor.execute(query)
 		results = self.db_handler.cursor.fetchall()
 
-		if result is None:
+		if results is None:
 			return jsonify(trades=[])
 
 		trades = []
 		for result in results:
-			trades.append(format_trade_json(result))
+			initiator = result[0]
+			recipient = result[1]
+			trade_id = result[2]
+			offered_items = self.get_item_array(trade_id, initiator)
+			requested_items = self.get_item_array(trade_id, recipient)
+			trades.append(format_trade_json(result, offered_items, requested_items))
 		return jsonify(trades=trades)
 
 	def start_trade(self, json):
-		query = "INSERT INTO TRADE "
-		query += "(initiatorId, recipientId, offeredItem1, offeredItem2, requestedItem1, requestedItem2, status) "
-		
-		query += "VALUES(" + str(json["initiator_id"]) + "," + str(json["recipient_id"])
-		if len(json["offered_items"]) > 1:
-			query += "," + json["offered_items"][0]
-		if len(json["offered_items"]) > 2:
-			query += "," + json["offered_items"][1]
-		if len(json["requested_items"]) > 1:
-			query += "," + json["requested_items"][0]
-		if len(json["requested_items"]) > 2:
-			query += "," + json["requested_items"][1]
-		query += ")"
+		query = "INSERT INTO TRADES"
+		query += " VALUES(" + str(json["initiator_id"]) + "," + str(json["recipient_id"])
+		query += ", default, 'PENDING')"
+
 		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
 
-		query = "SELECT * FROM TRADE WHERE "
+		query = "SELECT * FROM TRADES WHERE "
 		query += "initiatorId=" + str(json["initiator_id"]) + " AND "
 		query += "recipientId=" + str(json["recipient_id"])
 		self.db_handler.cursor.execute(query)
 		result = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
-		return jsonify(result=result) # todo change to match spec
+
+		if result is None:
+			return jsonify(error="Start trade failed")
+
+		trade_id = result[2]
+
+		for item in json["offered_item_ids"]:
+			query = "INSERT INTO TRADEITEMS"
+			query += " VALUES (" + str(trade_id) + ", " + str(item) + ", " + str(json["initiator_id"]) + ")" 
+			self.db_handler.cursor.execute(query)
+			self.db_handler.connection.commit()
+
+		for item in json["requested_item_ids"]:
+			query = "INSERT INTO TRADEITEMS"
+			query += " VALUES (" + str(trade_id) + ", " + str(item) + ", " + str(json["recipient_id"]) + ")" 
+			self.db_handler.cursor.execute(query)
+			self.db_handler.connection.commit()
+
+		return jsonify(trade_id=result[2]) # todo change to match spec
 
 	def accept_trade(self, json):
 		# check if json["user"] is recipient?
-		query = "UPDATE TRADE SET status=ACCEPTED WHERE id=" + json["id"]
+		query = "UPDATE TRADES SET status='ACCEPTED' WHERE recipientId=" + str(json["user_id"])
+		query += " AND tradeId = " + str(json["trade_id"])
 		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
 		return jsonify(error=None) # todo change to match spec
 
 	def deny_trade(self, json):
 		# check if json["user"] is recipient?
-		query = "UPDATE TRADE SET status=ACCEPTED WHERE id=" + json["id"]
+		query = "UPDATE TRADES SET status='DENIED' WHERE recipientId=" + str(json["user_id"])
+		query += " AND tradeId = " + str(json["trade_id"])
 		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
 		return jsonify(error=None) # todo change to match spec
 
-def send_confirmation_emails():
-	# TODO: implement this
-	return
-		
-def format_trade_json(result):
-	initiator_id, recipient_id, offered_item1, offered_item2, requested_item1, requested_item2, status, trade_id = result
-	offered_items = []
-	offered_items.append(offered_item1) if offered_item1 is not None else None
-	offered_items.append(offered_item2) if offered_item2 is not None else None
-	requested_items = []
-	requested_items.append(requested_item1) if requested_item1 is not None else None
-	requested_items.append(requested_item2) if requested_item1 is not None else None
+	def get_item_array(self, trade_id, user_id):
+		query = "SELECT itemId FROM TRADEITEMS WHERE userId=" + str(user_id) + " AND tradeId=" + str(trade_id)
+		items = []
+		self.db_handler.cursor.execute(query)
+		result = self.db_handler.cursor.fetchone()
+		while result is not None:
+			items.append(result[0])
+			result = self.db_handler.cursor.fetchone()
+		return items
+
+def format_trade_json(result, offered_items, requested_items):
+	initiator_id, recipient_id, trade_id, status = result
 
 	return {
 		"trade_id":trade_id, 
-		"initiator_id":owner_id, 
+		"initiator_id":initiator_id, 
 		"recipient_id":recipient_id, 
 		"offered_items":offered_items, 
 		"requested_items":requested_items, 

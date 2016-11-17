@@ -78,7 +78,7 @@ public class AddItemWindowActivity extends AppCompatActivity {
         setContentView(R.layout.content_additem_page);
         userapiservice = UserInfoHolder.getInstance().getAPIService();
         ImageButton img = (ImageButton) findViewById(R.id.add_item_img);
-        Button upload = (Button) findViewById(R.id.upload_button); //TODO: URGENT: RETURNING NULL?!\
+        Button upload = (Button) findViewById(R.id.upload_button);
 
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("ITEM_ID") && getIntent().getExtras().containsKey("TAGS")) {
 

@@ -39,14 +39,14 @@ class TestTradeHandler(unittest.TestCase):
         trade1 =  {
             "initiator_id": -1,
             "recipient_id": -2,
-            "offered_items": "item1,item2",
-            "requested_items": "item3,item4"
+            "offered_items": [1,2],
+            "requested_items": [3,4]
         }
         trade2 =  {
             "initiator_id": -1,
             "recipient_id": -4,
-            "offered_items": "item5,item6",
-            "requested_items": "item7,item8"
+            "offered_items": [5,6]
+            "requested_items": [7,8]
         }
         # create json for trade 1 and trade 2
         json1 = json.dumps(trade1)
