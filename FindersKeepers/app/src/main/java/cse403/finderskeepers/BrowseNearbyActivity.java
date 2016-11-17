@@ -11,14 +11,31 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import cse403.finderskeepers.data.UserInfoHolder;
+import static cse403.finderskeepers.UserSettingsActivity.JSON;
+
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class BrowseNearbyActivity extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +45,79 @@ public class BrowseNearbyActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //TODO: Add items to view
-        URL getImg = null;
+        JSONArray usersArray = new JSONArray();
+
+        LinearLayout users = (LinearLayout) findViewById(R.id.nearby_users_layout);
+        UserAPIService userapiservice = UserInfoHolder.getInstance().getAPIService();
+
+        if (UserInfoHolder.getInstance().getZip() == -1) {
+            TextView labelText = (TextView) findViewById(R.id.browse_nearby_text_view);
+            labelText.setText("Please Enter a ZIP Code on the Settings Screen");
+            return;
+        }
+
         try {
-            getImg = new URL("http://i.imgur.com/ibsZi5R.png");
-        } catch (MalformedURLException e) {
+            JSONObject queryObj = new JSONObject().put("zipcode", UserInfoHolder.getInstance().getZip());
+            queryObj.put("radius", 20).toString();
+            Call<ResponseBody> nearbyUsers = userapiservice.getNearbyUsers(RequestBody.create(JSON, queryObj.toString()));
+            Response<ResponseBody> doCall = nearbyUsers.execute();
+
+            if (doCall.code() != 200){
+                throw new IOException("HTTP ERROR");
+            }
+
+            JSONObject nearbyJSON = new JSONObject(doCall.body().string());
+            usersArray = nearbyJSON.getJSONArray("users");
+
+        } catch (JSONException e) {
+            disconnectionError();
+            e.printStackTrace();
+        } catch (IOException e) {
+            disconnectionError();
             e.printStackTrace();
         }
-        if (getImg != null && !getImg.toString().equals("")) {
-            Bitmap image = null;
+
+        for (int i = 0; i < usersArray.length(); i++) {
+            URL getImg = null;
+            int UID = -1;
+            String userName = "";
             try {
-                image = BitmapFactory.decodeStream(getImg.openConnection().getInputStream());
-            } catch (IOException e) {
+                getImg = new URL(usersArray.getJSONObject(i).getString("image_url"));
+                UID = usersArray.getJSONObject(i).getInt("user_id");
+                userName = usersArray.getJSONObject(i).getString("name");
+            } catch (MalformedURLException e) {
+                disconnectionError();
                 e.printStackTrace();
+            } catch (JSONException e) {
+                disconnectionError();
+                e.printStackTrace();
+            }
+
+            if (getImg != null && !getImg.toString().equals("")) {
+                Bitmap image = null;
+                try {
+                    image = BitmapFactory.decodeStream(getImg.openConnection().getInputStream());
+                } catch (IOException e) {
+                    disconnectionError();
+                    e.printStackTrace();
+                }
+                if (image != null) {
+                    BrowseResultUser newUserResult = new BrowseResultUser(this, UID);
+                    LinearLayout.LayoutParams params = new LinearLayout
+                            .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    newUserResult.setImageBitmap(image);
+                    newUserResult.setLayoutParams(params);
+                    newUserResult.setAdjustViewBounds(true);
+                    newUserResult.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    newUserResult.setOnClickListener(userClickListener);
+                    users.addView(newUserResult);
+
+                    TextView userLabel = new TextView(this);
+                    userLabel.setLayoutParams(params);
+                    userLabel.setText(userName);
+                    userLabel.setTextSize(30);
+                    users.addView(userLabel);
+                }
             }
         }
     }
@@ -58,11 +136,15 @@ public class BrowseNearbyActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent viewUserIntent = new Intent(BrowseNearbyActivity.this, OtherUserPageActivity.class);
-            //TODO: add user info to extras in intent
-
+            viewUserIntent.putExtra("USERID", view.getId());
             startActivity(viewUserIntent);
         }
     };
+
+    private void disconnectionError(){
+        Intent intent = new Intent(BrowseNearbyActivity.this, DisconnectionError.class);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
