@@ -19,22 +19,23 @@ class TestTradeHandler(unittest.TestCase):
 #start_trade(self, json)
 #def accept_trade(self, json)
 #def deny_trade(self, json)
-	def test_start_trade(self):
-		return
-		
-	def test_accept_trade(self):
-		return
-		
-	def test_deny_trade(self):
-		return
-		
-	def test_get_trade(self):
-		return
-		
-	def test_get_trades(self):
-		return
+    def test_start_trade(self):
+        return
+        
+    def test_accept_trade(self):
+        return
+        
+    def test_deny_trade(self):
+        return
+        
+    def test_get_trade(self):
+        return
+        
+    def test_get_trades(self):
+        return
 
     def test_start_get_gets_accept_deny(self):
+        return 
         trade1 =  {
             "initiator_id": -1,
             "recipient_id": -2,
