@@ -60,8 +60,8 @@ public class ProposeTradeActivity extends AppCompatActivity {
         public void onClick(View view) {
             LinearLayout unselected = (LinearLayout) findViewById(R.id.this_user_item_list);
             LinearLayout selected = (LinearLayout) findViewById(R.id.this_user_selected_item_list);
-            selected.addView(view);
             unselected.removeView(view);
+            selected.addView(view);
             view.setOnClickListener(deselectOwnListener);
         }
     };
@@ -74,8 +74,8 @@ public class ProposeTradeActivity extends AppCompatActivity {
         public void onClick(View view) {
             LinearLayout unselected = (LinearLayout) findViewById(R.id.this_user_item_list);
             LinearLayout selected = (LinearLayout) findViewById(R.id.this_user_selected_item_list);
-            unselected.addView(view);
             selected.removeView(view);
+            unselected.addView(view);
             view.setOnClickListener(selectOwnListener);
         }
     };
@@ -88,8 +88,8 @@ public class ProposeTradeActivity extends AppCompatActivity {
         public void onClick(View view) {
             LinearLayout unselected = (LinearLayout) findViewById(R.id.their_item_list);
             LinearLayout selected = (LinearLayout) findViewById(R.id.their_selected_item_list);
-            selected.addView(view);
             unselected.removeView(view);
+            selected.addView(view);
             view.setOnClickListener(deselectOtherListener);
         }
     };
@@ -103,8 +103,8 @@ public class ProposeTradeActivity extends AppCompatActivity {
         public void onClick(View view) {
             LinearLayout unselected = (LinearLayout) findViewById(R.id.their_item_list);
             LinearLayout selected = (LinearLayout) findViewById(R.id.their_selected_item_list);
-            unselected.addView(view);
             selected.removeView(view);
+            unselected.addView(view);
             view.setOnClickListener(selectOtherListener);
         }
     };
