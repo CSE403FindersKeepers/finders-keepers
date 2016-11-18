@@ -1,17 +1,33 @@
 package cse403.finderskeepers;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.google.android.gms.vision.text.Line;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import cse403.finderskeepers.data.UserInfoHolder;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class ProposeTradeActivity extends AppCompatActivity {
 
@@ -42,7 +58,11 @@ public class ProposeTradeActivity extends AppCompatActivity {
     private View.OnClickListener selectOwnListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            LinearLayout unselected = (LinearLayout) findViewById(R.id.this_user_item_list);
+            LinearLayout selected = (LinearLayout) findViewById(R.id.this_user_selected_item_list);
+            selected.addView(view);
+            unselected.removeView(view);
+            view.setOnClickListener(deselectOwnListener);
         }
     };
 
@@ -52,7 +72,11 @@ public class ProposeTradeActivity extends AppCompatActivity {
     private View.OnClickListener deselectOwnListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            LinearLayout unselected = (LinearLayout) findViewById(R.id.this_user_item_list);
+            LinearLayout selected = (LinearLayout) findViewById(R.id.this_user_selected_item_list);
+            unselected.addView(view);
+            selected.removeView(view);
+            view.setOnClickListener(selectOwnListener);
         }
     };
 
@@ -62,7 +86,11 @@ public class ProposeTradeActivity extends AppCompatActivity {
     private View.OnClickListener selectOtherListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            LinearLayout unselected = (LinearLayout) findViewById(R.id.their_item_list);
+            LinearLayout selected = (LinearLayout) findViewById(R.id.their_selected_item_list);
+            selected.addView(view);
+            unselected.removeView(view);
+            view.setOnClickListener(deselectOtherListener);
         }
     };
 
@@ -73,7 +101,11 @@ public class ProposeTradeActivity extends AppCompatActivity {
     private View.OnClickListener deselectOtherListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            LinearLayout unselected = (LinearLayout) findViewById(R.id.their_item_list);
+            LinearLayout selected = (LinearLayout) findViewById(R.id.their_selected_item_list);
+            unselected.addView(view);
+            selected.removeView(view);
+            view.setOnClickListener(selectOtherListener);
         }
     };
 
@@ -95,5 +127,68 @@ public class ProposeTradeActivity extends AppCompatActivity {
 
         Call<ResponseBody> ourInventory = userapiservice.getInventory(UserInfoHolder.getInstance().getUID());
         Call<ResponseBody> theirInventory = userapiservice.getInventory(otherUID);
+
+        try {
+            Response<ResponseBody> doOurInventoryCall = ourInventory.execute();
+            Response<ResponseBody> doTheirInventoryCall = theirInventory.execute();
+
+            if (doOurInventoryCall.code() != 200 || doTheirInventoryCall.code() != 200) {
+                throw new IOException("HTTP ERROR");
+            }
+
+            String ourInventoryString = doOurInventoryCall.body().toString();
+            String theirInventoryString = doTheirInventoryCall.body().toString();
+
+            JSONArray ourInventoryArray = new JSONObject(ourInventoryString).getJSONArray("items");
+            JSONArray theirInventoryArray = new JSONObject(theirInventoryString).getJSONArray("items");
+
+            populateLayoutWithItems(ourInventoryArray, ourItems, selectOwnListener);
+            populateLayoutWithItems(theirInventoryArray, theirItems, selectOtherListener);
+        } catch (IOException e) {
+            disconnectionError();
+            e.printStackTrace();
+        } catch (JSONException e) {
+            disconnectionError();
+            e.printStackTrace();
+        }
+    }
+
+    private void populateLayoutWithItems(JSONArray inventory, LinearLayout layout, View.OnClickListener listener) {
+        for (int i = 0; i < inventory.length(); i++) {
+            try {
+                JSONObject item = inventory.getJSONObject(i);
+                Bitmap image;
+
+                URL itemImageURL = new URL(item.getString("image_url"));
+                image = BitmapFactory.decodeStream(itemImageURL.openConnection().getInputStream());
+
+                if (image != null) {
+                    AddableItem newItem = new AddableItem(this, "", item.getInt("item_id"));
+                    LinearLayout.LayoutParams params = new LinearLayout
+                            .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    newItem.setImageBitmap(image);
+                    newItem.setLayoutParams(params);
+                    newItem.setAdjustViewBounds(true);
+                    newItem.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    newItem.setOnClickListener(listener);
+                    layout.addView(newItem, 0);
+                }
+            } catch (JSONException e) {
+                disconnectionError();
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                disconnectionError();
+                e.printStackTrace();
+            } catch (IOException e) {
+                disconnectionError();
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void disconnectionError(){
+        Intent intent = new Intent(ProposeTradeActivity.this, DisconnectionError.class);
+        startActivity(intent);
     }
 }
