@@ -25,9 +25,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import cse403.finderskeepers.data.UserInfoHolder;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+
+import static cse403.finderskeepers.UserSettingsActivity.JSON;
 
 public class ProposeTradeActivity extends AppCompatActivity {
 
@@ -115,7 +118,43 @@ public class ProposeTradeActivity extends AppCompatActivity {
     private View.OnClickListener proposeListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            LinearLayout ourItems = (LinearLayout) findViewById(R.id.this_user_selected_item_list);
+            LinearLayout theirItems = (LinearLayout) findViewById(R.id.their_selected_item_list);
 
+            JSONObject startTradeObject = new JSONObject();
+            try {
+                startTradeObject.put("initiator_id", UserInfoHolder.getInstance().getUID());
+                startTradeObject.put("recipient_id", otherUID);
+                JSONArray ourItemIds = new JSONArray();
+                JSONArray theirItemIds = new JSONArray();
+
+                int i;
+                for (i = 0; i < ourItems.getChildCount(); i++) {
+                    AddableItem ourItem = (AddableItem) ourItems.getChildAt(i);
+                    ourItemIds.put(ourItem.getItemId());
+                }
+
+                for (i = 0; i < theirItems.getChildCount(); i++) {
+                    AddableItem theirItem = (AddableItem) theirItems.getChildAt(i);
+                    theirItemIds.put(theirItem.getItemId());
+                }
+
+                startTradeObject.put("offered_item_ids", ourItemIds);
+                startTradeObject.put("requested_item_ids", theirItemIds);
+
+                UserAPIService userAPIService = UserInfoHolder.getInstance().getAPIService();
+
+                RequestBody requestBody = RequestBody.create(JSON, startTradeObject.toString());
+                Call<ResponseBody> startTrade = userAPIService.startTrade(requestBody);
+                startTrade.execute();
+                finish();
+            } catch (JSONException e) {
+                disconnectionError();
+                e.printStackTrace();
+            } catch (IOException e) {
+                disconnectionError();
+                e.printStackTrace();
+            }
         }
     };
 
