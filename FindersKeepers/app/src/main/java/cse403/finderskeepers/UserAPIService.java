@@ -58,19 +58,19 @@ public interface UserAPIService {
     @GET("/api/get_inventory/{id}")
     Call<ResponseBody> getInventory(@Path("id") int id);
 
-    @GET("/mock/api/get_trade/{id}")
+    @GET("/api/get_trade/{id}")
     Call<ResponseBody> getTrade(@Path("id") int id);
 
-    @GET("/mock/api/get_trades/{id}")
+    @GET("/api/get_trades/{id}")
     Call<ResponseBody> getTrades(@Path("id") int id);
 
-    @POST("/mock/api/start_trade")
+    @POST("/api/start_trade")
     Call<ResponseBody> startTrade(@Body RequestBody request);
 
-    @PUT("/mock/api/accept_trade")
+    @PUT("/api/accept_trade")
     Call<ResponseBody> acceptTrade(@Body RequestBody request);
 
-    @GET("/mock/api/get_users_within_radius")
+    @POST("/api/get_users_within_radius")
     Call<ResponseBody> getNearbyUsers(@Body RequestBody request);
 
 }

@@ -19,6 +19,23 @@
         android:layout_height="0dp"
         android:layout_weight=".5"
         android:textSize="30sp"
+        android:text="@string/trade_initiator_text"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"
+        android:textSize="30sp"
+        android:id="@+id/initiator_string"
+        android:text="@string/initiator_placeholder"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"
+        android:textSize="30sp"
         android:text="@string/trade_view_your_items_text"/>
 
     <HorizontalScrollView
