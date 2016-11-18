@@ -139,6 +139,8 @@ public class ProposeTradeActivity extends AppCompatActivity {
             String ourInventoryString = doOurInventoryCall.body().string();
             String theirInventoryString = doTheirInventoryCall.body().string();
 
+
+
             JSONArray ourInventoryArray = new JSONObject(ourInventoryString).getJSONArray("items");
             JSONArray theirInventoryArray = new JSONObject(theirInventoryString).getJSONArray("items");
 

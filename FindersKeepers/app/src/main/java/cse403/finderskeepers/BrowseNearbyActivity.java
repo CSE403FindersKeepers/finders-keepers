@@ -59,6 +59,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
 
         try {
             JSONObject queryObj = new JSONObject().put("zipcode", UserInfoHolder.getInstance().getZip());
+            Log.d("ZipNearby", queryObj.toString());
             queryObj.put("radius", 20).toString();
             Call<ResponseBody> nearbyUsers = userapiservice.getNearbyUsers(RequestBody.create(JSON, queryObj.toString()));
             Response<ResponseBody> doCall = nearbyUsers.execute();
@@ -71,7 +72,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
             usersArray = nearbyJSON.getJSONArray("users");
 
         } catch (JSONException e) {
-            disconnectionError();
+            //disconnectionError();
             e.printStackTrace();
         } catch (IOException e) {
             disconnectionError();
@@ -103,7 +104,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
                     disconnectionError();
                     e.printStackTrace();
                 }
-                if (image != null) {
+                if (image != null && UID != UserInfoHolder.getInstance().getUID()) {
                     BrowseResultUser newUserResult = new BrowseResultUser(this, UID);
                     LinearLayout.LayoutParams params = new LinearLayout
                             .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
