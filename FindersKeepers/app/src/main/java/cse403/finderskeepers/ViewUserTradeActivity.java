@@ -24,11 +24,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import cse403.finderskeepers.data.UserInfoHolder;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
+import static cse403.finderskeepers.UserSettingsActivity.JSON;
 
 public class ViewUserTradeActivity extends AppCompatActivity {
 
@@ -49,6 +51,12 @@ public class ViewUserTradeActivity extends AppCompatActivity {
 
         Button viewUserButton = (Button) findViewById(R.id.view_profile);
         viewUserButton.setOnClickListener(viewUserListener);
+
+        Button acceptButton = (Button) findViewById(R.id.accept_trade);
+        acceptButton.setOnClickListener(acceptListener);
+
+        Button rejectButton = (Button) findViewById(R.id.reject_trade);
+        rejectButton.setOnClickListener(rejectListener);
 
         populatePage();
     }
@@ -75,6 +83,54 @@ public class ViewUserTradeActivity extends AppCompatActivity {
             Intent viewUserIntent = new Intent(ViewUserTradeActivity.this, OtherUserPageActivity.class);
             viewUserIntent.putExtra("USERID", theirUID);
             startActivity(viewUserIntent);
+        }
+    };
+
+    /**
+     * Listener which accepts this trade
+     */
+    private View.OnClickListener acceptListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            JSONObject requestObj = new JSONObject();
+            try {
+                requestObj.put("user_id", UserInfoHolder.getInstance().getUID());
+                requestObj.put("trade_id", tradeID);
+                RequestBody body = RequestBody.create(JSON, requestObj.toString());
+                Call<ResponseBody> acceptTrade = UserInfoHolder.getInstance().getAPIService().acceptTrade(body);
+                acceptTrade.execute();
+            } catch (JSONException e) {
+                disconnectionError();
+                e.printStackTrace();
+            } catch (IOException e) {
+                disconnectionError();
+                e.printStackTrace();
+            }
+            finish();
+        }
+    };
+
+    /**
+     * Listener which rejects this trade
+     */
+    private View.OnClickListener rejectListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            JSONObject requestObj = new JSONObject();
+            try {
+                requestObj.put("user_id", UserInfoHolder.getInstance().getUID());
+                requestObj.put("trade_id", tradeID);
+                RequestBody body = RequestBody.create(JSON, requestObj.toString());
+                Call<ResponseBody> denyTrade = UserInfoHolder.getInstance().getAPIService().denyTrade(body);
+                denyTrade.execute();
+            } catch (JSONException e) {
+                disconnectionError();
+                e.printStackTrace();
+            } catch (IOException e) {
+                disconnectionError();
+                e.printStackTrace();
+            }
+            finish();
         }
     };
 
@@ -184,7 +240,6 @@ public class ViewUserTradeActivity extends AppCompatActivity {
                 disconnectionError();
                 e.printStackTrace();
             }
-
         }
     }
 }

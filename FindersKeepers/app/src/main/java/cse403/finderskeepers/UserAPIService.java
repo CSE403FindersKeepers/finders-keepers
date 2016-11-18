@@ -70,6 +70,9 @@ public interface UserAPIService {
     @PUT("/api/accept_trade")
     Call<ResponseBody> acceptTrade(@Body RequestBody request);
 
+    @PUT("/api/deny_trade")
+    Call<ResponseBody> denyTrade(@Body RequestBody request);
+
     @POST("/api/get_users_within_radius")
     Call<ResponseBody> getNearbyUsers(@Body RequestBody request);
 
