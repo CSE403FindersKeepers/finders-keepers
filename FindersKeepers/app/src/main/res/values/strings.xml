@@ -50,4 +50,7 @@
     <string name="rejected_trades_text">Rejected Trades</string>
     <string name="trade_initiator_text">Trade Initiated By</string>
     <string name="initiator_placeholder">username</string>
+    <string name="trade_status_text">Trade Status:</string>
+    <string name="status_placeholder">Incoming</string>
+    <string name="view_other_text">View Other User\'s Profile</string>
 </resources>

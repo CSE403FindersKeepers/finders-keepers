@@ -51,12 +51,6 @@ public class ProposeTradeActivity extends AppCompatActivity {
         proposeTradeButton.setOnClickListener(proposeListener);
 
         populatePage();
-
-        // TODO: Populate Item Lists
-
-        // TODO: Add Item Selection Functionality - move items from "Your Items" and "Their Items" to chosen item groups
-
-        // TODO: Add Item Deselection Functionality - move items back after they're clicked on in the other list
     }
 
     /**
@@ -228,7 +222,6 @@ public class ProposeTradeActivity extends AppCompatActivity {
                 disconnectionError();
                 e.printStackTrace();
             }
-
         }
     }
 
