@@ -21,6 +21,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
+/**
+ * Test that adds item to the user inventory. Requires that the user has a picture saved on their
+ * phone before running the test. Requires the user to select google account and permissions
+ * for image access.
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class AddItemTest {
@@ -30,6 +35,7 @@ public class AddItemTest {
 
     @Test
     public void addItemTest() {
+        //Click on google sign in
         ViewInteraction rc = onView(
                 allOf(withText("Sign in"),
                         withParent(allOf(withId(R.id.sign_in_button),
@@ -37,12 +43,14 @@ public class AddItemTest {
                         isDisplayed()));
         rc.perform(click());
 
+        //Select add item picture
         ViewInteraction appCompatImageButton = onView(
                 allOf(withId(R.id.add_item),
                         withParent(allOf(withId(R.id.item_list),
                                 withParent(withId(R.id.user_items_view))))));
         appCompatImageButton.perform(scrollTo(), click());
 
+        //Select picture to add to the item
         ViewInteraction appCompatImageButton2 = onView(
                 allOf(withId(R.id.add_item_img),
                         withParent(allOf(withId(R.id.content_inventory_page),
@@ -50,6 +58,7 @@ public class AddItemTest {
                         isDisplayed()));
         appCompatImageButton2.perform(click());
 
+        //Add tag to the image
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.editTags),
                         withParent(allOf(withId(R.id.content_inventory_page),
@@ -57,6 +66,7 @@ public class AddItemTest {
                         isDisplayed()));
         appCompatEditText.perform(replaceText("Tagthing"), closeSoftKeyboard());
 
+        //Select the upload button
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.upload_button), withText("Add Item"),
                         withParent(allOf(withId(R.id.content_inventory_page),
