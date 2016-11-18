@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,6 +46,9 @@ public class ProposeTradeActivity extends AppCompatActivity {
         if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("USERID")){
             otherUID = getIntent().getExtras().getInt("USERID");
         }
+
+        Button proposeTradeButton = (Button) findViewById(R.id.send_trade);
+        proposeTradeButton.setOnClickListener(proposeListener);
 
         populatePage();
 
