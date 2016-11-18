@@ -59,6 +59,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
 
         try {
             JSONObject queryObj = new JSONObject().put("zipcode", UserInfoHolder.getInstance().getZip());
+            Log.d("ZipNearby", queryObj.toString());
             queryObj.put("radius", 20).toString();
             Call<ResponseBody> nearbyUsers = userapiservice.getNearbyUsers(RequestBody.create(JSON, queryObj.toString()));
             Response<ResponseBody> doCall = nearbyUsers.execute();
@@ -71,7 +72,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
             usersArray = nearbyJSON.getJSONArray("users");
 
         } catch (JSONException e) {
-            disconnectionError();
+            //disconnectionError();
             e.printStackTrace();
         } catch (IOException e) {
             disconnectionError();
