@@ -11,7 +11,11 @@ class SearchHandler():
 		self.db_handler = db_handler
 		
 	def get_users_within_radius(self, zip, radius):
-		zip = zipcode.isequal(str(zip))
+		zipstr = str(zip)
+		while len(zipstr) < 5:
+			zipstr = "0" + zipstr
+			
+		zip = zipcode.isequal(zipstr)
 		
 		# check if the zipcode has a record
 		if zip is None:

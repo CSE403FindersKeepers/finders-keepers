@@ -360,8 +360,8 @@ def get_users_within_radius():
 	result = search_handler.get_users_within_radius(zipcode, radius)
 	
 	# check if there was an error
-	#if result is None:
-	#	abort(400, 'get_users_within_radius: invalid zipcode or radius')
+	if result is None:
+		return jsonify(error="invalid zipcode")
 		
 		
 	return result
