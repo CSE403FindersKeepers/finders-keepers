@@ -152,8 +152,22 @@ public class ViewUserTradeActivity extends AppCompatActivity {
                 URL itemImageURL = new URL(item.getString("image_url"));
                 image = BitmapFactory.decodeStream(itemImageURL.openConnection().getInputStream());
 
+                String itemTagString = "";
+
+                JSONArray itemTags = item.getJSONArray("tags");
+
+                try {
+                    for (int j = 0; j < itemTags.length() - 1; j++) {
+                        if (!itemTags.getString(j).equals("null"))itemTagString += itemTags.getString(j) + " ";
+                    }
+                    if (!itemTags.getString(itemTags.length() - 1).equals("null")) itemTagString += itemTags.getString(itemTags.length() - 1);
+                } catch (JSONException e) {
+                    disconnectionError();
+                    e.printStackTrace();
+                }
+
                 if (image != null) {
-                    AddableItem newItem = new AddableItem(this, "", item.getInt("item_id"));
+                    AddableItem newItem = new AddableItem(this, itemTagString, item.getInt("item_id"));
                     LinearLayout.LayoutParams params = new LinearLayout
                             .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     newItem.setImageBitmap(image);
