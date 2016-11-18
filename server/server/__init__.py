@@ -347,10 +347,11 @@ def deny_trade():
 	
 #----------------------------------------------------------------#
 
-@app.route('/api/get_users_within_radius', methods=['GET'])
-def get_users_within_radius():
-	zipcode = request.args.get('zipcode')
-	radius = request.args.get('radius')
+@app.route('/api/get_users_within_radius/<int:zipcode>', methods=['GET'])
+def get_users_within_radius(zipcode):
+	#zipcode = request.args.get('zipcode')
+	#radius = request.args.get('radius')
+	radius = 20
 	
 	if zipcode is None or radius is None:
 		abort(400, 'get_users_within_radius: invalid GET arguments')
