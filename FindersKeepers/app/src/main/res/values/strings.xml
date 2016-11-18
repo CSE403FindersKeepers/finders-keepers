@@ -48,4 +48,6 @@
     <string name="trade_view_your_items_text">Your Items</string>
     <string name="trade_view_their_items_text">Their Items</string>
     <string name="rejected_trades_text">Rejected Trades</string>
+    <string name="trade_initiator_text">Trade Initiated By</string>
+    <string name="initiator_placeholder">username</string>
 </resources>
