@@ -136,8 +136,8 @@ public class ProposeTradeActivity extends AppCompatActivity {
                 throw new IOException("HTTP ERROR");
             }
 
-            String ourInventoryString = doOurInventoryCall.body().toString();
-            String theirInventoryString = doTheirInventoryCall.body().toString();
+            String ourInventoryString = doOurInventoryCall.body().string();
+            String theirInventoryString = doTheirInventoryCall.body().string();
 
             JSONArray ourInventoryArray = new JSONObject(ourInventoryString).getJSONArray("items");
             JSONArray theirInventoryArray = new JSONObject(theirInventoryString).getJSONArray("items");
