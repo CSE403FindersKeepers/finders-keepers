@@ -55,7 +55,7 @@ class TradeHandler():
 		query = "SELECT * FROM TRADES WHERE "
 		query += "initiatorId=" + str(json["initiator_id"]) + " AND "
 		query += "recipientId=" + str(json["recipient_id"])
-		query += " ORDER BY trade_id DESC"
+		query += " ORDER BY tradeId DESC"
 		self.db_handler.cursor.execute(query)
 		result = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
