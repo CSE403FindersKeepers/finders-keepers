@@ -115,7 +115,8 @@ public class ProposeTradeActivity extends AppCompatActivity {
     private View.OnClickListener proposeListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            LinearLayout ourItems = (LinearLayout) findViewById(R.id.this_user_selected_item_list);
+            LinearLayout theirItems = (LinearLayout) findViewById(R.id.their_selected_item_list);
         }
     };
 

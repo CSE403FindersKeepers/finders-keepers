@@ -103,7 +103,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
                     disconnectionError();
                     e.printStackTrace();
                 }
-                if (image != null) {
+                if (image != null && UID != UserInfoHolder.getInstance().getUID()) {
                     BrowseResultUser newUserResult = new BrowseResultUser(this, UID);
                     LinearLayout.LayoutParams params = new LinearLayout
                             .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
