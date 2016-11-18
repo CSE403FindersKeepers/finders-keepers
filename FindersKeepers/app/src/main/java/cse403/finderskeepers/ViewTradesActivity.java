@@ -104,6 +104,8 @@ public class ViewTradesActivity extends AppCompatActivity {
 
                 if (itemBitmap != null) {
                     AddableItem newItemButton = new AddableItem(this, status, tradeID);
+                    Log.d("Trade IDs:", "" + tradeID);
+                    Log.d("TradeIDInside: ", "" + newItemButton.getItemId());
                     LinearLayout.LayoutParams params = new LinearLayout
                             .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
                     newItemButton.setImageBitmap(itemBitmap);

@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -45,7 +46,7 @@ public class ViewUserTradeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("USERID")){
+        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("TRADEID")){
             tradeID = getIntent().getExtras().getInt("TRADEID");
         }
 
@@ -140,11 +141,13 @@ public class ViewUserTradeActivity extends AppCompatActivity {
         Call<ResponseBody> trade = userapiservice.getTrade(tradeID);
         try {
             Response<ResponseBody> tradeCall = trade.execute();
-            JSONObject tradeObj = new JSONObject(tradeCall.body().string()).getJSONObject("trade");
+            String trdstrm =  tradeCall.body().string();
+            Log.d("TradeCallObj: ", trdstrm);
+            JSONObject tradeObj = new JSONObject(trdstrm).getJSONObject("trade");
 
             TextView statusString = (TextView) findViewById(R.id.status_string);
 
-            if (!tradeObj.getString("status").equals("T_OPEN") || !(UserInfoHolder.getInstance().getUID() == tradeObj.getInt("recipient_id"))) {
+            if (!tradeObj.getString("status").equals("PENDING") || !(UserInfoHolder.getInstance().getUID() == tradeObj.getInt("recipient_id"))) {
                 Button acceptButton = (Button) findViewById(R.id.accept_trade);
                 acceptButton.setVisibility(GONE);
 
@@ -152,13 +155,13 @@ public class ViewUserTradeActivity extends AppCompatActivity {
                 rejectButton.setVisibility(GONE);
             }
 
-            if (tradeObj.getString("status").equals("T_OPEN") && UserInfoHolder.getInstance().getUID() == tradeObj.getInt("recipient_id")) {
+            if (tradeObj.getString("status").equals("PENDING") && UserInfoHolder.getInstance().getUID() == tradeObj.getInt("recipient_id")) {
                 statusString.setText("Incoming - Pending");
-            } else if (tradeObj.getString("status").equals("T_OPEN")) {
+            } else if (tradeObj.getString("status").equals("PENDING")) {
                 statusString.setText("Outgoing - Pending");
-            } else if (tradeObj.getString("stats").equals("T_COMPLETED")) {
+            } else if (tradeObj.getString("status").equals("ACCEPTED")) {
                 statusString.setText("Completed");
-            } else if (tradeObj.getString("stats").equals("T_REJECTED")) {
+            } else if (tradeObj.getString("status").equals("DENIED")) {
                 statusString.setText("Rejected");
             }
 
@@ -167,12 +170,12 @@ public class ViewUserTradeActivity extends AppCompatActivity {
 
             if (UserInfoHolder.getInstance().getUID() == tradeObj.getInt("initiator_id")) {
                 theirUID = tradeObj.getInt("recipient_id");
-                ourItems = tradeObj.getJSONArray("offered_item_ids");
-                theirItems = tradeObj.getJSONArray("requested_item_ids");
+                ourItems = tradeObj.getJSONArray("offered_items");
+                theirItems = tradeObj.getJSONArray("requested_items");
             } else {
                 theirUID = tradeObj.getInt("initiator_id");
-                ourItems = tradeObj.getJSONArray("requested_item_ids");
-                theirItems = tradeObj.getJSONArray("offered_item_ids");
+                ourItems = tradeObj.getJSONArray("requested_items");
+                theirItems = tradeObj.getJSONArray("offered_items");
             }
 
             LinearLayout ourItemsLayout = (LinearLayout) findViewById(R.id.your_items_list);
