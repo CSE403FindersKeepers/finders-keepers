@@ -73,7 +73,7 @@ public class ViewUserTradeActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent viewUserIntent = new Intent(ViewUserTradeActivity.this, OtherUserPageActivity.class);
-            viewUserIntent.putExtra("USERID", ((BrowseResultUser) view).getUserId());
+            viewUserIntent.putExtra("USERID", theirUID);
             startActivity(viewUserIntent);
         }
     };
