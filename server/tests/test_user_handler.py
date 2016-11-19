@@ -2,20 +2,19 @@
 # Fulfilling the requirement on the spec
 import unittest
 import json
+from server.server import app
 from flask import Flask
-from server.server.handlers import user_handler
-from server.server.handlers import db_handler
-
-# create the app instance
-app = Flask(__name__)
-
-# create the MySQL database handler instance
-db_handler = db_handler.DBHandler(app)
-user_handler = user_handler.UserHandler(db_handler)
 
 class TestUserHandler(unittest.TestCase):
+    def setUp(self):
+        app.testing = True
+        self.app = app.test_client()
+
     def test_get_user_invalid_id(self):
-        return
+        result = self.app.get('/api/get_user/49834')
+        self.assertTrue(result.data is not None)
+        data = json.loads(result.data)
+        self.assertEqual(data['user_id'], -1)
 
     def test_create_user_new_user(self):
         return
@@ -32,13 +31,13 @@ class TestUserHandler(unittest.TestCase):
     def test_update_user_all_null_fields(self):
         return
         
-    def test_update_user_wishlist_empty(self):
+    def test_set_wishlist_to_empty(self):
         return
 
-    def test_update_user_wishlist_one_item(self):
+    def test_set_wishlist_to_one_item(self):
         return
 
-    def test_update_user_wishlist_multiple_items(self):
+    def test_set_wishlist_to_multiple_items(self):
         return
 
 if __name__ == '__main__':
