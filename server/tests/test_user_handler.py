@@ -3,7 +3,7 @@
 import unittest
 import json
 from server.server import app
-from flask import Flask
+from flask import Flask, jsonify
 
 class TestUserHandler(unittest.TestCase):
     def setUp(self):
@@ -17,7 +17,18 @@ class TestUserHandler(unittest.TestCase):
         self.assertEqual(data['user_id'], -1)
 
     def test_create_user_new_user(self):
-        return
+        result = self.app.post('/api/create_user', data=json.dumps({
+            'email':'test34@email.com'
+        }), content_type='application/json')
+        self.assertEqual(result.status, '200 OK')
+        self.assertTrue(result.data is not None)
+        data = json.loads(result.data)
+        self.assertTrue('user_id' in data)
+        user_id = data['user_id']
+        result = self.app.get('/api/get_user/' + str(user_id))
+        self.assertTrue(result.data is not None)
+        data = json.loads(result.data)
+        self.assertEqual(data['user']['email'], 'test34@email.com')
         
     def test_create_user_existing_user(self):
         return
