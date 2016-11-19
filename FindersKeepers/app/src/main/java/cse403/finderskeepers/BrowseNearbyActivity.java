@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +59,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
 
         try {
             JSONObject queryObj = new JSONObject().put("zipcode", UserInfoHolder.getInstance().getZip());
+            Log.d("ZipNearby", queryObj.toString());
             queryObj.put("radius", 20).toString();
             Call<ResponseBody> nearbyUsers = userapiservice.getNearbyUsers(RequestBody.create(JSON, queryObj.toString()));
             Response<ResponseBody> doCall = nearbyUsers.execute();
@@ -70,7 +72,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
             usersArray = nearbyJSON.getJSONArray("users");
 
         } catch (JSONException e) {
-            disconnectionError();
+            //disconnectionError();
             e.printStackTrace();
         } catch (IOException e) {
             disconnectionError();
@@ -82,14 +84,15 @@ public class BrowseNearbyActivity extends AppCompatActivity {
             int UID = -1;
             String userName = "";
             try {
-                getImg = new URL(usersArray.getJSONObject(i).getString("image_url"));
+                Log.d("Users: ", usersArray.toString());
+                getImg = new URL(usersArray.getJSONObject(i).getString("avatar"));
                 UID = usersArray.getJSONObject(i).getInt("user_id");
                 userName = usersArray.getJSONObject(i).getString("name");
             } catch (MalformedURLException e) {
-                disconnectionError();
+                //disconnectionError();
                 e.printStackTrace();
             } catch (JSONException e) {
-                disconnectionError();
+                //disconnectionError();
                 e.printStackTrace();
             }
 
@@ -101,7 +104,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
                     disconnectionError();
                     e.printStackTrace();
                 }
-                if (image != null) {
+                if (image != null && UID != UserInfoHolder.getInstance().getUID()) {
                     BrowseResultUser newUserResult = new BrowseResultUser(this, UID);
                     LinearLayout.LayoutParams params = new LinearLayout
                             .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -136,7 +139,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent viewUserIntent = new Intent(BrowseNearbyActivity.this, OtherUserPageActivity.class);
-            viewUserIntent.putExtra("USERID", view.getId());
+            viewUserIntent.putExtra("USERID", ((BrowseResultUser) view).getUserId());
             startActivity(viewUserIntent);
         }
     };

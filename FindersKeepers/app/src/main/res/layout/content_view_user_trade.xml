@@ -19,6 +19,30 @@
         android:layout_height="0dp"
         android:layout_weight=".5"
         android:textSize="30sp"
+        android:text="@string/trade_status_text"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"
+        android:textSize="30sp"
+        android:id="@+id/status_string"
+        android:text="@string/status_placeholder"
+        android:gravity="center"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/view_other_text"
+        android:id="@+id/view_profile"
+        android:layout_weight=".5"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".5"
+        android:textSize="30sp"
         android:text="@string/trade_view_your_items_text"/>
 
     <HorizontalScrollView
@@ -73,5 +97,13 @@
         android:text="@string/reject_trade_text"
         android:id="@+id/reject_trade"
         android:layout_weight=".5"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/send_mail_text"
+        android:id="@+id/send_mail"
+        android:layout_weight=".5"
+        android:visibility="gone"/>
 
 </LinearLayout>

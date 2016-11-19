@@ -47,20 +47,17 @@ public class OtherUserPageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Button pt = (Button) findViewById(R.id.propose_trade);
+        pt.setOnClickListener(this.proposeTradeListener);
+
         uid = -1;
+        Log.d("UserID:", "" + getIntent().getExtras().getInt("USERID"));
         if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("USERID")){
             uid = getIntent().getExtras().getInt("USERID");
         }
 
         populatePage();
 
-        //TODO: populate avatar
-
-        //TODO: populate user name text field
-
-        //TODO: populate item list - use AddableItems, add viewItemListener
-
-        //TODO: populate tags field
     }
 
     private void populatePage() {
@@ -78,7 +75,7 @@ public class OtherUserPageActivity extends AppCompatActivity {
             Call<ResponseBody> user = userapiservice.getUser(uid);
             Response<ResponseBody> doCall = user.execute();
 
-            Log.d("Response val for user:", " " + doCall.code());
+            Log.d("Response val for ouser:", " " + doCall.code());
 
             if (doCall.code() != 200){
                 throw new IOException("OMG HTTP \n\n\n\n\n\n\nn\n\n ERRUR");
@@ -111,9 +108,8 @@ public class OtherUserPageActivity extends AppCompatActivity {
         }
 
         ImageView userAvatar = (ImageView) findViewById(R.id.user_avatar);
-        if (UserInfoHolder.getInstance().getAvatar() != null) {
-            userAvatar.setImageBitmap(image);
-        }
+        userAvatar.setImageBitmap(image);
+
 
         String tagString = "";
         try {
@@ -206,6 +202,15 @@ public class OtherUserPageActivity extends AppCompatActivity {
             addItemIntent.putExtra("ITEM_ID", ((AddableItem) view).getItemId());
             addItemIntent.putExtra("TAGS", ((AddableItem) view).getTags());
             startActivity(addItemIntent);
+        }
+    };
+
+    private View.OnClickListener proposeTradeListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent proposeTradeIntent = new Intent(OtherUserPageActivity.this, ProposeTradeActivity.class);
+            proposeTradeIntent.putExtra("USERID", uid);
+            startActivity(proposeTradeIntent);
         }
     };
 
