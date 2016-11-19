@@ -43,7 +43,7 @@ class UserHandler():
 				"image_url": data[2],
 				"zipcode": data[3],
 				"email": data[4],
-				"wishlist": ([] if data[5] is None else data[5].split(",")), 
+				"wishlist": (data[5].split(",") if data[5] else []), 
 				"inventory": inventory
 			}
 
@@ -63,6 +63,9 @@ class UserHandler():
 	# create_user: Takes in a json containing a user_id, name, zipcode, photo, and email returns a json with a null error field on success,
 	# and an error field with a message upon failure
 	def update_user(self,json):
+		if 'name' not in json and 'zipcode' not in json and 'avatar' not in json:
+			abort(400, 'must pass at least 1 parameter besides user_id to update')
+		
 		# Make sure user exists
 		url = 'http://i.imgur.com/0bGFP47.jpg'
 		self.db_handler.cursor.execute("SELECT USER.photo FROM USER WHERE USER.id=" + str(json['user_id']))
@@ -103,6 +106,6 @@ class UserHandler():
 			
 		query += " WHERE id=" + str(json['user_id'])
 		
-		self.db_handler.cursor.execute("UPDATE USER SET name='" + json['name'] + "', zipcode=" + str(json['zipcode']) + ", photo='" + url + "' WHERE id =" + str(json['user_id']))
+		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
 		return jsonify(error=None)
