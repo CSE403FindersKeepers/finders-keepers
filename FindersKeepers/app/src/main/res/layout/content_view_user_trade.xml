@@ -98,4 +98,12 @@
         android:id="@+id/reject_trade"
         android:layout_weight=".5"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/send_mail_text"
+        android:id="@+id/send_mail"
+        android:layout_weight=".5"
+        android:visibility="gone"/>
+
 </LinearLayout>
