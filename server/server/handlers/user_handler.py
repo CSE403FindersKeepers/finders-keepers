@@ -109,3 +109,16 @@ class UserHandler():
 		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
 		return jsonify(error=None)
+
+	# delete_user: Takes in a user_id and deletes that user from the table.
+	def delete_user(self, user_id):
+		self.db_handler.cursor.execute("SELECT * FROM USER WHERE USER.id=" + str(user_id))
+		data = self.db_handler.cursor.fetchone()
+		if data is None:
+			return jsonify(error="User not found")
+		else:
+			image_handler.delete_image(data[2])
+			query = "DELETE FROM USER WHERE id=" + str(user_id)
+			self.db_handler.cursor.execute(query)
+			self.db_handler.connection.commit()
+			return jsonify(error=None)

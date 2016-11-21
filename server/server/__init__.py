@@ -245,6 +245,14 @@ def get_user(user_id):
 	
 	return user_handler.get_user(user_id)
 
+@app.route('/api/delete_user/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+	# check for malformed request
+	if user_id <= 0:
+		abort(400, 'delete_user: only accepts positive user IDs')
+	
+	return user_handler.delete_user(user_id)
+
 @app.route('/api/create_user', methods=['POST'])
 def create_user():
 	json = request.get_json()
