@@ -16,6 +16,28 @@ class TestUserHandler(unittest.TestCase):
         data = json.loads(result.data)
         self.assertEqual(data['user_id'], -1)
 
+    def test_get_user_gets_inventory(self):
+        result = self.app.post('/api/create_user', data=json.dumps({
+            'email':'testgetusergetsinventory@email.com'
+        }), content_type='application/json')
+        data = json.loads(result.data)
+        user_id = data['user_id']
+        result = self.app.post('/api/create_item', data=json.dumps({
+            'user_id':user_id,
+            'title':'a potato',
+            'description': 'brown and lumpy',
+            'tags':['tater'],
+            'item_image': 'foo'
+        }), content_type='application/json')
+        self.assertEqual(result.status, '200 OK')
+        result = self.app.get('/api/get_user/' + str(user_id))
+        data = json.loads(result.data)
+        self.assertTrue('inventory' in data['user'])
+        self.assertEqual(len(data['user']['inventory']), 1)
+        item = data['user']['inventory'][0]
+        self.assertEqual(item['title'], 'a potato')
+        self.app.delete('/api/delete_item/' + str(item['item_id']))
+
     def test_create_user_new_user(self):
         result = self.app.post('/api/create_user', data=json.dumps({
             'email':'testcreatenewuser@email.com'
@@ -29,8 +51,7 @@ class TestUserHandler(unittest.TestCase):
         self.assertTrue(result.data is not None)
         data = json.loads(result.data)
         self.assertEqual(data['user']['email'], 'testcreatenewuser@email.com')
-        # delete the user (not implemented yet)
-        
+
     def test_create_user_existing_user(self):
         result1 = self.app.post('/api/create_user', data=json.dumps({
             'email':'testcreateexistinguser@email.com'
@@ -44,8 +65,6 @@ class TestUserHandler(unittest.TestCase):
         self.assertTrue('user_id' in data2)
         data1 = json.loads(result1.data)
         self.assertEqual(data2['user_id'], data1['user_id'])
-        # delete the user (not implemented yet)
-
 
     def test_update_user_zipcode(self):
         result = self.app.post('/api/create_user', data=json.dumps({
