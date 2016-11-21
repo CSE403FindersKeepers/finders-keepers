@@ -181,20 +181,78 @@ class TestItemHandler(unittest.TestCase):
         self.assertEquals(set(item['tags']), set(['zombie', 'green']))
 
     def test_get_inventory_user_dne(self):
-        return
+        result = self.app.get('/api/get_inventory/238382')
+        self.assertEquals(result.status, '200 OK')
 
     def test_get_inventory_no_items(self):
-        return
+        result = self.app.get('/api/get_inventory/238382')
+        self.assertEquals(result.status, '200 OK')
 
     def test_get_inventory_many_items(self):
-        return
+        result = self.app.post('/api/create_item', data=json.dumps({
+            'user_id':self.test_user,
+            'title':'cactus',
+            'description':'hybrid destined to die',
+            'tags':['zombie', 'plant'],
+            'item_image':self.testImage1
+        }), content_type='application/json')
+
+        result = self.app.get('/api/get_inventory/' + str(self.test_user))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertTrue(data['items'] is not None)
+        self.assertEquals(len(data['items']), 1)
+        self.assertEquals(data['items'][0]['title'], 'cactus')
 
     def test_set_wishlist_none(self):
-        return
+        result = self.app.put('/api/set_wishlist', data=json.dumps({
+            'user_id':self.test_user,
+            'wishlist':[]
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        result = self.app.get('/api/get_user/' + str(self.test_user))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertTrue(data['user']['wishlist'] is not None)
+        self.assertEquals(data['user']['wishlist'], [])        
 
     def test_set_wishlist_many(self):
-        return
+        wishlist = ['fee', 'fie', 'foe', 'fum']
+        result = self.app.put('/api/set_wishlist', data=json.dumps({
+            'user_id':self.test_user,
+            'wishlist':wishlist
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        result = self.app.get('/api/get_user/' + str(self.test_user))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertTrue(data['user']['wishlist'] is not None)
+        self.assertEquals(set(data['user']['wishlist']), set(wishlist))
         
+    def test_get_wishlist_empty(self):
+        result = self.app.put('/api/set_wishlist', data=json.dumps({
+            'user_id':self.test_user,
+            'wishlist':[]
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        result = self.app.get('/api/get_wishlist/' + str(self.test_user))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertTrue(data['wishlist'] is not None)
+        self.assertEquals(data['wishlist'], [])
+
+    def test_get_wishlist_not_empty(self):
+        wishlist = ['fee', 'fie', 'foe', 'fum']
+        result = self.app.put('/api/set_wishlist', data=json.dumps({
+            'user_id':self.test_user,
+            'wishlist':wishlist
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        result = self.app.get('/api/get_wishlist/' + str(self.test_user))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertTrue(data['wishlist'] is not None)
+        self.assertEquals(set(data['wishlist']), set(wishlist))
 
 if __name__ == '__main__':
     unittest.main()

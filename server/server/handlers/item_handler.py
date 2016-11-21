@@ -179,11 +179,14 @@ class ItemHandler():
 		self.db_handler.cursor.fetchall()
 
 		if result is None:
-			abort(400, "That user DNE or doesn't have a wishlist")
+			abort(400, "Something went wrong in the DB")
 		else:
 			user_id, wishlist = result
-			arr = wishlist.split(",")
-			return jsonify(wishlist=arr)
+			if wishlist:
+				arr = wishlist.split(",")
+				return jsonify(wishlist=arr)
+			else:
+				return jsonify(wishlist=[])
 
 def concat_params(*args):
 	return ",".join("'{0}'".format(w) for w in args)
