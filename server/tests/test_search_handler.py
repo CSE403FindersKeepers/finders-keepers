@@ -45,7 +45,7 @@ class TestSearchHandler(unittest.TestCase):
         data = json.loads(result.data)
         self.test_user_same_zip = data['user_id']
         self.app.put('/api/update_user', data=json.dumps({
-            'user_id':self.actor,
+            'user_id':self.test_user_same_zip,
             'zipcode': 97202 #portland
         }), content_type='application/json')
 
@@ -59,7 +59,7 @@ class TestSearchHandler(unittest.TestCase):
     def test_get_users_within_radius_same_zip(self):
         result = self.app.post('/api/get_users_within_radius', data=json.dumps({
             'zipcode':97202, #portland
-            'radius':1
+            'radius':100
         }), content_type='application/json')
         self.assertEquals(result.status, '200 OK')
         data = json.loads(result.data)
