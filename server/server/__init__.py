@@ -353,6 +353,10 @@ def deny_trade():
 
 	return trade_handler.deny_trade(json)
 	
+# ONLY FOR TESTING DO NOT USE
+@app.route('/api/delete_trade/<int:trade_id>', methods=['DELETE'])
+def delete_trade(trade_id):
+	return trade_handler.delete_trade(trade_id)
 #----------------------------------------------------------------#
 
 @app.route('/api/get_users_within_radius', methods=['GET', 'POST'])
