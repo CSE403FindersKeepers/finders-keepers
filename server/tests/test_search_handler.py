@@ -26,7 +26,7 @@ class TestSearchHandler(unittest.TestCase):
         self.test_user_1m_away = data['user_id']
         self.app.put('/api/update_user', data=json.dumps({
             'user_id':self.test_user_1m_away,
-            'zipcode': 97201 #portland
+            'zipcode': 97202 #portland
         }), content_type='application/json')
 
         result = self.app.post('/api/create_user', data=json.dumps({
