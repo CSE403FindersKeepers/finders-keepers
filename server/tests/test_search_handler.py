@@ -57,7 +57,7 @@ class TestSearchHandler(unittest.TestCase):
         self.app.delete('/api/delete_user/' + str(self.test_user_same_zip))
 
     def test_get_users_within_radius_same_zip(self):
-        result = self.app.get('/api/get_users_within_radius', data=json.dumps({
+        result = self.app.post('/api/get_users_within_radius', data=json.dumps({
             'zipcode':97202, #portland
             'radius':1
         }), content_type='application/json')
