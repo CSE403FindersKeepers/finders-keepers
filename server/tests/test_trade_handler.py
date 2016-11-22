@@ -1,99 +1,156 @@
-# TestTradeHandler: Tests for a class that's currently not implemented
-# Fulfilling the requirement on the spec
 import unittest
 import json
-from flask import Flask
-from server.server.handlers import trade_handler
-from server.server.handlers import db_handler
-
-# create the app instance
-app = Flask(__name__)
-
-# create the MySQL database handler instance
-db_handler = db_handler.DBHandler(app)
-trade_handler = trade_handler.TradeHandler(db_handler)
+from server.server import app
+from flask import Flask, jsonify
 
 class TestTradeHandler(unittest.TestCase):
-#get_trade(self, trade_id)
-#get_trades(self, user_id)
-#start_trade(self, json)
-#def accept_trade(self, json)
-#def deny_trade(self, json)
+    @classmethod
+    def setUpClass(self):
+        app.testing = True
+        self.app = app.test_client()
+
+        result = self.app.post('/api/create_user', data=json.dumps({
+            'email':'testtradehandler1@email.com'
+        }), content_type='application/json')
+        data = json.loads(result.data)
+        self.test_initiator = data['user_id']
+
+        result = self.app.post('/api/create_user', data=json.dumps({
+            'email':'testtradehandler2@email.com'
+        }), content_type='application/json')
+        data = json.loads(result.data)
+        self.test_recipient = data['user_id']
+
+        self.app.post('/api/create_item', data=json.dumps({
+            'user_id':self.test_initiator,
+            'title':'cactus',
+            'description':'spikey and fits in window sill',
+            'tags':['plants'],
+            'item_image':'bar'
+        }), content_type='application/json')
+        result = self.app.get('/api/get_inventory/' + str(self.test_initiator))
+        data = json.loads(result.data)
+        self.test_initiator_inventory = [data['items'][0]['item_id']]
+
+        self.app.post('/api/create_item', data=json.dumps({
+            'user_id':self.test_recipient,
+            'title':'roses',
+            'description':'12 mini yellow roses',
+            'tags':['flowers', 'plants'],
+            'item_image':'bar'
+        }), content_type='application/json')
+        result = self.app.get('/api/get_inventory/' + str(self.test_recipient))
+        data = json.loads(result.data)
+        self.test_recipient_inventory = [data['items'][0]['item_id']]
+
+    @classmethod
+    def tearDownClass(self):
+        for item_id in self.test_initiator_inventory:
+            self.app.delete('/api/delete_item/' + str(item_id))
+        for item_id in self.test_recipient_inventory:
+            self.app.delete('/api/delete_item/' + str(item_id))
+
+    def tearDown(self):
+        result = self.app.get('/api/get_trades/' + str(self.test_initiator))
+        data = json.loads(result.data)
+        for trade in data['trades']:
+            trade_id = trade['trade_id']
+            self.app.delete('/api/delete_trade/' + str(trade_id))
+
     def test_start_trade(self):
-        return
-        
+        result = self.app.post('/api/start_trade', data=json.dumps({
+            'initiator_id': self.test_initiator,
+            'recipient_id': self.test_recipient,
+            'offered_item_ids': self.test_initiator_inventory,
+            'requested_item_ids': self.test_recipient_inventory
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        trade_id = data['trade_id']
+
+        result = self.app.get('/api/get_trade/' + str(trade_id))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertEquals(data['trade']['status'], 'PENDING')
+
+    def test_get_trades_for_initiator(self):
+        result = self.app.post('/api/start_trade', data=json.dumps({
+            'initiator_id': self.test_initiator,
+            'recipient_id': self.test_recipient,
+            'offered_item_ids': self.test_initiator_inventory,
+            'requested_item_ids': self.test_recipient_inventory
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        trade_id = data['trade_id']
+
+        result = self.app.get('/api/get_trades/' + str(self.test_initiator))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertTrue('trades' in data)
+        self.assertEquals(len(data['trades']), 1)
+        self.assertEquals(data['trades'][0]['trade_id'], trade_id)
+        self.assertEquals(data['trades'][0]['status'], 'PENDING')
+
+    def test_get_trades_for_recipient(self):
+        result = self.app.post('/api/start_trade', data=json.dumps({
+            'initiator_id': self.test_initiator,
+            'recipient_id': self.test_recipient,
+            'offered_item_ids': self.test_initiator_inventory,
+            'requested_item_ids': self.test_recipient_inventory
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        trade_id = data['trade_id']
+
+        result = self.app.get('/api/get_trades/' + str(self.test_recipient))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertTrue('trades' in data)
+        self.assertEquals(len(data['trades']), 1)
+        self.assertEquals(data['trades'][0]['trade_id'], trade_id)
+        self.assertEquals(data['trades'][0]['status'], 'PENDING')
+
     def test_accept_trade(self):
-        return
-        
+        result = self.app.post('/api/start_trade', data=json.dumps({
+            'initiator_id': self.test_initiator,
+            'recipient_id': self.test_recipient,
+            'offered_item_ids': self.test_initiator_inventory,
+            'requested_item_ids': self.test_recipient_inventory
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        trade_id = data['trade_id']
+
+        result = self.app.put('/api/accept_trade', data=json.dumps({
+            'user_id': self.test_recipient,
+            'trade_id': trade_id
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+
+        result = self.app.get('/api/get_trade/' + str(trade_id))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertEquals(data['trade']['status'], 'ACCEPTED')
+
     def test_deny_trade(self):
-        return
-        
-    def test_get_trade(self):
-        return
-        
-    def test_get_trades(self):
-        return
+        result = self.app.post('/api/start_trade', data=json.dumps({
+            'initiator_id': self.test_initiator,
+            'recipient_id': self.test_recipient,
+            'offered_item_ids': self.test_initiator_inventory,
+            'requested_item_ids': self.test_recipient_inventory
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        trade_id = data['trade_id']
 
-    def test_start_get_gets_accept_deny(self):
-        return 
-        trade1 =  {
-            "initiator_id": -1,
-            "recipient_id": -2,
-            "offered_items": [1,2],
-            "requested_items": [3,4]
-        }
-        trade2 =  {
-            "initiator_id": -1,
-            "recipient_id": -4,
-            "offered_items": [5,6]
-            "requested_items": [7,8]
-        }
-        # create json for trade 1 and trade 2
-        json1 = json.dumps(trade1)
-        json2 = json.dumps(trade2)
-        # assert that trade1 is started successfully
-        startTradeJson1 = trade_handler.start_trade(json1)
-        self.assertFalse(self.is_valid_json(['error'], startTradeJson1))
-        self.assertTrue(self.is_valid_json(['trade_id'], startTradeJson1))
-        # assert that trade2 is started successfully
-        startTradeJson2 = trade_handler.start_trade(json2)
-        self.assertFalse(self.is_valid_json(['error'], startTradeJson2))
-        self.assertTrue(self.is_valid_json(['trade_id'], startTradeJson2))
-        # assert that getting trade2 is working correctly
-        self.assertFalse(self.is_valid_json(['error'], trade_handler.get_trade(startTradeJson2['trade_id'])))
-        self.assertTrue(self.is_valid_json(['trade_id', 'initiator_id', 'recipient_id', 'requested_items', 'offered_items', 'status'], trade_handler.get_trade(startTradeJson2['trade_id'])))
-        # assert that getting all trades for user_id=-1 is working correctly
-        self.assertFalse(self.is_valid_json(['error'], trade_handler.get_trades(-1)))
-        self.assertTrue(self.is_valid_json(['trades'], trade_handler.get_trades(-1)))
-        # make sure that accepting a trade is working correctly
-        acceptance = {
-            "user_id": -2,
-            "trade_id": startTradeJson1['trade_id']
-        }
-        json3 = json.dumps(acceptance)
-        self.assertTrue(self.is_valid_json(['error'], trade_handler.accept_trade(json3)))
-        self.assertTrue(trade_handler.get_trade(startTradeJson1['trade_id'])['status'] is "Accepted")
-        # make sure that denying a trade is working correctly
-        deny = {
-            "user_id": -4,
-            "trade_id": startTradeJson2['trade_id']
-        }
-        json4 = json.dumps(deny)
-        self.assertTrue(self.is_valid_json(['error'], trade_handler.deny_trade(json4)))
-        self.assertTrue(trade_handler.get_trade(startTradeJson2['trade_id'])['status'] is "Denied")
+        result = self.app.put('/api/deny_trade', data=json.dumps({
+            'user_id': self.test_recipient,
+            'trade_id': trade_id
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
 
-    # makes sure that the returned json is correct
-    def is_valid_json(self, expected_fields, json):
-        # check that there is json data
-        if not json:
-            return False
-        
-        # validate the expected fields exist
-        for field in expected_fields:
-            if field not in json:
-                return False
-        
-        return True
-
-if __name__ == '__main__':
-    unittest.main()
+        result = self.app.get('/api/get_trade/' + str(trade_id))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertEquals(data['trade']['status'], 'DENIED')

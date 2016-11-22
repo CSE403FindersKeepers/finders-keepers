@@ -53,4 +53,5 @@
     <string name="trade_status_text">Trade Status:</string>
     <string name="status_placeholder">Incoming</string>
     <string name="view_other_text">View Other User\'s Profile</string>
+    <string name="send_mail_text">Send Email to User</string>
 </resources>

@@ -119,6 +119,7 @@ public class ViewTradesActivity extends AppCompatActivity {
                     newItemButton.setAdjustViewBounds(true);
                     newItemButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     newItemButton.setOnClickListener(viewTradeListener);
+                    newItemButton.setEmail(origUserJSON.getString("email"));
                     section.addView(newItemButton, 0);
                 }
             }
@@ -145,6 +146,7 @@ public class ViewTradesActivity extends AppCompatActivity {
             Intent addItemIntent = new Intent(ViewTradesActivity.this, ViewUserTradeActivity.class);
             addItemIntent.putExtra("TRADEID", ((AddableItem) view).getItemId());
             addItemIntent.putExtra("STATUS", ((AddableItem) view).getTags());
+            addItemIntent.putExtra("EMAIL", ((AddableItem) view).getEmail());
             startActivity(addItemIntent);
         }
     };

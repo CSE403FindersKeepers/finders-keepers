@@ -105,6 +105,18 @@ class TradeHandler():
 			result = self.db_handler.cursor.fetchone()
 		return items
 
+	def delete_trade(self, trade_id): # should not be used, only for testing
+		self.db_handler.cursor.execute("SELECT * FROM TRADES WHERE tradeId=" + str(trade_id))
+		data = self.db_handler.cursor.fetchone()
+		if data is None:
+			return jsonify(error="Trade not found")
+		else:
+			image_handler.delete_image(data[2])
+			query = "DELETE FROM TRADES WHERE tradeId=" + str(trade_id)
+			self.db_handler.cursor.execute(query)
+			self.db_handler.connection.commit()
+			return jsonify(error=None)
+
 def format_trade_json(result, offered_items, requested_items):
 	initiator_id, recipient_id, trade_id, status = result
 

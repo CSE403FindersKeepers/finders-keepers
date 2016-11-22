@@ -3,6 +3,7 @@ package cse403.finderskeepers;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import cse403.finderskeepers.data.UserInfoHolder;
@@ -39,6 +41,8 @@ public class ViewUserTradeActivity extends AppCompatActivity {
 
     private int theirUID;
 
+    private String email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +50,9 @@ public class ViewUserTradeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("TRADEID")){
+        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("TRADEID") && getIntent().getExtras().containsKey("EMAIL")){
             tradeID = getIntent().getExtras().getInt("TRADEID");
+            email = "mailto:" + getIntent().getExtras().getString("EMAIL");
         }
 
         Button viewUserButton = (Button) findViewById(R.id.view_profile);
@@ -58,6 +63,9 @@ public class ViewUserTradeActivity extends AppCompatActivity {
 
         Button rejectButton = (Button) findViewById(R.id.reject_trade);
         rejectButton.setOnClickListener(rejectListener);
+
+        Button emailButton = (Button) findViewById(R.id.send_mail);
+        emailButton.setOnClickListener(mailListener);
 
         populatePage();
     }
@@ -72,6 +80,18 @@ public class ViewUserTradeActivity extends AppCompatActivity {
             addItemIntent.putExtra("ITEM_ID", ((AddableItem) view).getItemId());
             addItemIntent.putExtra("TAGS", ((AddableItem) view).getTags());
             startActivity(addItemIntent);
+        }
+    };
+
+    /**
+     * Listener which opens email app for mailing
+     */
+    private View.OnClickListener mailListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Uri mailURI = Uri.parse(email);
+            Intent mailIntent = new Intent(Intent.ACTION_VIEW, mailURI);
+            startActivity(mailIntent);
         }
     };
 
@@ -160,6 +180,8 @@ public class ViewUserTradeActivity extends AppCompatActivity {
             } else if (tradeObj.getString("status").equals("PENDING")) {
                 statusString.setText("Outgoing - Pending");
             } else if (tradeObj.getString("status").equals("ACCEPTED")) {
+                Button emailButton = (Button) findViewById(R.id.send_mail);
+                emailButton.setVisibility(View.VISIBLE);
                 statusString.setText("Completed");
             } else if (tradeObj.getString("status").equals("DENIED")) {
                 statusString.setText("Rejected");
