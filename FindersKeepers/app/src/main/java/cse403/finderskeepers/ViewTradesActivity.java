@@ -43,7 +43,6 @@ public class ViewTradesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_trades);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        populateTrades();
 
         // TODO: Add logic to populate incoming/outgoing/completed trades
     }
@@ -52,6 +51,13 @@ public class ViewTradesActivity extends AppCompatActivity {
     private void populateTrades(){
         UserAPIService userapiservice = UserInfoHolder.getInstance().getAPIService();
 
+        for(int i : new int[] {R.id.outgoing_trades_list, R.id.incoming_trades_list, R.id.completed_trades_list, R.id.rejected_trades_list})
+        {
+            LinearLayout items = (LinearLayout) findViewById(i);
+            while (items.getChildCount() > 0) {
+                items.removeViewAt(0);
+            }
+        }
 
         try {
             Call<ResponseBody> trad = userapiservice.getTrades(UserInfoHolder.getInstance().getUID());
@@ -126,6 +132,12 @@ public class ViewTradesActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        populateTrades();
     }
 
     private View.OnClickListener viewTradeListener = new View.OnClickListener() {
