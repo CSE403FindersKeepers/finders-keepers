@@ -134,7 +134,7 @@ class ItemHandler():
 			self.db_handler.connection.commit()
 		query = "DELETE FROM TRADEITEMS WHERE itemId=" + str(item_id)
 		self.db_handler.cursor.execute(query)
-		result = self.db_handler.cursor.fetchall()
+		self.db_handler.connection.commit()
 
 		query = "DELETE FROM ITEM WHERE id=" + str(item_id)
 		self.db_handler.cursor.execute(query)
