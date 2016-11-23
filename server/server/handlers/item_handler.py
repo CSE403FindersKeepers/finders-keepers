@@ -124,6 +124,18 @@ class ItemHandler():
 
 	# delete_item: deletes an item based on the item ID given.
 	def delete_item(self, item_id):
+		query = "SELECT tradeId FROM TRADEITEMS WHERE itemId=" + str(item_id)
+		self.db_handler.cursor.execute(query)
+		result = self.db_handler.cursor.fetchall()
+		for row in result:
+			trade_id = row[0]
+			query = "UPDATE TRADES SET status='CANCELLED' WHERE tradeId=" + str(trade_id)
+			self.db_handler.cursor.execute(query)
+			self.db_handler.connection.commit()
+		query = "DELETE FROM TRADEITEMS WHERE itemId=" + str(item_id)
+		self.db_handler.cursor.execute(query)
+		result = self.db_handler.cursor.fetchall()
+
 		query = "DELETE FROM ITEM WHERE id=" + str(item_id)
 		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()

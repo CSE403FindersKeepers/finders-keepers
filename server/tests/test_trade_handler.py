@@ -49,6 +49,8 @@ class TestTradeHandler(unittest.TestCase):
             self.app.delete('/api/delete_item/' + str(item_id))
         for item_id in self.test_recipient_inventory:
             self.app.delete('/api/delete_item/' + str(item_id))
+        self.app.delete('/api/delete_user/' + str(self.test_recipient))
+        self.app.delete('/api/delete_user/' + str(self.test_initiator))
 
     def tearDown(self):
         result = self.app.get('/api/get_trades/' + str(self.test_initiator))
@@ -154,3 +156,24 @@ class TestTradeHandler(unittest.TestCase):
         self.assertEquals(result.status, '200 OK')
         data = json.loads(result.data)
         self.assertEquals(data['trade']['status'], 'DENIED')
+
+    def test_delete_item_cancels_trade(self):
+        result = self.app.post('/api/start_trade', data=json.dumps({
+            'initiator_id': self.test_initiator,
+            'recipient_id': self.test_recipient,
+            'offered_item_ids': self.test_initiator_inventory,
+            'requested_item_ids': self.test_recipient_inventory
+        }), content_type='application/json')
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        trade_id = data['trade_id']
+
+        item_id = self.test_initiator_inventory[0]
+        result = self.app.delete('/api/delete_item/' + str(item_id))
+        self.assertEquals(result.status, '200 OK')
+
+        result = self.app.get('/api/get_trade/' + str(trade_id))
+        self.assertEquals(result.status, '200 OK')
+        data = json.loads(result.data)
+        self.assertEquals(data['trade']['status'], 'CANCELLED')
+        self.assertEquals(len(data['trade']['offered_items']), 0)
