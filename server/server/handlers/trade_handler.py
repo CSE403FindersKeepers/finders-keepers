@@ -10,7 +10,10 @@ app = Flask(__name__)
 class TradeHandler():
 	def __init__(self, db_handler):
 		self.db_handler = db_handler
-
+	
+	"""
+	get_trade() takes a Trade ID and returns all trade information.
+	"""
 	def get_trade(self, trade_id):
 		tradeQuery = "SELECT * FROM TRADES WHERE tradeId=" + str(trade_id)
 		self.db_handler.cursor.execute(tradeQuery)
@@ -25,6 +28,10 @@ class TradeHandler():
 		requested_items = self.get_item_array(trade_id, recipient)
 		return jsonify(trade=format_trade_json(tradeRes, offered_items, requested_items))
 
+	"""
+	get_trades() takes a User ID and retuns all trades that the user
+	is associated with.
+	"""
 	def get_trades(self, user_id):
 		query = "SELECT * FROM TRADES WHERE "
 		query += "recipientId=" + str(user_id) + " OR initiatorId=" + str(user_id)
@@ -44,6 +51,10 @@ class TradeHandler():
 			trades.append(format_trade_json(result, offered_items, requested_items))
 		return jsonify(trades=trades)
 
+	"""
+	start_trade() creates a trade between an initiator and a recipient, made up of 
+	items offered by the initiator and the recipient.
+	"""
 	def start_trade(self, json):
 		query = "INSERT INTO TRADES"
 		query += " VALUES(" + str(json["initiator_id"]) + "," + str(json["recipient_id"])
@@ -79,6 +90,10 @@ class TradeHandler():
 
 		return jsonify(trade_id=result[2]) # todo change to match spec
 
+	"""
+	accept_trade() takes a user and a trade ID and accepts the trade if it is pending
+	and does nothing if it has already been closed.
+	"""
 	def accept_trade(self, json):
 		# check if json["user"] is recipient?
 		query = "UPDATE TRADES SET status='ACCEPTED' WHERE recipientId=" + str(json["user_id"])
@@ -87,6 +102,10 @@ class TradeHandler():
 		self.db_handler.connection.commit()
 		return jsonify(error=None) # todo change to match spec
 
+	"""
+	deny_trade() takes a user and a trade ID and cancels the trade if it is pending
+	and (?is this reasonable behavior?) does nothing if it has already been closed.
+	"""
 	def deny_trade(self, json):
 		# check if json["user"] is recipient?
 		query = "UPDATE TRADES SET status='DENIED' WHERE recipientId=" + str(json["user_id"])
@@ -95,6 +114,10 @@ class TradeHandler():
 		self.db_handler.connection.commit()
 		return jsonify(error=None) # todo change to match spec
 
+	"""
+	get_item_array() takes a user and a trade ID and returns a list of all the items that belong to
+	the given trade and user.
+	"""
 	def get_item_array(self, trade_id, user_id):
 		query = "SELECT itemId FROM TRADEITEMS WHERE userId=" + str(user_id) + " AND tradeId=" + str(trade_id)
 		items = []
@@ -105,6 +128,9 @@ class TradeHandler():
 			result = self.db_handler.cursor.fetchone()
 		return items
 
+	"""
+	TEST METHOD, DO NOT USE IN PRODUCTION
+	"""
 	def delete_trade(self, trade_id): # should not be used, only for testing
 		self.db_handler.cursor.execute("SELECT * FROM TRADES WHERE tradeId=" + str(trade_id))
 		data = self.db_handler.cursor.fetchone()
