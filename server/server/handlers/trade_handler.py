@@ -18,7 +18,6 @@ class TradeHandler():
 		tradeQuery = "SELECT * FROM TRADES WHERE tradeId=" + str(trade_id)
 		self.db_handler.cursor.execute(tradeQuery)
 		tradeRes = self.db_handler.cursor.fetchone()
-		self.db_handler.cursor.fetchall()
 		if tradeRes is None:
 			return jsonify(error="Cannot find trade with id " + str(trade_id))
 

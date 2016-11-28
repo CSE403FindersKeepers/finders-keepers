@@ -22,7 +22,6 @@ class ItemHandler():
 		query = "SELECT * FROM ITEM WHERE id=" + str(item_id)
 		self.db_handler.cursor.execute(query);
 		result = self.db_handler.cursor.fetchone()
-		self.db_handler.cursor.fetchall()		
 
 		# handle querying failures
 		if result is None:
