@@ -102,6 +102,8 @@ public class UserSettingsActivity extends AppCompatActivity {
 
             locationText.setText("Latitude: " + latitude + " Longitude: " + longitude);
             UserSettingsActivity.this.updateUser();
+            Intent goHome = new Intent(UserSettingsActivity.this, HomePage.class);
+            startActivity(goHome);
         }
     };
 

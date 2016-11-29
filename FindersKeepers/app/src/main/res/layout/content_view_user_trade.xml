@@ -14,43 +14,42 @@
     tools:context="cse403.finderskeepers.ViewUserTradeActivity"
     tools:showIn="@layout/activity_view_user_trade">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".5"
-        android:textSize="30sp"
-        android:text="@string/trade_status_text"
-        android:gravity="center"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:textSize="30sp"
+            android:text="@string/trade_status_text"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:textSize="30sp"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:id="@+id/status_string"
+            android:text="@string/status_placeholder"
+            android:gravity="center"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight=".5"
         android:textSize="30sp"
-        android:id="@+id/status_string"
-        android:text="@string/status_placeholder"
-        android:gravity="center"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:text="@string/view_other_text"
-        android:id="@+id/view_profile"
-        android:layout_weight=".5"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".5"
-        android:textSize="30sp"
-        android:text="@string/trade_view_your_items_text"/>
+        android:text="@string/trade_view_your_items_text"
+        android:layout_marginTop="20dp"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/your_items_view"
         android:layout_weight="1">
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -66,7 +65,8 @@
         android:layout_height="0dp"
         android:layout_weight=".5"
         android:textSize="30sp"
-        android:text="@string/trade_view_their_items_text"/>
+        android:text="@string/trade_view_their_items_text"
+        android:layout_marginTop="20dp"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -84,19 +84,28 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="@string/accept_trade_text"
-        android:id="@+id/accept_trade"
-        android:layout_weight=".5"/>
+        android:layout_weight=".5"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/accept_trade_text"
+            android:id="@+id/accept_trade"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:text="@string/reject_trade_text"
-        android:id="@+id/reject_trade"
-        android:layout_weight=".5"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/reject_trade_text"
+            android:id="@+id/reject_trade"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"/>
+    </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
@@ -105,5 +114,14 @@
         android:id="@+id/send_mail"
         android:layout_weight=".5"
         android:visibility="gone"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/view_other_text"
+        android:id="@+id/view_profile"
+        android:layout_weight=".5"
+        android:layout_marginTop="10dp"
+        android:background="#AAAAAA"/>
 
 </LinearLayout>

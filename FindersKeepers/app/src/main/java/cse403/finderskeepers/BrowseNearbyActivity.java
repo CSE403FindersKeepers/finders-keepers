@@ -105,21 +105,29 @@ public class BrowseNearbyActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if (image != null && UID != UserInfoHolder.getInstance().getUID()) {
+                    LinearLayout resultArea = new LinearLayout(this);
+                    resultArea.setLayoutParams(new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
                     BrowseResultUser newUserResult = new BrowseResultUser(this, UID);
-                    LinearLayout.LayoutParams params = new LinearLayout
-                            .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams pictureLayout = new LinearLayout
+                            .LayoutParams(500, 500);
                     newUserResult.setImageBitmap(image);
-                    newUserResult.setLayoutParams(params);
+                    newUserResult.setLayoutParams(pictureLayout);
                     newUserResult.setAdjustViewBounds(true);
                     newUserResult.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     newUserResult.setOnClickListener(userClickListener);
-                    users.addView(newUserResult);
+                    resultArea.addView(newUserResult);
 
+                    LinearLayout.LayoutParams textLayout = new LinearLayout
+                            .LayoutParams(500, 500);
                     TextView userLabel = new TextView(this);
-                    userLabel.setLayoutParams(params);
+                    userLabel.setLayoutParams(textLayout);
                     userLabel.setText(userName);
                     userLabel.setTextSize(30);
-                    users.addView(userLabel);
+                    resultArea.addView(userLabel);
+
+                    users.addView(resultArea);
                 }
             }
         }

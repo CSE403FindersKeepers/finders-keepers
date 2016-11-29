@@ -185,6 +185,8 @@ public class ViewUserTradeActivity extends AppCompatActivity {
                 statusString.setText("Completed");
             } else if (tradeObj.getString("status").equals("DENIED")) {
                 statusString.setText("Rejected");
+            } else if (tradeObj.getString("status").equals("CANCELLED")) {
+                statusString.setText("Cancelled");
             }
 
             JSONArray ourItems;

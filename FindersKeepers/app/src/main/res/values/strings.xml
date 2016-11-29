@@ -6,8 +6,8 @@
     <string name="action_user_page">User Page</string>
 
     <string name="user_name">username</string>
-    <string name="user_items_text">Your Items</string>
-    <string name="user_tags_text">Your Tags</string>
+    <string name="user_items_text">Your Inventory</string>
+    <string name="user_tags_text">Your Wishlist</string>
     <string name="user_wishlist_text">Your Wishlist</string>
     <string name="title_activity_sign_in">Finders Keepers</string>
     <string name="sign_in_text">Sign In</string>
@@ -17,12 +17,12 @@
     <string name="tag_add">Add Tags</string>
     <string name="new_tag">New Tag</string>
     <string name="item_add_tags_hint">Tags Separated By Spaces</string>
-    <string name="change_avatar_text">Change Avatar</string>
-    <string name="update_button_text">Update Avatar and ZIP</string>
+    <string name="change_avatar_text">Change image</string>
+    <string name="update_button_text">Save changes</string>
     <string name="title_activity_view_item">ViewItemActivity</string>
     <string name="delete_item_text">Delete Item</string>
-    <string name="update_tags_text">Update Tags</string>
-    <string name="wishlist_tags_hint">Tag1 Tag2 Tag3 Tag4</string>
+    <string name="update_tags_text">Update Wishlist</string>
+    <string name="wishlist_tags_hint">Enter some item tags</string>
     <string name="title_activity_browse_nearby">BrowseNearby</string>
     <string name="browse_nearby_users_text">Browse Nearby Users</string>
     <string name="action_browse_users">Browse Users</string>

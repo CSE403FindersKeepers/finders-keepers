@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:text="@string/browse_nearby_users_text"
         android:gravity="center_horizontal"
-        android:textSize="20sp"
+        android:textSize="40dp"
         android:id="@+id/browse_nearby_text_view"/>
 
     <ScrollView

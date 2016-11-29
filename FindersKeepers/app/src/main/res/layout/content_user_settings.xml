@@ -14,39 +14,61 @@
     tools:context="cse403.finderskeepers.UserSettingsActivity"
     tools:showIn="@layout/activity_user_settings">
 
-    <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:src="@mipmap/ic_launcher"
-        android:id="@+id/user_avatar"
-        android:layout_gravity="center"
-        android:layout_weight="2"/>
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:textSize="40dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+            <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:hasBorder="false"
+                android:src="@mipmap/ic_launcher"
+                android:id="@+id/user_avatar"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+        <Button
+            android:text="@string/change_avatar_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/action_change_avatar"
+            android:layout_weight="2"
+            android:layout_gravity="right"/>
+    </LinearLayout>
 
-    <Button
-        android:text="@string/change_avatar_text"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/action_change_avatar"
-        android:layout_weight="1"/>
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:maxLength="5"
+            android:id="@+id/edit_zip_field"
+            android:gravity="center"
+            android:inputType="number"
+            android:hint="@string/enter_zip_text"
+            android:maxLines="1"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:maxLength="5"
-        android:id="@+id/edit_zip_field"
-        android:gravity="center"
-        android:inputType="number"
-        android:hint="@string/enter_zip_text"
-        android:maxLines="1"/>
-
-    <Button
-        android:text="@string/update_button_text"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/action_change_location"
-        android:gravity="center"
-        android:layout_weight="1" />
+        <Button
+            android:text="@string/update_button_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/action_change_location"
+            android:gravity="center"
+            android:layout_weight="2" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
