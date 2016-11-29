@@ -14,7 +14,12 @@
     tools:context="cse403.finderskeepers.HomePage"
     tools:showIn="@layout/activity_additem">
 
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add an item"
+        android:textSize="40dp"/>
+    
     <ImageButton
         android:layout_width="match_parent"
         android:layout_height="0dp"
