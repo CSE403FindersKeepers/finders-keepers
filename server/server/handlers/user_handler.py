@@ -51,14 +51,18 @@ class UserHandler():
 
 	# create_user: Takes in a json containing an email, returns a user id. User id is -1 if there is an error
 	def create_user(self, json):
- 		self.db_handler.cursor.execute("INSERT INTO USER VALUES(default,'','http://i.imgur.com/0bGFP47.jpg',0,'" + json["email"] + "', '')")
- 		self.db_handler.cursor.execute("SELECT USER.id FROM USER WHERE USER.email='" + json['email'] + "'")
+		# Return the original user if already exists
+		self.db_handler.cursor.execute("SELECT USER.id FROM USER WHERE USER.email='" + json['email'] + "'")
  		data = self.db_handler.cursor.fetchone()
  		if data is None:
- 			return jsonify(user_id=-1)
- 		else:
- 			self.db_handler.connection.commit()
- 			return jsonify(user_id=data[0])
+	 		self.db_handler.cursor.execute("INSERT INTO USER VALUES(default,'','http://i.imgur.com/0bGFP47.jpg',0,'" + json["email"] + "', '')")
+	 		self.db_handler.cursor.execute("SELECT USER.id FROM USER WHERE USER.email='" + json['email'] + "'")
+	 		data = self.db_handler.cursor.fetchone()
+	 		if data is None:
+	 			return jsonify(user_id=-1)
+	 		else:
+	 			self.db_handler.connection.commit()
+	 	return jsonify(user_id=data[0])
 
 	# create_user: Takes in a json containing a user_id, name, zipcode, photo, and email returns a json with a null error field on success,
 	# and an error field with a message upon failure
