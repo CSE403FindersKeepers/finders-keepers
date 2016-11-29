@@ -33,7 +33,7 @@
         android:textSize="30sp"
         android:textColor="@color/bootstrap_brand_secondary_text"
         android:layout_gravity="center_horizontal"
-        android:layout_weight=".5"/>
+        android:layout_weight="1"/>
 
     <com.beardedhen.androidbootstrap.AwesomeTextView
         android:text="@string/user_items_text"
@@ -43,14 +43,14 @@
         android:textSize="30sp"
         android:textColor="@color/bootstrap_brand_secondary_text"
         android:layout_gravity="start"
-        android:layout_weight=".5"
+        android:layout_weight="1"
         android:layout_marginTop="20sp"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/user_items_view"
-        android:layout_weight="1">
+        android:layout_weight="2">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
         android:textSize="30sp"
         android:textColor="@color/bootstrap_brand_secondary_text"
         android:layout_gravity="start"
-        android:layout_weight=".5"
+        android:layout_weight="1"
         android:layout_marginTop="20dp"/>
 
     <EditText
@@ -89,14 +89,14 @@
         android:hint="@string/wishlist_tags_hint"
         android:ems="10"
         android:id="@+id/edit_tags"
-        android:layout_weight=".5" />
+        android:layout_weight="1" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:text="@string/update_tags_text"
         android:id="@+id/update_tags"
-        android:layout_weight=".5"
+        android:layout_weight="1"
         android:layout_marginTop="20dp"/>
 
 </LinearLayout>
