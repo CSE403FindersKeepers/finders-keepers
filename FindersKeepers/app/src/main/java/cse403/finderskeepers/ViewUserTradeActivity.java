@@ -50,7 +50,9 @@ public class ViewUserTradeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("TRADEID") && getIntent().getExtras().containsKey("EMAIL")){
+        if(getIntent().getExtras() != null
+                && getIntent().getExtras().containsKey("TRADEID")
+                && getIntent().getExtras().containsKey("EMAIL")) {
             tradeID = getIntent().getExtras().getInt("TRADEID");
             email = "mailto:" + getIntent().getExtras().getString("EMAIL");
         }
@@ -187,6 +189,7 @@ public class ViewUserTradeActivity extends AppCompatActivity {
                 statusString.setText("Rejected");
             }
 
+
             JSONArray ourItems;
             JSONArray theirItems;
 
@@ -194,6 +197,15 @@ public class ViewUserTradeActivity extends AppCompatActivity {
                 theirUID = tradeObj.getInt("recipient_id");
                 ourItems = tradeObj.getJSONArray("offered_items");
                 theirItems = tradeObj.getJSONArray("requested_items");
+
+                Call<ResponseBody> getUser = UserInfoHolder.getInstance().getAPIService().getUser(theirUID);
+                Response<ResponseBody> userCall = getUser.execute();
+
+                String userString = userCall.body().string();
+
+                JSONObject userObj = new JSONObject(userString).getJSONObject("user");
+
+                email = "mailto:" + userObj.getString("email");
             } else {
                 theirUID = tradeObj.getInt("initiator_id");
                 ourItems = tradeObj.getJSONArray("requested_items");
