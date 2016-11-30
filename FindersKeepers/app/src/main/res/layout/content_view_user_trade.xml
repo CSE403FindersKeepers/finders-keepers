@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".5"
+            android:layout_weight="1"
             android:textSize="30sp"
             android:text="@string/trade_status_text"
             android:gravity="center"/>
@@ -40,7 +40,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".5"
+        android:layout_weight="1"
         android:textSize="30sp"
         android:text="@string/trade_view_your_items_text"
         android:layout_marginTop="20dp"/>
@@ -63,7 +63,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".5"
+        android:layout_weight="1"
         android:textSize="30sp"
         android:text="@string/trade_view_their_items_text"
         android:layout_marginTop="20dp"/>
@@ -87,7 +87,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".5"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:layout_marginTop="20dp">
         <Button
@@ -112,7 +112,7 @@
         android:layout_height="0dp"
         android:text="@string/send_mail_text"
         android:id="@+id/send_mail"
-        android:layout_weight=".5"
+        android:layout_weight="1"
         android:visibility="gone"/>
 
     <Button
@@ -120,7 +120,7 @@
         android:layout_height="0dp"
         android:text="@string/view_other_text"
         android:id="@+id/view_profile"
-        android:layout_weight=".5"
+        android:layout_weight="1"
         android:layout_marginTop="10dp"
         android:background="#AAAAAA"/>
 

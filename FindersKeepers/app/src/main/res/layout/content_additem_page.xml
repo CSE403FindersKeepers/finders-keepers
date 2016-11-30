@@ -28,21 +28,20 @@
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:background="#FFFFFF"
-        android:layout_weight="2"/>
+        android:layout_weight="5"/>
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:inputType="textCapWords"
         android:hint="@string/item_add_tags_hint"
-        android:id="@+id/editTags"
-        android:layout_weight="1" />
+        android:id="@+id/editTags" />
 
     <Button
         android:text="Add Item"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:id="@+id/upload_button"
-        android:layout_weight=".5"/>
+        android:layout_weight="1"/>
 
 </LinearLayout>

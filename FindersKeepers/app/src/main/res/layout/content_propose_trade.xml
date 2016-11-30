@@ -17,18 +17,16 @@
     <com.beardedhen.androidbootstrap.AwesomeTextView
         android:text="@string/this_user_items_text"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:id="@+id/this_user_items_text"
         android:textSize="30sp"
         android:textColor="@color/bootstrap_brand_secondary_text"
-        android:layout_gravity="start"
-        android:layout_weight=".5"/>
+        android:layout_gravity="start"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/this_user_item_view"
-        android:layout_weight="1">
+        android:layout_height="90dp"
+        android:id="@+id/this_user_item_view">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -43,18 +41,16 @@
     <com.beardedhen.androidbootstrap.AwesomeTextView
         android:text="@string/this_user_selected_items_text"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:id="@+id/this_user_selected_items_text"
         android:textSize="30sp"
         android:textColor="@color/bootstrap_brand_secondary_text"
-        android:layout_gravity="start"
-        android:layout_weight=".5"/>
+        android:layout_gravity="start"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/this_user_selected_item_view"
-        android:layout_weight="1">
+        android:layout_height="90dp"
+        android:id="@+id/this_user_selected_item_view">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -69,18 +65,16 @@
     <com.beardedhen.androidbootstrap.AwesomeTextView
         android:text="@string/their_items_text"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:id="@+id/their_items_text"
         android:textSize="30sp"
         android:textColor="@color/bootstrap_brand_secondary_text"
-        android:layout_gravity="start"
-        android:layout_weight=".5"/>
+        android:layout_gravity="start"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/their_item_view"
-        android:layout_weight="1">
+        android:layout_height="90dp"
+        android:id="@+id/their_item_view">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -95,18 +89,16 @@
     <com.beardedhen.androidbootstrap.AwesomeTextView
         android:text="@string/their_selected_items_text"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:id="@+id/their_selected_items_text"
         android:textSize="30sp"
         android:textColor="@color/bootstrap_brand_secondary_text"
-        android:layout_gravity="start"
-        android:layout_weight=".5"/>
+        android:layout_gravity="start"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/their_selected_item_view"
-        android:layout_weight="1">
+        android:layout_height="90dp"
+        android:id="@+id/their_selected_item_view">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -120,9 +112,8 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="60sp"
         android:text="@string/send_trade_text"
-        android:id="@+id/send_trade"
-        android:layout_weight=".5"/>
+        android:id="@+id/send_trade"/>
 
 </LinearLayout>
