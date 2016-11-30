@@ -264,10 +264,6 @@ public class HomePage extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Set tags in TextView
-        TextView tagText = (TextView) findViewById(R.id.edit_tags);
-        tagText.setText(tagString);
-        taglist = tagString;
 
         try {
             if(UserJSON == null) throw new JSONException("OH NOE");

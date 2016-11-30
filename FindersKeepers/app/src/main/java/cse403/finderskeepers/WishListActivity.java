@@ -38,6 +38,7 @@ public class WishListActivity extends AppCompatActivity {
     private String[] items;
     private ListView scrollView;
     private Context c;
+    boolean clicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -145,14 +146,16 @@ public class WishListActivity extends AppCompatActivity {
                 for(int i = selected.size() - 1; i >= 0; i--){
                     if(selected.get(i)){
                         image.setImageResource(R.mipmap.delete);
+                        clicked = true;
                         break;
                     }
                 }
+
             }
         });
 
         image.setOnClickListener(new View.OnClickListener() {
-            boolean clicked = false;
+
             @Override
             public void onClick(View v) {
                 if(clicked){
@@ -167,6 +170,7 @@ public class WishListActivity extends AppCompatActivity {
                     ArrayAdapter adapter = new ArrayAdapter(c, android.R.layout.simple_list_item_1, items);
                     scrollView.setAdapter(adapter);
                     image.setImageResource(R.mipmap.add);
+                    clicked = !clicked;
                 }else{
                     listItems.add(edit.getText().toString());
                     items = new String[listItems.size()];
@@ -175,9 +179,8 @@ public class WishListActivity extends AppCompatActivity {
                     ArrayAdapter adapter = new ArrayAdapter(c, android.R.layout.simple_list_item_1, items);
                     scrollView.setAdapter(adapter);
                     edit.setText("");
-                    image.setImageResource(R.mipmap.delete);
                 }
-                clicked = !clicked;
+
 
                 JSONObject requestJSON = new JSONObject();
                 try {
