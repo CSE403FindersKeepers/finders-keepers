@@ -60,7 +60,8 @@
         <activity
             android:name=".ViewUserTradeActivity"
             android:label="@string/title_activity_view_user_trade"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".WishListActivity"></activity>
     </application>
 
 </manifest>
