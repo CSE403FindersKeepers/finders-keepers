@@ -311,7 +311,7 @@ public class HomePage extends AppCompatActivity {
                     newItemButton.setAdjustViewBounds(true);
                     newItemButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     newItemButton.setOnClickListener(editItemListener);
-                    items.addView(newItemButton, 1);
+                    items.addView(newItemButton, 0);
                 }
             }
         } catch (JSONException e) {
