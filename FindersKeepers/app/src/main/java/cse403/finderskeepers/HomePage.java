@@ -34,12 +34,14 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static android.R.id.message;
 import static cse403.finderskeepers.UserSettingsActivity.JSON;
 
 public class HomePage extends AppCompatActivity {
 
     private static final int REQUEST_STUFF = 14582;
     private UserAPIService userapiservice;
+    private String taglist;
 
     private void disconnectionError(){
         Intent intent = new Intent(HomePage.this, DisconnectionError.class);
@@ -115,10 +117,14 @@ public class HomePage extends AppCompatActivity {
     private View.OnClickListener updateTagsListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            userapiservice = UserInfoHolder.getInstance().getAPIService();
+            Intent inten = new Intent(HomePage.this, WishListActivity.class);
+            inten.putExtra("message", taglist);
+            startActivity(inten);
+            /*userapiservice = UserInfoHolder.getInstance().getAPIService();
             JSONObject requestJSON = new JSONObject();
             try {
                 EditText tags = (EditText) findViewById(R.id.edit_tags);
+                taglist = tags.getText().toString();
                 Scanner scanner = new Scanner(tags.getText().toString());
                 JSONArray wishlist = new JSONArray();
                 while (scanner.hasNext()) {
@@ -142,7 +148,8 @@ public class HomePage extends AppCompatActivity {
                 e.printStackTrace();
                 Intent intent = new Intent(HomePage.this, DisconnectionError.class);
                 startActivity(intent);
-            }
+            }*/
+
         }
     };
 
@@ -257,9 +264,6 @@ public class HomePage extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Set tags in TextView
-        TextView tagText = (TextView) findViewById(R.id.edit_tags);
-        tagText.setText(tagString);
 
         try {
             if(UserJSON == null) throw new JSONException("OH NOE");

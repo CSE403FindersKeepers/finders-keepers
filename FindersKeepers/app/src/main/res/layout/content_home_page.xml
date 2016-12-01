@@ -69,24 +69,6 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <com.beardedhen.androidbootstrap.AwesomeTextView
-        android:text="@string/user_tags_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/user_tags_text"
-        android:textSize="30sp"
-        android:textColor="@color/bootstrap_brand_secondary_text"
-        android:layout_gravity="start"
-        android:layout_marginTop="20dp"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textCapWords"
-        android:hint="@string/wishlist_tags_hint"
-        android:ems="10"
-        android:id="@+id/edit_tags" />
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
