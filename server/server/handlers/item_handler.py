@@ -19,8 +19,8 @@ class ItemHandler():
 	# about the item.
 	def get_item(self, item_id):
 		# query the database
-		query = "SELECT * FROM ITEM WHERE id=" + str(item_id)
-		self.db_handler.cursor.execute(query);
+		query = "SELECT * FROM ITEM WHERE id=%s"
+		self.db_handler.cursor.execute(query, str(item_id));
 		result = self.db_handler.cursor.fetchone()
 
 		# handle querying failures
