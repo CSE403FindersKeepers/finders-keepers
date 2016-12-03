@@ -15,8 +15,8 @@ class TradeHandler():
 	get_trade() takes a Trade ID and returns all trade information.
 	"""
 	def get_trade(self, trade_id):
-		tradeQuery = "SELECT * FROM TRADES WHERE tradeId=" + str(trade_id)
-		self.db_handler.cursor.execute(tradeQuery)
+		tradeQuery = "SELECT * FROM TRADES WHERE tradeId=%s"
+		self.db_handler.cursor.execute(tradeQuery, str(trade_id))
 		tradeRes = self.db_handler.cursor.fetchone()
 		if tradeRes is None:
 			return jsonify(error="Cannot find trade with id " + str(trade_id))
@@ -33,8 +33,8 @@ class TradeHandler():
 	"""
 	def get_trades(self, user_id):
 		query = "SELECT * FROM TRADES WHERE "
-		query += "recipientId=" + str(user_id) + " OR initiatorId=" + str(user_id)
-		self.db_handler.cursor.execute(query)
+		query += "recipientId=%s OR initiatorId=%s"
+		self.db_handler.cursor.execute(query, (str(user_id), str(user_id)))
 		results = self.db_handler.cursor.fetchall()
 
 		if results is None:
@@ -56,17 +56,17 @@ class TradeHandler():
 	"""
 	def start_trade(self, json):
 		query = "INSERT INTO TRADES"
-		query += " VALUES(" + str(json["initiator_id"]) + "," + str(json["recipient_id"])
+		query += " VALUES(%s,%s"
 		query += ", default, 'PENDING')"
 
-		self.db_handler.cursor.execute(query)
+		self.db_handler.cursor.execute(query (str(json["initiator_id"]), str(json["recipient_id"])))
 		self.db_handler.connection.commit()
 
 		query = "SELECT * FROM TRADES WHERE "
-		query += "initiatorId=" + str(json["initiator_id"]) + " AND "
-		query += "recipientId=" + str(json["recipient_id"])
+		query += "initiatorId=%s AND "
+		query += "recipientId=%s"
 		query += " ORDER BY tradeId DESC"
-		self.db_handler.cursor.execute(query)
+		self.db_handler.cursor.execute(query, (str(json["initiator_id"]), str(json["recipient_id"])))
 		result = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
 
@@ -77,14 +77,14 @@ class TradeHandler():
 
 		for item in json["offered_item_ids"]:
 			query = "INSERT INTO TRADEITEMS"
-			query += " VALUES (" + str(trade_id) + ", " + str(item) + ", " + str(json["initiator_id"]) + ")" 
-			self.db_handler.cursor.execute(query)
+			query += " VALUES (%s, %s, %s)" 
+			self.db_handler.cursor.execute(query,(str(trade_id), str(item), str(json["initiator_id"])))
 			self.db_handler.connection.commit()
 
 		for item in json["requested_item_ids"]:
 			query = "INSERT INTO TRADEITEMS"
-			query += " VALUES (" + str(trade_id) + ", " + str(item) + ", " + str(json["recipient_id"]) + ")" 
-			self.db_handler.cursor.execute(query)
+			query += " VALUES (%s, %s, %s)" 
+			self.db_handler.cursor.execute(query, (str(trade_id), str(item), str(json["recipient_id"])))
 			self.db_handler.connection.commit()
 
 		return jsonify(trade_id=result[2]) # todo change to match spec
