@@ -1,9 +1,11 @@
+# TestTradeHandler: Tests for the TradeHandler class
 import unittest
 import json
 from server.server import app
 from flask import Flask, jsonify
 
 class TestTradeHandler(unittest.TestCase):
+    # Set app up for testing, create some dummy data
     @classmethod
     def setUpClass(self):
         app.testing = True
@@ -43,6 +45,7 @@ class TestTradeHandler(unittest.TestCase):
         data = json.loads(result.data)
         self.test_recipient_inventory = [data['items'][0]['item_id']]
 
+    # Tear down to avoid polluting the database
     @classmethod
     def tearDownClass(self):
         for item_id in self.test_initiator_inventory:
@@ -52,6 +55,7 @@ class TestTradeHandler(unittest.TestCase):
         self.app.delete('/api/delete_user/' + str(self.test_recipient))
         self.app.delete('/api/delete_user/' + str(self.test_initiator))
 
+    # Tear down to avoid polluting the database
     def tearDown(self):
         result = self.app.get('/api/get_trades/' + str(self.test_initiator))
         data = json.loads(result.data)
@@ -59,6 +63,7 @@ class TestTradeHandler(unittest.TestCase):
             trade_id = trade['trade_id']
             self.app.delete('/api/delete_trade/' + str(trade_id))
 
+    # Test starting a trade
     def test_start_trade(self):
         result = self.app.post('/api/start_trade', data=json.dumps({
             'initiator_id': self.test_initiator,
@@ -75,6 +80,7 @@ class TestTradeHandler(unittest.TestCase):
         data = json.loads(result.data)
         self.assertEquals(data['trade']['status'], 'PENDING')
 
+    # Test get trades for the initiator of trades
     def test_get_trades_for_initiator(self):
         result = self.app.post('/api/start_trade', data=json.dumps({
             'initiator_id': self.test_initiator,
@@ -94,6 +100,7 @@ class TestTradeHandler(unittest.TestCase):
         self.assertEquals(data['trades'][0]['trade_id'], trade_id)
         self.assertEquals(data['trades'][0]['status'], 'PENDING')
 
+    # Test get trades for the receiver
     def test_get_trades_for_recipient(self):
         result = self.app.post('/api/start_trade', data=json.dumps({
             'initiator_id': self.test_initiator,
@@ -113,6 +120,7 @@ class TestTradeHandler(unittest.TestCase):
         self.assertEquals(data['trades'][0]['trade_id'], trade_id)
         self.assertEquals(data['trades'][0]['status'], 'PENDING')
 
+    # Test accepting of a trade
     def test_accept_trade(self):
         result = self.app.post('/api/start_trade', data=json.dumps({
             'initiator_id': self.test_initiator,
@@ -135,6 +143,7 @@ class TestTradeHandler(unittest.TestCase):
         data = json.loads(result.data)
         self.assertEquals(data['trade']['status'], 'ACCEPTED')
 
+    # Test denying of a trade
     def test_deny_trade(self):
         result = self.app.post('/api/start_trade', data=json.dumps({
             'initiator_id': self.test_initiator,
@@ -157,6 +166,7 @@ class TestTradeHandler(unittest.TestCase):
         data = json.loads(result.data)
         self.assertEquals(data['trade']['status'], 'DENIED')
 
+    # Test deleting an item and then cancelling it to ensure it does not throw an error
     def test_delete_item_cancels_trade(self):
         result = self.app.post('/api/start_trade', data=json.dumps({
             'initiator_id': self.test_initiator,

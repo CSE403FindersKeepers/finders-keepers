@@ -30,8 +30,8 @@ class SearchHandler():
 			return None
 	
 		# build a list of all users
-		query = "SELECT * FROM USER WHERE zipcode=" + str(zips[0].zip)
-		self.db_handler.cursor.execute(query);
+		query = "SELECT * FROM USER WHERE zipcode=%s"
+		self.db_handler.cursor.execute(query, str(zips[0].zip));
 		
 		# ID, name, avatar_url, zipcode, email, wishlist
 		users = self.db_handler.cursor.fetchall()
@@ -42,8 +42,8 @@ class SearchHandler():
 			user_id, name, avatar, zip, email, wishlist = user
 						
 			# build the inventory
-			query = "SELECT * FROM ITEM WHERE ownerId=" + str(user_id)
-			self.db_handler.cursor.execute(query);
+			query = "SELECT * FROM ITEM WHERE ownerId=%s"
+			self.db_handler.cursor.execute(query, str(user_id));
 			items = self.db_handler.cursor.fetchall()		
 			inventory = []
 			if items is not None:

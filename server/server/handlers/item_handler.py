@@ -56,27 +56,23 @@ class ItemHandler():
 		# build the query to add the new data
 		query = ""
 		if len(json['tags']) < 2:
-			query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1) VALUES ("
-			query += concat_params(json['user_id'], json['title'], json['description'], item_image_url, json['tags'][0])
+			query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1) VALUES (%s,%s,%s,%s,%s)"
+			self.db_handler.cursor.execute(query, (json['user_id'], json['title'], json['description'], item_image_url, json['tags'][0]))
 		else:	
-			query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1, tag2) VALUES ("
-			query += concat_params(json['user_id'], json['title'], json['description'], item_image_url, json['tags'][0], json['tags'][1])
-		query += ")"
+			query = "INSERT INTO ITEM (ownerId, title, description, photo, tag1, tag2) VALUES (%s,%s,%s,%s,%s,%s)"
+			self.db_handler.cursor.execute(query, (json['user_id'], json['title'], json['description'], item_image_url, json['tags'][0], json['tags'][1]))
 
-		self.db_handler.cursor.execute(query)
 		self.db_handler.connection.commit()
 		
 		# query for the item ID and image URL
-		query = "SELECT id, photo FROM ITEM WHERE"
-		query += " ownerId=" + str(json['user_id'])
-		query += " AND title='" + str(json['title']) + "'"
-		self.db_handler.cursor.execute(query)
+		query = "SELECT id, photo FROM ITEM WHERE ownerId=%s AND title=%s"
+		self.db_handler.cursor.execute(query, (str(json['user_id']), str(json['title'])))
 		result = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
 
 		# handle database errors
 		if result is None:
-			abort(400, "Create was unnsuccessful even though you provided the correct info")
+			abort(400, "Create was unsuccessful even though you provided the correct info")
 		else:
 			item, url = result
 			return jsonify(item_id=item, item_image_url=url)
@@ -85,19 +81,28 @@ class ItemHandler():
 	# depending on what fields are included.
 	def update_item(self, json):
 		# build the query
-		query = "UPDATE ITEM SET "
-		query += "id=" + str(json['item_id'])
-		
+		self.db_handler.cursor.execute("SELECT * FROM ITEM WHERE ITEM.id=%s", str(json['item_id']))
+		data = self.db_handler.cursor.fetchone()
+		query = "UPDATE ITEM SET photo=%s, tag1=%s, tag2=%s, description=%s, title=%s WHERE id=%s"
+		if data is None:
+			return jsonify(error="Error. Item not found")
+		else:
+			url = data[2]
+			tag1 = data[3]
+			tag2 = data[4]
+			description = data[5]
+			title = data[6]
+
 		if 'title' in json:
-			query += ",title='" + json['title'] + "'"
+			title = json['title']
 
 		if 'description' in json:
-			query += ",description='" + json['description'] + "'"
+			description = json['description']
 
 		if 'item_image' in json:
 			# delete the old image first
-			url_query = 'SELECT photo FROM ITEM WHERE id=' + str(json['item_id'])
-			self.db_handler.cursor.execute(url_query)
+			url_query = 'SELECT photo FROM ITEM WHERE id=%s'
+			self.db_handler.cursor.execute(url_query, str(json['item_id']))
 			image_url = self.db_handler.cursor.fetchone()
 			self.db_handler.cursor.fetchall()
 			delete_image(image_url)
@@ -105,38 +110,34 @@ class ItemHandler():
 			# upload the new image
 			new_url = upload_image(json['item_image'])
 
-			query += ",photo='" + new_url + "'"
+			url = new_url
 
 		if 'tags' in json and len(json['tags']) > 0 :
-			query += ",tag1='" + json['tags'][0] + "'"
+			tag1 = json['tags'][0]
 			if len(json['tags']) > 1:
-				query += ",tag2='" + json['tags'][1] + "'"
-			else:
-				query += ",tag2=NULL"
+				tag2 = json['tags'][1]
 
-		query += " WHERE id=" + str(json['item_id'])
-
-		self.db_handler.cursor.execute(query)
+		self.db_handler.cursor.execute(query, (url, tag1, tag2, description, title, str(json['item_id'])))
 		self.db_handler.connection.commit()
 		
 		return jsonify(errors=None) # TODO actually do an error
 
 	# delete_item: deletes an item based on the item ID given.
 	def delete_item(self, item_id):
-		query = "SELECT tradeId FROM TRADEITEMS WHERE itemId=" + str(item_id)
-		self.db_handler.cursor.execute(query)
+		query = "SELECT tradeId FROM TRADEITEMS WHERE itemId=%s"
+		self.db_handler.cursor.execute(query, str(item_id))
 		result = self.db_handler.cursor.fetchall()
 		for row in result:
 			trade_id = row[0]
-			query = "UPDATE TRADES SET status='CANCELLED' WHERE tradeId=" + str(trade_id)
-			self.db_handler.cursor.execute(query)
+			query = "UPDATE TRADES SET status='CANCELLED' WHERE tradeId=%s"
+			self.db_handler.cursor.execute(query, str(trade_id))
 			self.db_handler.connection.commit()
-		query = "DELETE FROM TRADEITEMS WHERE itemId=" + str(item_id)
-		self.db_handler.cursor.execute(query)
+		query = "DELETE FROM TRADEITEMS WHERE itemId=%s"
+		self.db_handler.cursor.execute(query, str(item_id))
 		self.db_handler.connection.commit()
 
-		query = "DELETE FROM ITEM WHERE id=" + str(item_id)
-		self.db_handler.cursor.execute(query)
+		query = "DELETE FROM ITEM WHERE id=%s"
+		self.db_handler.cursor.execute(query, str(item_id))
 		self.db_handler.connection.commit()
 		
 		return jsonify(errors=None) # TODO actually do an error
@@ -144,8 +145,8 @@ class ItemHandler():
 	# get_inventory: returns all the objects owned by a specific user, specified
 	# by the user ID argument.
 	def get_inventory(self, owner_id):
-		query = "SELECT * FROM ITEM WHERE ownerId=" + str(owner_id)
-		self.db_handler.cursor.execute(query);
+		query = "SELECT * FROM ITEM WHERE ownerId=%s"
+		self.db_handler.cursor.execute(query, str(owner_id));
 		items = self.db_handler.cursor.fetchall()		
 
 		if items is None:
@@ -173,19 +174,17 @@ class ItemHandler():
 	# set_wishlist: given a user ID and array of wishlist tags, updates the wishlist tags
 	def set_wishlist(self, json):
 		user_id, wishlist = json['user_id'], json['wishlist']
-		query = "UPDATE USER SET wishlist="
-		query += "'" + ",".join(wishlist) + "'"
-		query += " WHERE id=" + str(user_id)
+		query = "UPDATE USER SET wishlist=%s WHERE id=%s"
 		
-		self.db_handler.cursor.execute(query)
+		self.db_handler.cursor.execute(query, (",".join(wishlist), str(user_id)))
 		self.db_handler.connection.commit()
 
 		return jsonify(error=None) # TODO return error if it didn't work?
 
 	# get_wishlist: given a user ID, returns a user's wishlist.
 	def get_wishlist(self, user_id):
-		query = "SELECT id, wishlist FROM USER WHERE id=" + str(user_id)
-		self.db_handler.cursor.execute(query);
+		query = "SELECT id, wishlist FROM USER WHERE id=%s"
+		self.db_handler.cursor.execute(query, str(user_id));
 		result = self.db_handler.cursor.fetchone()
 		self.db_handler.cursor.fetchall()
 

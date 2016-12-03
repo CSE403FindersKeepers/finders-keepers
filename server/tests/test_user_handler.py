@@ -1,21 +1,23 @@
-# TestTradeHandler: Tests for a class that's currently not implemented
-# Fulfilling the requirement on the spec
+# TestUserHandler: Tests for the UserHandler class
 import unittest
 import json
 from server.server import app
 from flask import Flask, jsonify
 
 class TestUserHandler(unittest.TestCase):
+    # Sets up the application for testing
     def setUp(self):
         app.testing = True
         self.app = app.test_client()
 
+    # Tests the case where we try to get a nonexistant user
     def test_get_user_invalid_id(self):
         result = self.app.get('/api/get_user/49834')
         self.assertTrue(result.data is not None)
         data = json.loads(result.data)
         self.assertEqual(data['user_id'], -1)
 
+    # Tests the updating of a user inventory
     def test_get_user_gets_inventory(self):
         result = self.app.post('/api/create_user', data=json.dumps({
             'email':'testgetusergetsinventory@email.com'
@@ -38,6 +40,7 @@ class TestUserHandler(unittest.TestCase):
         self.assertEqual(item['title'], 'a potato')
         self.app.delete('/api/delete_item/' + str(item['item_id']))
 
+    # Test creation of a new user
     def test_create_user_new_user(self):
         result = self.app.post('/api/create_user', data=json.dumps({
             'email':'testcreatenewuser@email.com'
@@ -52,6 +55,7 @@ class TestUserHandler(unittest.TestCase):
         data = json.loads(result.data)
         self.assertEqual(data['user']['email'], 'testcreatenewuser@email.com')
 
+    # Test creating a user that already exists
     def test_create_user_existing_user(self):
         result1 = self.app.post('/api/create_user', data=json.dumps({
             'email':'testcreateexistinguser@email.com'
@@ -66,6 +70,7 @@ class TestUserHandler(unittest.TestCase):
         data1 = json.loads(result1.data)
         self.assertEqual(data2['user_id'], data1['user_id'])
 
+    # Test updating only the zipcode of a user
     def test_update_user_zipcode(self):
         result = self.app.post('/api/create_user', data=json.dumps({
             'email':'testupdateuserzipcode@email.com'
@@ -82,6 +87,7 @@ class TestUserHandler(unittest.TestCase):
         data = json.loads(result.data)
         self.assertEqual(data['user']['zipcode'], 98684)
 
+    # Test updating only the name of a user
     def test_update_user_name(self):
         result = self.app.post('/api/create_user', data=json.dumps({
             'email':'testupdateusername@email.com'
@@ -98,6 +104,7 @@ class TestUserHandler(unittest.TestCase):
         data = json.loads(result.data)
         self.assertEqual(data['user']['name'], 'Draco Malfoy')
         
+    # Test a full update
     def test_update_user_all_null_fields(self):
         result = self.app.post('/api/create_user', data=json.dumps({
             'email':'testupdateusernull@email.com'
@@ -109,6 +116,7 @@ class TestUserHandler(unittest.TestCase):
         }), content_type='application/json')
         self.assertEqual(result.status, '400 BAD REQUEST')
         
+    # Test emptying a wishlist
     def test_set_wishlist_to_empty(self):
         result = self.app.post('/api/create_user', data=json.dumps({
             'email':'testsetwishlistempty@email.com'
@@ -125,6 +133,7 @@ class TestUserHandler(unittest.TestCase):
         wishlist = data['user']['wishlist']
         self.assertEqual(len(wishlist), 0)
 
+    # Test setting wishlist to a single item
     def test_set_wishlist_to_one_item(self):
         result = self.app.post('/api/create_user', data=json.dumps({
             'email':'testsetwishlistoneitem@email.com'
@@ -142,6 +151,7 @@ class TestUserHandler(unittest.TestCase):
         self.assertEqual(len(wishlist), 1)
         self.assertEqual(wishlist[0], 'cats')
 
+    # Test fully exercising the wishlist
     def test_set_wishlist_to_multiple_items(self):
         result = self.app.post('/api/create_user', data=json.dumps({
             'email':'testsetwishlistmanyitems@email.com'

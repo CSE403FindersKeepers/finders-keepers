@@ -1,3 +1,4 @@
+/*
 package cse403.finderskeepers;
 
 
@@ -19,9 +20,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-/**
+*
  * Tests wishlist functionality on the userpage
- */
+
+
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class UserPageTagTest {
@@ -56,3 +58,4 @@ public class UserPageTagTest {
     }
 
 }
+*/
