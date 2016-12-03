@@ -59,7 +59,7 @@ class TradeHandler():
 		query += " VALUES(%s,%s"
 		query += ", default, 'PENDING')"
 
-		self.db_handler.cursor.execute(query (str(json["initiator_id"]), str(json["recipient_id"])))
+		self.db_handler.cursor.execute(query, (str(json["initiator_id"]), str(json["recipient_id"])))
 		self.db_handler.connection.commit()
 
 		query = "SELECT * FROM TRADES WHERE "
@@ -95,9 +95,9 @@ class TradeHandler():
 	"""
 	def accept_trade(self, json):
 		# check if json["user"] is recipient?
-		query = "UPDATE TRADES SET status='ACCEPTED' WHERE recipientId=" + str(json["user_id"])
-		query += " AND tradeId = " + str(json["trade_id"])
-		self.db_handler.cursor.execute(query)
+		query = "UPDATE TRADES SET status='ACCEPTED' WHERE recipientId=%s"
+		query += " AND tradeId=%s"
+		self.db_handler.cursor.execute(query, (str(json["user_id"]), str(json["trade_id"])))
 		self.db_handler.connection.commit()
 		return jsonify(error=None) # todo change to match spec
 
@@ -107,9 +107,9 @@ class TradeHandler():
 	"""
 	def deny_trade(self, json):
 		# check if json["user"] is recipient?
-		query = "UPDATE TRADES SET status='DENIED' WHERE recipientId=" + str(json["user_id"])
-		query += " AND tradeId = " + str(json["trade_id"])
-		self.db_handler.cursor.execute(query)
+		query = "UPDATE TRADES SET status='DENIED' WHERE recipientId=%s"
+		query += " AND tradeId=%s"
+		self.db_handler.cursor.execute(query, (str(json["user_id"]), str(json["trade_id"])))
 		self.db_handler.connection.commit()
 		return jsonify(error=None) # todo change to match spec
 
@@ -118,9 +118,9 @@ class TradeHandler():
 	the given trade and user.
 	"""
 	def get_item_array(self, trade_id, user_id):
-		query = "SELECT itemId FROM TRADEITEMS WHERE userId=" + str(user_id) + " AND tradeId=" + str(trade_id)
+		query = "SELECT itemId FROM TRADEITEMS WHERE userId=%s AND tradeId=%s"
 		items = []
-		self.db_handler.cursor.execute(query)
+		self.db_handler.cursor.execute(query, (str(user_id), str(trade_id)))
 		result = self.db_handler.cursor.fetchone()
 		while result is not None:
 			items.append(result[0])
@@ -131,14 +131,14 @@ class TradeHandler():
 	TEST METHOD, DO NOT USE IN PRODUCTION
 	"""
 	def delete_trade(self, trade_id): # should not be used, only for testing
-		self.db_handler.cursor.execute("SELECT * FROM TRADES WHERE tradeId=" + str(trade_id))
+		self.db_handler.cursor.execute("SELECT * FROM TRADES WHERE tradeId=%s", str(trade_id))
 		data = self.db_handler.cursor.fetchone()
 		if data is None:
 			return jsonify(error="Trade not found")
 		else:
 			image_handler.delete_image(data[2])
-			query = "DELETE FROM TRADES WHERE tradeId=" + str(trade_id)
-			self.db_handler.cursor.execute(query)
+			query = "DELETE FROM TRADES WHERE tradeId=%s"
+			self.db_handler.cursor.execute(query, str(trade_id))
 			self.db_handler.connection.commit()
 			return jsonify(error=None)
 
