@@ -111,7 +111,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
 
                     BrowseResultUser newUserResult = new BrowseResultUser(this, UID);
                     LinearLayout.LayoutParams pictureLayout = new LinearLayout
-                            .LayoutParams(500, 500);
+                            .LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
                     newUserResult.setImageBitmap(image);
                     newUserResult.setLayoutParams(pictureLayout);
                     newUserResult.setAdjustViewBounds(true);
@@ -120,7 +120,7 @@ public class BrowseNearbyActivity extends AppCompatActivity {
                     resultArea.addView(newUserResult);
 
                     LinearLayout.LayoutParams textLayout = new LinearLayout
-                            .LayoutParams(500, 500);
+                            .LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
                     TextView userLabel = new TextView(this);
                     userLabel.setLayoutParams(textLayout);
                     userLabel.setText(userName);
