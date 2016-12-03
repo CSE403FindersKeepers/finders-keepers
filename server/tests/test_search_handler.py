@@ -1,9 +1,11 @@
+# TestSearchHandler: Tests the SearchHandler class
 import unittest
 import json
 from server.server import app
 from flask import Flask, jsonify
 
 class TestSearchHandler(unittest.TestCase):
+    # Set up for tests by creating dummy data
     @classmethod
     def setUpClass(self):
         app.testing = True
@@ -49,6 +51,7 @@ class TestSearchHandler(unittest.TestCase):
             'zipcode': 97202 #portland
         }), content_type='application/json')
 
+    # Tear down by deleting dummy data
     @classmethod
     def tearDownClass(self):
         self.app.delete('/api/delete_user/' + str(self.actor))
@@ -56,6 +59,7 @@ class TestSearchHandler(unittest.TestCase):
         self.app.delete('/api/delete_user/' + str(self.test_user_100m_away))
         self.app.delete('/api/delete_user/' + str(self.test_user_same_zip))
 
+    # Test the get users within radius method, the main search method
     def test_get_users_within_radius_same_zip(self):
         result = self.app.post('/api/get_users_within_radius', data=json.dumps({
             'zipcode':97202, #portland
